@@ -1,4 +1,4 @@
-package com.example.frontendgestoreta.ui.screens
+package com.example.frontendgestoreta.ui.screens_user
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
@@ -19,10 +19,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.frontendgestoreta.R
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.frontendgestoreta.ui.screens_user.SettingsScreen
 import com.example.frontendgestoreta.ui.theme.FrontendGestoretaTheme
 
 
@@ -38,7 +38,7 @@ fun MainScreen() {
         AppScreens.FallaNews
     )
 
-    //Recordar título actual de la pantalla
+    //Recordar titulo actual de la pantalla
     var topBarTitle by remember { mutableStateOf(AppScreens.News.title ?: "") }
     Column(
         modifier = Modifier
@@ -55,7 +55,26 @@ fun MainScreen() {
                         containerColor = MaterialTheme.colorScheme.secondary,
                         titleContentColor = MaterialTheme.colorScheme.tertiary,
                     ),
-                    title = { Text(topBarTitle) })
+                    title = { Text(topBarTitle) },
+                    actions = {
+                        IconButton(
+                            onClick = {
+                                navController.navigate(AppScreens.Settings.route) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
+                        ) {
+                            Icon(
+                                painterResource(id = AppScreens.Settings.icon!!),
+                                contentDescription = AppScreens.Settings.title
+                            )
+                        }
+                    },
+                )
             },
             bottomBar = {
                 NavigationBar {
@@ -74,8 +93,8 @@ fun MainScreen() {
                                     popUpTo(navController.graph.findStartDestination().id) {
                                         saveState = true
                                     }
-                                    launchSingleTop = true
-                                    restoreState = true
+                                    launchSingleTop = true // Avoid multiple copies of the same screen
+                                    restoreState = true // If the user was in the middle of something
                                 }
                             },
                             icon = {
