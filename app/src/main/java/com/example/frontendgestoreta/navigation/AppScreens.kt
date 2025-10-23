@@ -8,6 +8,22 @@ sealed class AppScreens(
     val title: String? = null,
     @DrawableRes val icon: Int? = null
 ) {
+    object FallaSettings : AppScreens(
+        route = "falla_settings_screen",
+        title = "Ajustes de falla",
+        icon = R.drawable.ic_settings
+    )
+    object Members : AppScreens(
+        route = "members_screen",
+        title = "Miembros",
+        icon = R.drawable.ic_fallas
+    )
+    object NewsGestor : AppScreens(
+        route = "news_gestor_screen",
+        title = "Noticias",
+        icon = R.drawable.ic_newspaper
+    )
+
     object News : AppScreens(
         route = "news_screen",
         title = "Noticias",

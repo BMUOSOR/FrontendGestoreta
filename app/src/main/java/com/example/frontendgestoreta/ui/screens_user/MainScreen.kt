@@ -1,83 +1,57 @@
 package com.example.frontendgestoreta.ui.screens_user
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.*
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.example.frontendgestoreta.navigation.AppScreens
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.unit.dp
-import com.example.frontendgestoreta.R
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.frontendgestoreta.ui.screens_user.SettingsScreen
+import com.example.frontendgestoreta.ui.components.AppHeaderImage
+import com.example.frontendgestoreta.ui.components.MainTopBar
 import com.example.frontendgestoreta.ui.theme.FrontendGestoretaTheme
-
+import com.example.frontendgestoreta.ui.theme.GestoretaGris
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
-
     val navigationItems = listOf(
         AppScreens.News,
         AppScreens.Map,
         AppScreens.Fallas,
         AppScreens.FallaNews
     )
-
-    //Recordar titulo actual de la pantalla
     var topBarTitle by remember { mutableStateOf(AppScreens.News.title ?: "") }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.primary)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         AppHeaderImage()
         Scaffold(
-            containerColor = MaterialTheme.colorScheme.primary,
+            containerColor = Color.Transparent,
             topBar = {
-                CenterAlignedTopAppBar(
-                    windowInsets = WindowInsets(0.dp),
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.secondary,
-                        titleContentColor = MaterialTheme.colorScheme.tertiary,
-                    ),
-                    title = { Text(topBarTitle) },
-                    actions = {
-                        IconButton(
-                            onClick = {
-                                navController.navigate(AppScreens.Settings.route) {
-                                    popUpTo(navController.graph.findStartDestination().id) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            }
-                        ) {
-                            Icon(
-                                painterResource(id = AppScreens.Settings.icon!!),
-                                contentDescription = AppScreens.Settings.title
-                            )
-                        }
-                    },
+                MainTopBar(
+                    title = topBarTitle,
+                    navController = navController
                 )
             },
             bottomBar = {
-                NavigationBar {
+                NavigationBar(
+                    containerColor = MaterialTheme.colorScheme.tertiary
+                ) {
                     val navBackStackEntry by navController.currentBackStackEntryAsState()
                     val currentDestination = navBackStackEntry?.destination
 
@@ -85,7 +59,8 @@ fun MainScreen() {
                         NavigationBarItem(
                             colors = NavigationBarItemDefaults.colors(
                                 indicatorColor = MaterialTheme.colorScheme.secondary,
-                                selectedIconColor = MaterialTheme.colorScheme.primary
+                                selectedIconColor = MaterialTheme.colorScheme.onSecondary,
+
                             ),
                             selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                             onClick = {
@@ -93,8 +68,8 @@ fun MainScreen() {
                                     popUpTo(navController.graph.findStartDestination().id) {
                                         saveState = true
                                     }
-                                    launchSingleTop = true // Avoid multiple copies of the same screen
-                                    restoreState = true // If the user was in the middle of something
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
                             },
                             icon = {
@@ -103,16 +78,14 @@ fun MainScreen() {
                                     contentDescription = screen.title
                                 )
                             }
-
                         )
                     }
                 }
             }
         ) { innerPadding ->
-            // Navigation graph
             NavHost(
                 navController = navController,
-                startDestination = AppScreens.News.route, //STAR DESTINATION
+                startDestination = AppScreens.News.route,
                 modifier = Modifier.padding(innerPadding)
             ) {
                 composable(AppScreens.News.route) {
@@ -139,24 +112,7 @@ fun MainScreen() {
         }
     }
 }
-@Composable
-fun AppHeaderImage() {
-    Box(
-        modifier = Modifier
-            .padding(top = 40.dp)
-            .padding(bottom = 10.dp)
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.primary), // Color de fondo para la barra
-        contentAlignment = Alignment.Center
-    ) { Image(
-            painter = painterResource(id = R.drawable.ic_gestoreta),
-            contentDescription = "Gestoreta", // Descripción para accesibilidad
-            modifier = Modifier
-                .height(50.dp), // Dale una altura fija a la barra del título
-            contentScale = ContentScale.Fit // Asegura que la imagen se vea completa sin deformarse
-        )
-    }
-}
+
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview() {

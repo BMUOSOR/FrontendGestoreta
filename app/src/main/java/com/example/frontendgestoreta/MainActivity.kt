@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
             FrontendGestoretaTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = MaterialTheme.colorScheme.primary
                 ) {
                     MainScreen()
                 }
