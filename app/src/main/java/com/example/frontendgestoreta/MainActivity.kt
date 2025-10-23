@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.frontendgestoreta.ui.screens_user.*
+import com.example.frontendgestoreta.ui.screens_gestor.*
 import com.example.frontendgestoreta.ui.theme.FrontendGestoretaTheme
 
 class MainActivity : ComponentActivity() {
@@ -23,7 +24,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.primary
                 ) {
-                    MainScreen()
+                    MainScreenGestor()
                 }
             }
         }

@@ -35,18 +35,20 @@ import com.example.frontendgestoreta.ui.theme.FrontendGestoretaTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
+fun MainScreenGestor() {
     val navController = rememberNavController()
-
     val navigationItems = listOf(
         AppScreens.NewsGestor,
         AppScreens.Members,
         AppScreens.FallaSettings
 
     )
-
     var topBarTitle by remember { mutableStateOf(AppScreens.NewsGestor.title ?: "") }
-    Column(){
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ){
         AppHeaderImage()
         Scaffold(
             topBar = {
@@ -106,6 +108,10 @@ fun MainScreen() {
                 composable(AppScreens.FallaSettings.route) {
                     topBarTitle = AppScreens.FallaSettings.title!!
                     FallasScreen()
+                }
+                composable(AppScreens.Settings.route) {
+                    topBarTitle = AppScreens.Settings.title!!
+                    SettingsScreen()
                 }
             }
         }
