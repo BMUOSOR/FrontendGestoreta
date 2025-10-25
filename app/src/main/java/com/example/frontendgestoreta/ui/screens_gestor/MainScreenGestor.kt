@@ -103,7 +103,7 @@ fun MainScreenGestor() {
                 }
                 composable(AppScreens.Members.route) {
                     topBarTitle = AppScreens.Members.title!!
-                    MapScreen()
+                    MembersScreen()
                 }
                 composable(AppScreens.FallaSettings.route) {
                     topBarTitle = AppScreens.FallaSettings.title!!
