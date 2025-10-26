@@ -11,41 +11,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.frontendgestoreta.data.models.MemberDTO
+import com.example.frontendgestoreta.data.models.MemberRequestDTO
+import com.example.frontendgestoreta.viewmodel.MembersViewModel
 
-data class Member(
-    val id: Long,
-    val nombre: String,
-    val cargo: String
-)
 
-data class MemberRequest(
-    val id: Long,
-    val nombre: String,
-    val motivo: String
-)
 
 @Composable
-fun MembersScreen() {
-    // Datos de prueba (más adelante vendrán del backend)
-    val members = remember {
-        listOf(
-            Member(1, "María López", "Presidenta"),
-            Member(2, "Carlos Pérez", "Secretario"),
-            Member(3, "Ana García", "Tesorera"),
-            Member(4, "Carla Romero", "Fallera"),
-        )
-    }
+fun MembersScreen(viewModel: MembersViewModel = viewModel()) {
+    val members by viewModel.members.collectAsState()
+    val requests by viewModel.requests.collectAsState()
 
-    val requests = remember {
-        listOf(
-            MemberRequest(10, "Lucía Torres", "Quiere unirse a la falla"),
-            MemberRequest(11, "Javier Díaz", "Quiere ser fallero infantil")
-        )
-    }
+    var selectedMember by remember { mutableStateOf<MemberDTO?>(null) }
+    var selectedMemberRequest by remember { mutableStateOf<MemberRequestDTO?>(null) }
 
-    // Estado para el miembro seleccionado
-    var selectedMember by remember { mutableStateOf<Member?>(null) }
-    var selectedMemberRequest by remember{ mutableStateOf<MemberRequest?>(null)}
+    LaunchedEffect(Unit) { viewModel.loadMembers() }
+
     // Si hay un miembro seleccionado muestra su info
     if (selectedMember != null) {
         MemberDetailScreen(member = selectedMember!!) {
@@ -83,8 +65,8 @@ fun MembersScreen() {
                         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
-                            Text(text = member.nombre, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                            Text(text = member.cargo, style = MaterialTheme.typography.bodyMedium)
+                            Text(text = member.nombre ?: "Sin nombre", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                            Text(text = member.dni ?: "Sin dni", style = MaterialTheme.typography.bodyMedium)
                         }
                     }
                 }
@@ -104,8 +86,8 @@ fun MembersScreen() {
                         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer)
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
-                            Text(text = req.nombre, fontWeight = FontWeight.Bold)
-                            Text(text = req.motivo, style = MaterialTheme.typography.bodyMedium)
+                            Text(text = req.contenido ?: "Sin contenido", fontWeight = FontWeight.Bold)
+                            Text(text = req.motivo ?: "Sin motivo", style = MaterialTheme.typography.bodyMedium)
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -129,7 +111,7 @@ fun MembersScreen() {
 }
 
 @Composable
-fun MemberDetailScreen(member: Member, onBack: () -> Unit) {
+fun MemberDetailScreen(member: MemberDTO, onBack: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -137,12 +119,12 @@ fun MemberDetailScreen(member: Member, onBack: () -> Unit) {
         horizontalAlignment = Alignment.Start
     ) {
         Text(
-            text = "Detalles de ${member.nombre}",
+            text = "Detalles de ${member.nombre ?: "Sin nombre"}",
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Text("Cargo: ${member.cargo}")
+        Text("DNI: ${member.dni ?:"Sin DNI"}")
         Spacer(modifier = Modifier.height(32.dp))
         Button(onClick = onBack) {
             Text("Volver")
@@ -150,7 +132,7 @@ fun MemberDetailScreen(member: Member, onBack: () -> Unit) {
     }
 }
 @Composable
-fun MemberRequestDetailScreen(request: MemberRequest, onBack: () -> Unit) {
+fun MemberRequestDetailScreen(request: MemberRequestDTO, onBack: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -158,12 +140,12 @@ fun MemberRequestDetailScreen(request: MemberRequest, onBack: () -> Unit) {
         horizontalAlignment = Alignment.Start
     ) {
         Text(
-            text = "Detalles de ${request.nombre}",
+            text = "Detalles de ${request.contenido ?: "Sin contenido"}",
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Text("Cargo: ${request.motivo}")
+        Text("Cargo: ${request.motivo ?: "Sin motivo"}")
         Spacer(modifier = Modifier.height(32.dp))
         Button(onClick = onBack) {
             Text("Volver")
