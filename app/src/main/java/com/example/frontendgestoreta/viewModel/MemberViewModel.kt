@@ -2,6 +2,7 @@ package com.example.frontendgestoreta.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.frontendgestoreta.data.api.RetrofitClient
 import com.example.frontendgestoreta.data.models.MemberDTO
 import com.example.frontendgestoreta.data.models.MemberRequestDTO
 import com.example.frontendgestoreta.repository.MemberRepository
@@ -13,7 +14,8 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class MembersViewModel : ViewModel() {
-    private val repository = MemberRepository()
+
+    private val repository = MemberRepository(RetrofitClient.apiService)
 
     private val _members = MutableStateFlow<List<MemberDTO>>(emptyList())
     val members: StateFlow<List<MemberDTO>> = _members
@@ -22,29 +24,16 @@ class MembersViewModel : ViewModel() {
     val requests: StateFlow<List<MemberRequestDTO>> = _requests
 
     fun loadMembers() {
+        viewModelScope.launch {
+            try {
+                _members.value = repository.getAllMembers()
+                _requests.value = repository.getAllRequests()
 
-
-        repository.getAllMembers().enqueue(object : Callback<List<MemberDTO>> {
-            override fun onResponse(call: Call<List<MemberDTO>>, response: Response<List<MemberDTO>>) {
-                println("Miembros - Código de respuesta: ${response.code()}") // <-- AGREGAR ESTO
-                println("Miembros - Body recibido: ${response.body()}") // <-- AGREGAR ESTO
-                if (response.isSuccessful) _members.value = response.body() ?: emptyList()
+            } catch (e: Exception) {
+                // MANEJO DE ERRORES:
+                println("Error al cargar datos: ${e.message}")
+                e.printStackTrace()
             }
-            override fun onFailure(call: Call<List<MemberDTO>>, t: Throwable) {
-                t.printStackTrace() // Si falla, revisa aquí el stack trace para errores de red
-            }
-        })
-
-        repository.getAllRequests().enqueue(object : Callback<List<MemberRequestDTO>> {
-            override fun onResponse(call: Call<List<MemberRequestDTO>>, response: Response<List<MemberRequestDTO>>) {
-                println("Código de respuesta: ${response.code()}")
-                println("Body recibido: ${response.body()}")
-                if (response.isSuccessful) _requests.value = response.body() ?: emptyList()
-            }
-            override fun onFailure(call: Call<List<MemberRequestDTO>>, t: Throwable) {
-                t.printStackTrace()
-            }
-        })
-
+        }
     }
 }

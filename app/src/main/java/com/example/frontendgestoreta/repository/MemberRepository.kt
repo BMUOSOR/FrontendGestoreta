@@ -1,13 +1,21 @@
 package com.example.frontendgestoreta.repository
 
+import com.example.frontendgestoreta.data.api.ApiService
 import com.example.frontendgestoreta.data.api.RetrofitClient
 import com.example.frontendgestoreta.data.models.MemberDTO
 import com.example.frontendgestoreta.data.models.MemberRequestDTO
 import retrofit2.Call
 
-class MemberRepository {
-    private val api = RetrofitClient.apiService
+// Ejemplo en MemberRepository.kt
+class MemberRepository(private val apiService: ApiService) {
 
-    fun getAllMembers(): Call<List<MemberDTO>> = api.getAllUsers()
-    fun getAllRequests(): Call<List<MemberRequestDTO>> = api.getAllRequests()
+
+    suspend fun getAllMembers() : List<MemberDTO> {
+        // Llama a la función suspendida de ApiService directamente
+        return apiService.getAllUsers()
+    }
+
+    suspend fun getAllRequests() : List<MemberRequestDTO> {
+        return apiService.getAllRequests()
+    }
 }
