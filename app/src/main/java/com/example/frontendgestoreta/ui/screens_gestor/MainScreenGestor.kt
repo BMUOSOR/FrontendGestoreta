@@ -31,7 +31,6 @@ import com.example.frontendgestoreta.ui.screens_user.NewsScreen
 import com.example.frontendgestoreta.ui.screens_user.SettingsScreen
 import com.example.frontendgestoreta.ui.theme.FrontendGestoretaTheme
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreenGestor() {
@@ -103,10 +102,6 @@ fun MainScreenGestor() {
                 composable(AppScreens.Members.route) {
                     topBarTitle = AppScreens.Members.title!!
                     MembersScreen()
-                }
-                composable(AppScreens.FallaSettings.route) {
-                    topBarTitle = AppScreens.FallaSettings.title!!
-                    FallasScreen()
                 }
                 composable(AppScreens.Settings.route) {
                     topBarTitle = AppScreens.Settings.title!!

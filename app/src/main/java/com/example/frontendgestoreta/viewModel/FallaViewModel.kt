@@ -1,4 +1,4 @@
-package com.example.frontendgestoreta.viewModel
+package com.example.frontendgestoreta.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
