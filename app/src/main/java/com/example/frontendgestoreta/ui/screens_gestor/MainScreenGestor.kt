@@ -103,6 +103,10 @@ fun MainScreenGestor() {
                     topBarTitle = AppScreens.Members.title!!
                     MembersScreen()
                 }
+                composable(AppScreens.FallaSettings.route) {
+                    topBarTitle = AppScreens.FallaSettings.title!!
+                    FallaSettingsScreen()
+                }
                 composable(AppScreens.Settings.route) {
                     topBarTitle = AppScreens.Settings.title!!
                     SettingsScreen()
