@@ -14,12 +14,12 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.frontendgestoreta.data.models.MemberDTO
 import com.example.frontendgestoreta.data.models.MemberRequestDTO
-import com.example.frontendgestoreta.viewmodel.MembersViewModel
+import com.example.frontendgestoreta.viewmodel.MemberViewModel
 
 
 
 @Composable
-fun MembersScreen(viewModel: MembersViewModel = viewModel()) {
+fun MembersScreen(viewModel: MemberViewModel = viewModel()) {
     val members by viewModel.members.collectAsState()
     val requests by viewModel.requests.collectAsState()
 

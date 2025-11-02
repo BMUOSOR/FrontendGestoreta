@@ -8,7 +8,6 @@ import retrofit2.Call
 class FallaRepository(private val apiService: ApiService) {
 
     suspend fun getAllFallas() : List<FallaDTO> {
-
         return apiService.getAllFallas()
     }
 
