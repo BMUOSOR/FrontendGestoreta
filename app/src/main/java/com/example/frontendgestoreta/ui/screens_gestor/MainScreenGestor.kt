@@ -26,12 +26,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.frontendgestoreta.ui.components.AppHeaderImage
 import com.example.frontendgestoreta.ui.components.MainTopBar
 import com.example.frontendgestoreta.ui.screens_user.FallaNewsScreen
-import com.example.frontendgestoreta.ui.screens_user.FallasScreen
 import com.example.frontendgestoreta.ui.screens_user.MapScreen
 import com.example.frontendgestoreta.ui.screens_user.NewsScreen
 import com.example.frontendgestoreta.ui.screens_user.SettingsScreen
 import com.example.frontendgestoreta.ui.theme.FrontendGestoretaTheme
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -107,7 +105,7 @@ fun MainScreenGestor() {
                 }
                 composable(AppScreens.FallaSettings.route) {
                     topBarTitle = AppScreens.FallaSettings.title!!
-                    FallasScreen()
+                    FallaSettingsScreen()
                 }
                 composable(AppScreens.Settings.route) {
                     topBarTitle = AppScreens.Settings.title!!

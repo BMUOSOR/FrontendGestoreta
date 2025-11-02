@@ -1,12 +1,12 @@
 package com.example.frontendgestoreta.data.api
 
-import com.example.frontendgestoreta.data.models.EventDTO
 import com.example.frontendgestoreta.data.models.MemberDTO
 import com.example.frontendgestoreta.data.models.MemberRequestDTO
 import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface ApiService {
+
 
     @GET("usuario/getAll")
     suspend fun getAllUsers(): List<MemberDTO>

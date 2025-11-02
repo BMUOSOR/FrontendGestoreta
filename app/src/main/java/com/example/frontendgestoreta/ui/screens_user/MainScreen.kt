@@ -19,6 +19,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.frontendgestoreta.navigation.AppScreens
 import com.example.frontendgestoreta.ui.components.AppHeaderImage
 import com.example.frontendgestoreta.ui.components.MainTopBar
+import com.example.frontendgestoreta.ui.screens_user.FallasScreen
 import com.example.frontendgestoreta.ui.theme.FrontendGestoretaTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
