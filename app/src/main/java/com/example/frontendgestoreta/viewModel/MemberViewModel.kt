@@ -1,5 +1,6 @@
 package com.example.frontendgestoreta.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.frontendgestoreta.data.api.RetrofitClient
@@ -26,9 +27,13 @@ class MembersViewModel : ViewModel() {
     fun loadMembers() {
         viewModelScope.launch {
             try {
-                _members.value = repository.getAllMembers()
-                _requests.value = repository.getAllRequests()
+                Log.d("MembersViewModel", "Iniciando carga de datos...")
+                val membersResult = repository.getAllMembers()
+                val requestsResult = repository.getAllRequests()
 
+                _members.value = membersResult
+                _requests.value = requestsResult
+                Log.d("MembersViewModel", "Datos cargados: ${membersResult.size} miembros, ${requestsResult.size} solicitudes.")
             } catch (e: Exception) {
                 // MANEJO DE ERRORES:
                 println("Error al cargar datos: ${e.message}")

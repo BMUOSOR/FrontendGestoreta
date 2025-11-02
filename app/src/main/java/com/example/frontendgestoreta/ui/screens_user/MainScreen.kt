@@ -20,7 +20,6 @@ import com.example.frontendgestoreta.navigation.AppScreens
 import com.example.frontendgestoreta.ui.components.AppHeaderImage
 import com.example.frontendgestoreta.ui.components.MainTopBar
 import com.example.frontendgestoreta.ui.theme.FrontendGestoretaTheme
-import com.example.frontendgestoreta.ui.theme.GestoretaGris
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
