@@ -10,5 +10,5 @@ data class MemberRequestDTO(
     val aprobada: Boolean?,
     val idGestor: Long?,
     val motivo: String?,
-    val dni: Long?
+    val dni: String?
 )

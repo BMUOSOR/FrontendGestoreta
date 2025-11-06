@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter
 import java.time.ZonedDateTime
 
 object RetrofitClient {
-    private const val BASE_URL = "http://192.168.1.31:8080/api/"
+    private const val BASE_URL = "http://192.168.1.131:8080/api/"
 
     // 1. ADAPTADOR PARA OffsetDateTime (createdAt)
     private val offsetDateTimeDeserializer = JsonDeserializer<OffsetDateTime> { json, _, _ ->
@@ -22,7 +22,7 @@ object RetrofitClient {
     // 2. ADAPTADOR PARA LocalDate (fechaNac)
     private val localDateDeserializer = JsonDeserializer<LocalDate> { json, _, _ ->
         // Para LocalDate, usamos el formato ISO local, que es "yyyy-MM-dd"
-        val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         LocalDate.parse(json.asString, formatter)
     }
 
