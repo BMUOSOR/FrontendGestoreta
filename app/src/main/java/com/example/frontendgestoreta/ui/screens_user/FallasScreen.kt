@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.frontendgestoreta.data.models.FallaDTO
-import com.example.frontendgestoreta.viewmodel.FallaViewModel
+import com.example.frontendgestoreta.viewModel.FallaViewModel
 
 
 @Composable
@@ -24,7 +24,6 @@ fun FallasScreen(viewModel: FallaViewModel = viewModel()) {
 
     LaunchedEffect(Unit) { viewModel.loadFallas() }
 
-    // Si hay un miembro seleccionado muestra su info
     if (selectedFalla != null) {
         FallaDetailScreen(falla = selectedFalla!!) {
             selectedFalla = null
@@ -36,7 +35,7 @@ fun FallasScreen(viewModel: FallaViewModel = viewModel()) {
                 .padding(16.dp)
         ) {
             Text(
-                text = "Miembros de la Falla",
+                text = "Fallas actuales",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -44,9 +43,7 @@ fun FallasScreen(viewModel: FallaViewModel = viewModel()) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // la lista de miembros
-            Text("Miembros actuales", fontWeight = FontWeight.SemiBold)
-            Spacer(modifier = Modifier.height(8.dp))
+            // la lista de fallas
             LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 items(fallas) { falla ->
                     Card(
@@ -62,6 +59,8 @@ fun FallasScreen(viewModel: FallaViewModel = viewModel()) {
                     }
                 }
             }
+
+
         }
     }
 }
