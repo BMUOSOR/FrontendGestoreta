@@ -19,7 +19,7 @@ interface ApiService {
     @GET("usuario/getFromFalla/{idFalla}")
     suspend fun getUsersFromFalla(@Path("idFalla") idFalla: Long): List<MemberDTO>
 
-    @GET("fallas/getAll")
+    @GET("falla/getAll")
     suspend fun getAllFallas(): List<FallaDTO>
 
     @GET("evento/getAll")

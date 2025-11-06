@@ -1,5 +1,6 @@
 package com.example.frontendgestoreta.ui.screens_user
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,6 +23,7 @@ fun FallasScreen(viewModel: FallaViewModel = viewModel()) {
 
     var selectedFalla by remember { mutableStateOf<FallaDTO?>(null) }
 
+    Log.d("Fallas Screen", "Loading fallas...")
     LaunchedEffect(Unit) { viewModel.loadFallas() }
 
     if (selectedFalla != null) {
@@ -44,6 +46,8 @@ fun FallasScreen(viewModel: FallaViewModel = viewModel()) {
             Spacer(modifier = Modifier.height(16.dp))
 
             // la lista de fallas
+            Text("Fallas actuales", fontWeight = FontWeight.SemiBold)
+            Spacer(modifier = Modifier.height(8.dp))
             LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 items(fallas) { falla ->
                     Card(
@@ -59,7 +63,6 @@ fun FallasScreen(viewModel: FallaViewModel = viewModel()) {
                     }
                 }
             }
-
 
         }
     }
