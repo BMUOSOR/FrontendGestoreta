@@ -73,21 +73,63 @@ fun FallaDetailScreen(falla: FallaDTO, onBack: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.Start
+            .padding(16.dp)
     ) {
+        // Header
         Text(
-            text = "Detalles de ${falla.nombre ?: "Sin nombre"}",
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Bold
+            text = "Detalles de la Falla",
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text("Dirección: ${falla.direccion ?:"Sin Dirección"}")
-        Spacer(modifier = Modifier.height(16.dp))
-        Text("Fecha de creación: ${falla.fechaCreacion ?:"Sin Fecha de creación"}")
+
         Spacer(modifier = Modifier.height(32.dp))
-        Button(onClick = onBack) {
-            Text("Volver")
+
+        // Información organizada
+        DetailItem("Nombre", falla.nombre ?: "Sin nombre")
+        Spacer(modifier = Modifier.height(16.dp))
+        DetailItem("Dirección", falla.direccion ?: "Sin dirección")
+        Spacer(modifier = Modifier.height(16.dp))
+        DetailItem("Fecha de creación", falla.fechaCreacion.toString() ?: "Sin fecha")
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // Botón Apuntarse (Funciona como volver)
+        Button(
+            onClick = onBack,
+            modifier = Modifier
+                .height(50.dp)
+        ) {
+            Text("Apuntarse", fontSize = 16.sp)
         }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        // Botón Volver
+        Button(
+            onClick = onBack,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
+        ) {
+            Text("Volver a la lista", fontSize = 16.sp)
+        }
+    }
+}
+
+@Composable
+fun DetailItem(label: String, value: String) {
+    Column {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontWeight = FontWeight.Medium
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.padding(top = 4.dp)
+        )
     }
 }
