@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter
 import java.time.ZonedDateTime
 
 object RetrofitClient {
-    private const val BASE_URL = "http://192.168.1.131:8080/api/"
+    private const val BASE_URL = "http://192.168.1.31:8080/api/"
 
     // 1. ADAPTADOR PARA OffsetDateTime (createdAt)
     private val offsetDateTimeDeserializer = JsonDeserializer<OffsetDateTime> { json, _, _ ->
