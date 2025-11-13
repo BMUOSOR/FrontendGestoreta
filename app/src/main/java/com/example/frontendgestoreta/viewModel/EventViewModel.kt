@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.frontendgestoreta.data.api.RetrofitClient
 import com.example.frontendgestoreta.data.models.EventDTO
+import com.example.frontendgestoreta.data.models.EventFilterDTO
 import com.example.frontendgestoreta.repository.EventRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -28,5 +29,10 @@ class EventViewModel : ViewModel() {
                 e.printStackTrace()
             }
         }
+    }
+
+    suspend fun filterEvents(eventFilter : EventFilterDTO){
+        val eventsFiltered = repository.filterEvents(eventFilter)
+        _events.value = eventsFiltered
     }
 }

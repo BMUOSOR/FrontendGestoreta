@@ -1,9 +1,11 @@
 package com.example.frontendgestoreta.data.api
 
 import com.example.frontendgestoreta.data.models.EventDTO
+import com.example.frontendgestoreta.data.models.EventFilterDTO
 import com.example.frontendgestoreta.data.models.FallaDTO
 import com.example.frontendgestoreta.data.models.MemberDTO
 import com.example.frontendgestoreta.data.models.MemberRequestDTO
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Path
 
@@ -24,4 +26,7 @@ interface ApiService {
 
     @GET("evento/getAll")
     suspend fun getAllEvents(): List<EventDTO>
+
+    @GET("evento/filterEvents")
+    suspend fun filterEvents(@Body filter : EventFilterDTO) : List<EventDTO>
 }
