@@ -1,5 +1,6 @@
 package com.example.frontendgestoreta.ui.screens_gestor
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -13,12 +14,14 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.NavigationBar
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.layout.ContentScale
@@ -147,7 +150,6 @@ fun MainScreenGestor() {
 
                 // Mostrar CreateEventScreen como overlay/dialog cuando sea necesario
                 if (showCreateEventScreen) {
-                    // Aquí puedes usar un Dialog o un FullScreenDialog según tu preferencia
                     AlertDialog(
                         onDismissRequest = { showCreateEventScreen = false },
                         title = { Text("Crear Evento") },
@@ -173,6 +175,11 @@ fun MainScreenGestor() {
 
 @Composable
 fun CreateEventScreen(onBack: () -> Unit) {
+    // Estados para los campos del formulario
+    var titulo by remember { mutableStateOf("") }
+    var descripcion by remember { mutableStateOf("") }
+    var ubicacion by remember { mutableStateOf("") }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -180,19 +187,97 @@ fun CreateEventScreen(onBack: () -> Unit) {
         horizontalAlignment = Alignment.Start
     ) {
         Text(
-            text = "Introduzca los datos del Evento",
+            text = "Crear Nuevo Evento",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Text("Formulario para crear evento")
-        Spacer(modifier = Modifier.height(8.dp))
+
+        // Campo Título
+        Text(
+            text = "Título",
+            fontWeight = FontWeight.Medium,
+            fontSize = 16.sp
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        OutlinedTextField(
+            value = titulo,
+            onValueChange = { titulo = it },
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = { Text("Ingresa el título del evento") },
+            singleLine = true
+        )
+
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = {
-            // Lógica para crear evento
-            onBack()
-        }) {
-            Text("Crear Evento")
+
+        // Campo Descripción
+        Text(
+            text = "Descripción",
+            fontWeight = FontWeight.Medium,
+            fontSize = 16.sp
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+
+        OutlinedTextField(
+            value = descripcion,
+            onValueChange = { descripcion = it },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(120.dp),
+            placeholder = { Text("Describe el evento") },
+            singleLine = false,
+            maxLines = 4
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = "Ubicación",
+            fontWeight = FontWeight.Medium,
+            fontSize = 16.sp
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        
+        OutlinedTextField(
+            value = ubicacion,
+            onValueChange = { ubicacion = it },
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = { Text("¿Dónde será el evento?") },
+            singleLine = true
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Botones de acción
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            TextButton(
+                onClick = { onBack() }
+            ) {
+                Text("Cancelar")
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Button(
+                onClick = {
+                    // Lógica para crear evento con los datos
+                    val nuevoEvento = mapOf(
+                        "titulo" to titulo,
+                        "descripcion" to descripcion,
+                        "ubicacion" to ubicacion
+                    )
+                    println("Evento creado: $nuevoEvento")
+
+                    onBack()
+                },
+                enabled = titulo.isNotBlank() && descripcion.isNotBlank() && ubicacion.isNotBlank()
+            ) {
+                Text("Crear Evento")
+            }
         }
     }
 }
