@@ -38,12 +38,15 @@ fun EventFilterMenu(
     modifier : Modifier = Modifier
 
 ) {
-    Button(onClick = { onApplyFilters(filter) }) {
-        Text("Aplicar filtros")
-    }
+
     var expanded by remember { mutableStateOf(false) }
     val rotationAngle by animateFloatAsState(if (expanded) 180f else 0f, label = "")
-    Button(onClick = { onApplyFilters(filter) }) {
+    Button(
+        onClick = { onApplyFilters(filter) },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 12.dp)
+    ) {
         Text("Aplicar filtros")
     }
     ElevatedCard(

@@ -34,6 +34,7 @@ class EventViewModel : ViewModel() {
     fun loadEventsWithFilter(filter: EventFilterDTO) {
         viewModelScope.launch {
             try {
+                Log.d("DEBUG",filter.public.toString())
                 val eventsResult = repository.filterEvents(filter)
                 _events.value = eventsResult
 

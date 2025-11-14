@@ -18,16 +18,28 @@ import com.example.frontendgestoreta.viewModel.EventViewModel
 import com.example.frontendgestoreta.ui.components.NewsListItem
 import com.example.frontendgestoreta.data.models.EventDTO
 import androidx.compose.foundation.lazy.items
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import com.example.frontendgestoreta.data.models.EventFilterDTO
+import com.example.frontendgestoreta.ui.components.EventFilterMenu
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FallaNewsScreen(viewModel: EventViewModel = viewModel()) {
+    var filter by remember { mutableStateOf(EventFilterDTO()) }
+
+
+
+
     val events = viewModel.events.collectAsState(initial = emptyList())
     Log.d("Fallas News Screen", "Loading Events...")
     LaunchedEffect(Unit) { viewModel.loadEvents() }
 
     Scaffold { innerPadding ->
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -36,9 +48,23 @@ fun FallaNewsScreen(viewModel: EventViewModel = viewModel()) {
             verticalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(bottom = 80.dp)
         ) {
+            item {
+                EventFilterMenu(
+                    filter = filter,
+                    onFilterChange = { filter = it },
+                    onApplyFilters = { finalFilter ->
+                        viewModel.loadEventsWithFilter(finalFilter)
+                    }
+                )
+            }
             items(events.value) { event ->
                 NewsListItem(event = event)
+
             }
+
         }
+
+
+
     }
 }

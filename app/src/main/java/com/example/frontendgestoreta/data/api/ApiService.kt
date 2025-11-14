@@ -7,6 +7,7 @@ import com.example.frontendgestoreta.data.models.MemberDTO
 import com.example.frontendgestoreta.data.models.MemberRequestDTO
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface ApiService {
@@ -27,6 +28,6 @@ interface ApiService {
     @GET("evento/getAll")
     suspend fun getAllEvents(): List<EventDTO>
 
-    @GET("evento/filterEvents")
+    @POST("evento/filterEvents")
     suspend fun filterEvents(@Body filter : EventFilterDTO) : List<EventDTO>
 }
