@@ -13,16 +13,21 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.NavigationBar
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.frontendgestoreta.R
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
+import com.example.frontendgestoreta.data.models.MemberDTO
 import com.example.frontendgestoreta.ui.components.AppHeaderImage
 import com.example.frontendgestoreta.ui.components.MainTopBar
 import com.example.frontendgestoreta.ui.screens_user.FallaNewsScreen
@@ -30,6 +35,9 @@ import com.example.frontendgestoreta.ui.screens_user.MapScreen
 import com.example.frontendgestoreta.ui.screens_user.NewsScreen
 import com.example.frontendgestoreta.ui.screens_user.SettingsScreen
 import com.example.frontendgestoreta.ui.theme.FrontendGestoretaTheme
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,6 +50,10 @@ fun MainScreenGestor() {
 
     )
     var topBarTitle by remember { mutableStateOf(AppScreens.NewsGestor.title ?: "") }
+
+    // Estado para controlar la visibilidad de CreateEventScreen
+    var showCreateEventScreen by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -51,8 +63,8 @@ fun MainScreenGestor() {
         Scaffold(
             topBar = {
                 MainTopBar(
-                title = topBarTitle,
-                navController = navController
+                    title = topBarTitle,
+                    navController = navController
                 )
             },
             bottomBar = {
@@ -88,30 +100,99 @@ fun MainScreenGestor() {
                         )
                     }
                 }
+            },
+            floatingActionButton = {
+                // Botón redondo con + en el centro inferior
+                FloatingActionButton(
+                    onClick = {
+                        showCreateEventScreen = true
+                    },
+                    shape = CircleShape,
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.size(64.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_falla_news), // Icono para añadir evento
+                        contentDescription = "Crear evento",
+                        modifier = Modifier.size(32.dp)
+                    )
+                }
+            },
+            floatingActionButtonPosition = FabPosition.Center
+        ){ innerPadding ->
+            Box(modifier = Modifier.padding(innerPadding)) {
+                NavHost(
+                    navController = navController,
+                    startDestination = AppScreens.NewsGestor.route, //START DESTINATION
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    composable(AppScreens.NewsGestor.route) {
+                        topBarTitle = AppScreens.NewsGestor.title!!
+                        NewsScreen()
+                    }
+                    composable(AppScreens.Members.route) {
+                        topBarTitle = AppScreens.Members.title!!
+                        MembersScreen()
+                    }
+                    composable(AppScreens.FallaSettings.route) {
+                        topBarTitle = AppScreens.FallaSettings.title!!
+                        FallaSettingsScreen()
+                    }
+                    composable(AppScreens.Settings.route) {
+                        topBarTitle = AppScreens.Settings.title!!
+                        SettingsScreen()
+                    }
+                }
+
+                // Mostrar CreateEventScreen como overlay/dialog cuando sea necesario
+                if (showCreateEventScreen) {
+                    // Aquí puedes usar un Dialog o un FullScreenDialog según tu preferencia
+                    AlertDialog(
+                        onDismissRequest = { showCreateEventScreen = false },
+                        title = { Text("Crear Evento") },
+                        text = {
+                            CreateEventScreen(
+                                onBack = { showCreateEventScreen = false }
+                            )
+                        },
+                        confirmButton = {
+                            TextButton(
+                                onClick = { showCreateEventScreen = false }
+                            ) {
+                                Text("Cerrar")
+                            }
+                        }
+                    )
+
+                }
             }
-        ){innerPadding ->
-            NavHost(
-                navController = navController,
-                startDestination = AppScreens.NewsGestor.route, //START DESTINATION
-                modifier = Modifier.padding(innerPadding)
-            ) {
-                composable(AppScreens.NewsGestor.route) {
-                    topBarTitle = AppScreens.NewsGestor.title!!
-                    NewsScreen()
-                }
-                composable(AppScreens.Members.route) {
-                    topBarTitle = AppScreens.Members.title!!
-                    MembersScreen()
-                }
-                composable(AppScreens.FallaSettings.route) {
-                    topBarTitle = AppScreens.FallaSettings.title!!
-                    FallaSettingsScreen()
-                }
-                composable(AppScreens.Settings.route) {
-                    topBarTitle = AppScreens.Settings.title!!
-                    SettingsScreen()
-                }
-            }
+        }
+    }
+}
+
+@Composable
+fun CreateEventScreen(onBack: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.Start
+    ) {
+        Text(
+            text = "Introduzca los datos del Evento",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text("Formulario para crear evento")
+        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = {
+            // Lógica para crear evento
+            onBack()
+        }) {
+            Text("Crear Evento")
         }
     }
 }
