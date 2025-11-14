@@ -31,8 +31,16 @@ class EventViewModel : ViewModel() {
         }
     }
 
-    suspend fun filterEvents(eventFilter : EventFilterDTO){
-        val eventsFiltered = repository.filterEvents(eventFilter)
-        _events.value = eventsFiltered
+    fun loadEventsWithFilter(filter: EventFilterDTO) {
+        viewModelScope.launch {
+            try {
+                val eventsResult = repository.filterEvents(filter)
+                _events.value = eventsResult
+
+            } catch (e: Exception) {
+                Log.e("EventViewModel", "Error filtrando eventos: ${e.message}")
+            }
+        }
     }
+
 }

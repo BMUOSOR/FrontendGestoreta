@@ -3,7 +3,7 @@ package com.example.frontendgestoreta.data.models
 import java.time.LocalDate
 import java.time.LocalTime
 
-class EventFilterDTO (
+data class EventFilterDTO (
     val beforeTime: LocalTime? = null,
     val afterTime: LocalTime? = null,
     val beforeDate : LocalDate? = null,

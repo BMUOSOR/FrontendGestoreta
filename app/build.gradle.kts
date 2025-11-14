@@ -35,7 +35,7 @@ android {
         isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -56,6 +56,9 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.ui)
     coreLibraryDesugaring ("com.android.tools:desugar_jdk_libs:2.0.4") // Usa la versión más reciente
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
