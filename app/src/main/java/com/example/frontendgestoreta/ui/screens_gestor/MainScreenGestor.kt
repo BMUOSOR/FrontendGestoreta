@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.NavigationBar
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.layout.ContentScale
@@ -39,8 +40,11 @@ import com.example.frontendgestoreta.ui.screens_user.NewsScreen
 import com.example.frontendgestoreta.ui.screens_user.SettingsScreen
 import com.example.frontendgestoreta.ui.theme.FrontendGestoretaTheme
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.ui.text.input.KeyboardType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -179,20 +183,20 @@ fun CreateEventScreen(onBack: () -> Unit) {
     var titulo by remember { mutableStateOf("") }
     var descripcion by remember { mutableStateOf("") }
     var ubicacion by remember { mutableStateOf("") }
+    var fecha by remember { mutableStateOf("") }
+    var hora by remember { mutableStateOf("") }
+    var maxPersonas by remember { mutableStateOf("") }
+    var esPublico by remember { mutableStateOf(true) }
+
+    val scrollState = rememberScrollState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(16.dp)
+            .verticalScroll(scrollState),
         horizontalAlignment = Alignment.Start
     ) {
-        Text(
-            text = "Crear Nuevo Evento",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-
         // Campo Título
         Text(
             text = "Título",
@@ -207,7 +211,6 @@ fun CreateEventScreen(onBack: () -> Unit) {
             placeholder = { Text("Ingresa el título del evento") },
             singleLine = true
         )
-
         Spacer(modifier = Modifier.height(16.dp))
 
         // Campo Descripción
@@ -217,7 +220,6 @@ fun CreateEventScreen(onBack: () -> Unit) {
             fontSize = 16.sp
         )
         Spacer(modifier = Modifier.height(4.dp))
-
         OutlinedTextField(
             value = descripcion,
             onValueChange = { descripcion = it },
@@ -228,16 +230,15 @@ fun CreateEventScreen(onBack: () -> Unit) {
             singleLine = false,
             maxLines = 4
         )
-
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Campo Ubicación
         Text(
             text = "Ubicación",
             fontWeight = FontWeight.Medium,
             fontSize = 16.sp
         )
         Spacer(modifier = Modifier.height(4.dp))
-        
         OutlinedTextField(
             value = ubicacion,
             onValueChange = { ubicacion = it },
@@ -245,9 +246,92 @@ fun CreateEventScreen(onBack: () -> Unit) {
             placeholder = { Text("¿Dónde será el evento?") },
             singleLine = true
         )
+        Spacer(modifier = Modifier.height(16.dp))
 
-        Spacer(modifier = Modifier.height(24.dp))
+        // Campo Fecha
+        Text(
+            text = "Fecha",
+            fontWeight = FontWeight.Medium,
+            fontSize = 16.sp
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        OutlinedTextField(
+            value = fecha,
+            onValueChange = { fecha = it },
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = { Text("Ej: 2025-12-25") },
+            singleLine = true
+        )
+        Spacer(modifier = Modifier.height(16.dp))
 
+        // Campo Hora
+        Text(
+            text = "Hora",
+            fontWeight = FontWeight.Medium,
+            fontSize = 16.sp
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        OutlinedTextField(
+            value = hora,
+            onValueChange = { hora = it },
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = { Text("Ej: 19:30, 20:00, 21:15") },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Number
+            )
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Campo Máximo de Personas
+        Text(
+            text = "Máximo de Personas",
+            fontWeight = FontWeight.Medium,
+            fontSize = 16.sp
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        OutlinedTextField(
+            value = maxPersonas,
+            onValueChange = {
+                // Validar que solo sean números
+                if (it.all { char -> char.isDigit() } || it.isEmpty()) {
+                    maxPersonas = it
+                }
+            },
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = { Text("Ej: 50, 100, 200") },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Number
+            )
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Casilla Es Público
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Checkbox(
+                checked = esPublico,
+                onCheckedChange = { esPublico = it }
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "Evento Público",
+                fontWeight = FontWeight.Medium,
+                fontSize = 16.sp
+            )
+        }
+
+        // Texto explicativo para la casilla
+        Text(
+            text = if (esPublico) "Cualquier persona puede unirse"
+            else "Solo miembros pueden unirse",
+            fontSize = 12.sp,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+            modifier = Modifier.padding(start = 48.dp)
+        )
         Spacer(modifier = Modifier.height(24.dp))
 
         // Botones de acción
@@ -268,13 +352,25 @@ fun CreateEventScreen(onBack: () -> Unit) {
                     val nuevoEvento = mapOf(
                         "titulo" to titulo,
                         "descripcion" to descripcion,
-                        "ubicacion" to ubicacion
+                        "ubicacion" to ubicacion,
+                        "hora" to hora,
+                        ("maxPersonas" to maxPersonas.toIntOrNull() ?: 0) as Pair<String, Any>,
+                        "esPublico" to esPublico
                     )
+
+                    // Aquí va la llamada a la API
+
+
                     println("Evento creado: $nuevoEvento")
 
+                    // Cerrar después de crear
                     onBack()
                 },
-                enabled = titulo.isNotBlank() && descripcion.isNotBlank() && ubicacion.isNotBlank()
+                enabled = titulo.isNotBlank() &&
+                        descripcion.isNotBlank() &&
+                        ubicacion.isNotBlank() &&
+                        hora.isNotBlank() &&
+                        maxPersonas.isNotBlank()
             ) {
                 Text("Crear Evento")
             }
