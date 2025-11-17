@@ -13,4 +13,12 @@ class EventRepository (private val apiService: ApiService){
     suspend fun filterEvents(eventFilter : EventFilterDTO): List<EventDTO> {
         return apiService.filterEvents(eventFilter)
     }
+
+    suspend fun postEvent(event: EventDTO) {
+        apiService.postEvent(event)
+    }
+
+    suspend fun updateEvent(event: EventDTO) {
+        apiService.updateEvent(event)
+    }
 }

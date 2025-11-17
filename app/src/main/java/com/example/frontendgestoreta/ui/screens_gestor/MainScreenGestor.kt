@@ -45,6 +45,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.ui.text.input.KeyboardType
+import com.example.frontendgestoreta.repository.EventRepository
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -353,6 +354,7 @@ fun CreateEventScreen(onBack: () -> Unit) {
                         "titulo" to titulo,
                         "descripcion" to descripcion,
                         "ubicacion" to ubicacion,
+                        "fecha" to fecha,
                         "hora" to hora,
                         ("maxPersonas" to maxPersonas.toIntOrNull() ?: 0) as Pair<String, Any>,
                         "esPublico" to esPublico
