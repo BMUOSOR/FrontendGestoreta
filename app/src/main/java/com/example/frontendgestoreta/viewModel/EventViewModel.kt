@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class EventViewModel : ViewModel() {
+
     private val repository = EventRepository(RetrofitClient.apiService)
 
     private val fallaRepository = FallaRepository(RetrofitClient.apiService)
@@ -65,6 +66,16 @@ class EventViewModel : ViewModel() {
 
             } catch (e: Exception) {
                 Log.e("EventViewModel", "Error filtrando eventos: ${e.message}")
+            }
+        }
+    }
+
+    fun createEvent(event: EventDTO) {
+        viewModelScope.launch {
+            try {
+                repository.postEvent(event)
+            } catch(e: Exception) {
+                Log.e("EventViewModel", "Error creando el evento: ${e.message}")
             }
         }
     }

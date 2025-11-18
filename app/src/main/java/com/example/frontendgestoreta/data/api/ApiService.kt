@@ -32,10 +32,10 @@ interface ApiService {
     @POST("evento/filterEvents")
     suspend fun filterEvents(@Body filter : EventFilterDTO) : List<EventDTO>
 
-    @POST("/postEvento")
+    @POST("evento/postEvento")
     suspend fun postEvent(@Body event : EventDTO)
 
-    @POST("/{idEvento}/update")
+    @POST("evento/{idEvento}/update")
     suspend fun updateEvent(@Body event : EventDTO)
 
     @GET("etiqueta/getAll")

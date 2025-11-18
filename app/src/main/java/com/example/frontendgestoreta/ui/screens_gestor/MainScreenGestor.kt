@@ -41,6 +41,9 @@ import com.example.frontendgestoreta.ui.theme.FrontendGestoretaTheme
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
+import com.example.frontendgestoreta.data.api.RetrofitClient
+import com.example.frontendgestoreta.repository.EventRepository
+import com.example.frontendgestoreta.ui.components.CreateEventScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -173,8 +176,10 @@ fun MainScreenGestor() {
     }
 }
 
+/*
 @Composable
 fun CreateEventScreen(onBack: () -> Unit) {
+    val eventRepository : EventRepository = EventRepository(RetrofitClient.apiService)
     // Estados para los campos del formulario
     var titulo by remember { mutableStateOf("") }
     var descripcion by remember { mutableStateOf("") }
@@ -281,3 +286,4 @@ fun CreateEventScreen(onBack: () -> Unit) {
         }
     }
 }
+*/
