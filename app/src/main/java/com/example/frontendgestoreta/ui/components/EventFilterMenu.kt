@@ -54,14 +54,6 @@ fun EventFilterMenu(
     val rotationAngle by animateFloatAsState(if (expanded) 180f else 0f, label = "")
     val fallas by viewModel.fallas.collectAsState()
     val tags by viewModel.tags.collectAsState()
-    Button(
-        onClick = { onApplyFilters(filter) },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 12.dp)
-    ) {
-        Text("Aplicar filtros")
-    }
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -89,12 +81,12 @@ fun EventFilterMenu(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text("Evento público")
-                        filter.public?.let {
-                            Switch(
-                                checked = it,
-                                onCheckedChange = { onFilterChange(filter.copy(public = it)) }
-                            )
-                        }
+                        Switch(
+                            checked = filter.public ?: true,
+                            onCheckedChange = { newValue ->
+                                onFilterChange(filter.copy(public = newValue))
+                            }
+                        )
                     }
 
                     Spacer(Modifier.height(16.dp))
