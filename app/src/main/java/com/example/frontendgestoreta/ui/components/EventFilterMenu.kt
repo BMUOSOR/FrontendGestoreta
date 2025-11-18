@@ -1,6 +1,7 @@
 package com.example.frontendgestoreta.ui.components
 
 import android.graphics.drawable.Icon
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
@@ -33,6 +34,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.frontendgestoreta.data.models.EventFilterDTO
 import com.example.frontendgestoreta.viewModel.EventViewModel
+import java.time.LocalDate
+import java.time.LocalTime
+import java.util.Calendar
+import java.util.Locale
 
 @Composable
 fun EventFilterMenu(
@@ -84,10 +89,12 @@ fun EventFilterMenu(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text("Evento público")
-                        Switch(
-                            checked = filter.public == true,
-                            onCheckedChange = { onFilterChange(filter.copy(public = it)) }
-                        )
+                        filter.public?.let {
+                            Switch(
+                                checked = it,
+                                onCheckedChange = { onFilterChange(filter.copy(public = it)) }
+                            )
+                        }
                     }
 
                     Spacer(Modifier.height(16.dp))
@@ -96,7 +103,10 @@ fun EventFilterMenu(
                     DatePickerField(
                         label = "Fecha desde",
                         date = filter.afterDate,
-                        onDateSelected = { onFilterChange(filter.copy(afterDate = it)) }
+                        onDateSelected = { selected ->
+                            onFilterChange(filter.copy(afterDate = selected))
+                        },
+
                     )
 
                     Spacer(Modifier.height(12.dp))
@@ -104,7 +114,9 @@ fun EventFilterMenu(
                     DatePickerField(
                         label = "Fecha hasta",
                         date = filter.beforeDate,
-                        onDateSelected = { onFilterChange(filter.copy(beforeDate = it)) }
+                        onDateSelected = {
+                            onFilterChange(filter.copy(beforeDate = it))
+                        }
                     )
 
                     Spacer(Modifier.height(16.dp))
@@ -224,5 +236,7 @@ fun EventFilterMenu(
                 }
             }
         }
+        Log.d("EventFilterMenu","Antes de: " + filter.beforeDate + " Después de: " + filter.afterDate)
+        Log.d("EventFilterMenu","Formato fecha: " + filter.beforeDate)
     }
 }

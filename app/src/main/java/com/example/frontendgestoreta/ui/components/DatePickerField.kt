@@ -1,5 +1,7 @@
+
 package com.example.frontendgestoreta.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.DatePicker
@@ -18,6 +20,7 @@ import androidx.compose.ui.Modifier
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,9 +33,8 @@ fun DatePickerField(
         initialSelectedDateMillis = date?.toEpochDay()?.let { it * 86_400_000 }
     )
     var showDialog by remember { mutableStateOf(false) }
-
     OutlinedTextField(
-        value = date?.toString() ?: "",
+        value = date.toString(),
         onValueChange = {},
         modifier = Modifier
             .fillMaxWidth()
@@ -41,6 +43,7 @@ fun DatePickerField(
         enabled = false
     )
 
+    Log.d("DatePickerField", "FECHA: " + date.toString())
     if (showDialog) {
         DatePickerDialog(
             onDismissRequest = { showDialog = false },

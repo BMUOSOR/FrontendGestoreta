@@ -3,6 +3,8 @@ package com.example.frontendgestoreta.data.api
 
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializer
+import com.google.gson.JsonPrimitive
+import com.google.gson.JsonSerializer
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.time.OffsetDateTime
@@ -29,8 +31,12 @@ object RetrofitClient {
     private val customGson = GsonBuilder()
         // Registrar el adaptador de OffsetDateTime
         .registerTypeAdapter(OffsetDateTime::class.java, offsetDateTimeDeserializer)
+
         // Registrar el adaptador de LocalDate
         .registerTypeAdapter(LocalDate::class.java, localDateDeserializer)
+        .registerTypeAdapter(LocalDate::class.java, JsonSerializer<LocalDate> { src, _, _ ->
+            JsonPrimitive(src.toString()) // yyyy-MM-dd
+        })
         .create()
 
     val apiService: ApiService by lazy {
