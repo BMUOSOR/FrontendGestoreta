@@ -6,7 +6,7 @@ import java.time.OffsetDateTime
 data class FallaDTO(
     val idFalla: Long,
     val createdAt: OffsetDateTime,
-    val nombre: String?,
+    val nombre: String,
     val fechaCreacion: LocalDate,
     val idGestor: Long,
     val acta: String?,

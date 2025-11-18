@@ -16,10 +16,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,19 +30,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.frontendgestoreta.data.models.EventFilterDTO
+import com.example.frontendgestoreta.viewModel.EventViewModel
 
 @Composable
 fun EventFilterMenu(
     filter : EventFilterDTO,
     onFilterChange: (EventFilterDTO) -> Unit,
     onApplyFilters: (EventFilterDTO) -> Unit,
-    modifier : Modifier = Modifier
+    onClearFilter: () -> Unit,
+    modifier : Modifier = Modifier,
+    viewModel : EventViewModel = viewModel()
 
 ) {
 
     var expanded by remember { mutableStateOf(false) }
     val rotationAngle by animateFloatAsState(if (expanded) 180f else 0f, label = "")
+    val fallas by viewModel.fallas.collectAsState()
+    val tags by viewModel.tags.collectAsState()
     Button(
         onClick = { onApplyFilters(filter) },
         modifier = Modifier
@@ -173,33 +181,46 @@ fun EventFilterMenu(
 
                     Spacer(Modifier.height(12.dp))
 
-                    // FALLA
-                    /*
-                    OutlinedTextField(
-                        value = filter.fallaId?.toString() ?: "",
-                        onValueChange = {
-                            val id = it.toLongOrNull()
+                    // FALLAS
+                    FallaSelector(
+                        fallas = fallas,
+                        selectedFallaId = filter.fallaId,
+                        onFallaSelected = { id ->
                             onFilterChange(filter.copy(fallaId = id))
-                        },
-                        label = { Text("Falla ID") },
-                        modifier = Modifier.fillMaxWidth()
+                        }
                     )
 
                     Spacer(Modifier.height(12.dp))
-                    */
+
 
                     // TAG
-                    /*
-                    OutlinedTextField(
-                        value = filter.tagId?.toString() ?: "",
-                        onValueChange = {
-                            val id = it.toLongOrNull()
+                    TagSelector(
+                        tags = tags,
+                        selectedTagId = filter.tagId,
+                        onTagSelected = { id ->
                             onFilterChange(filter.copy(tagId = id))
-                        },
-                        label = { Text("Tag ID") },
-                        modifier = Modifier.fillMaxWidth()
+                        }
                     )
-                    */
+
+                    Spacer(Modifier.height(12.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        OutlinedButton(
+                            onClick = onClearFilter
+                        ) {
+                            Text("Limpiar")
+                        }
+
+                        Button(
+                            onClick = { onApplyFilters(filter) }
+                        ) {
+                            Text("Aplicar")
+                        }
+                    }
+
                 }
             }
         }

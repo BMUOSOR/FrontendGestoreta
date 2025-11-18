@@ -31,6 +31,7 @@ import com.example.frontendgestoreta.ui.components.EventFilterMenu
 fun FallaNewsScreen(viewModel: EventViewModel = viewModel()) {
     var filter by remember { mutableStateOf(EventFilterDTO()) }
 
+    val defaultFilter = EventFilterDTO()
 
 
 
@@ -54,12 +55,13 @@ fun FallaNewsScreen(viewModel: EventViewModel = viewModel()) {
                     onFilterChange = { filter = it },
                     onApplyFilters = { finalFilter ->
                         viewModel.loadEventsWithFilter(finalFilter)
-                    }
+                    },
+                    onClearFilter = {filter = EventFilterDTO()}
+
                 )
             }
             items(events.value) { event ->
                 NewsListItem(event = event)
-
             }
 
         }

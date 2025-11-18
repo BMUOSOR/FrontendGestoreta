@@ -1,4 +1,4 @@
-package com.example.frontendgestoreta.viewmodel
+package com.example.frontendgestoreta.viewModel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -10,9 +10,6 @@ import com.example.frontendgestoreta.repository.MemberRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class MemberViewModel : ViewModel() {
 

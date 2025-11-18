@@ -40,8 +40,6 @@ import com.example.frontendgestoreta.ui.screens_user.SettingsScreen
 import com.example.frontendgestoreta.ui.theme.FrontendGestoretaTheme
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreenGestor() {

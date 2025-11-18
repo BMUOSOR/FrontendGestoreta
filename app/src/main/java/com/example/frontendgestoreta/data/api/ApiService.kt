@@ -5,6 +5,7 @@ import com.example.frontendgestoreta.data.models.EventFilterDTO
 import com.example.frontendgestoreta.data.models.FallaDTO
 import com.example.frontendgestoreta.data.models.MemberDTO
 import com.example.frontendgestoreta.data.models.MemberRequestDTO
+import com.example.frontendgestoreta.data.models.TagDTO
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -36,5 +37,8 @@ interface ApiService {
 
     @POST("/{idEvento}/update")
     suspend fun updateEvento(@Body event : EventDTO) : List<EventDTO>
+
+    @GET("etiqueta/getAll")
+    suspend fun getAllTags() : List<TagDTO>
 
 }

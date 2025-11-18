@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.frontendgestoreta.data.models.MemberDTO
 import com.example.frontendgestoreta.data.models.MemberRequestDTO
-import com.example.frontendgestoreta.viewmodel.MemberViewModel
+import com.example.frontendgestoreta.viewModel.MemberViewModel
 
 
 
