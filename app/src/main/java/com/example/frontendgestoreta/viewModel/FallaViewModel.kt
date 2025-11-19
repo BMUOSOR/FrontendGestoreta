@@ -1,6 +1,5 @@
 package com.example.frontendgestoreta.viewModel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.frontendgestoreta.data.api.RetrofitClient
@@ -9,9 +8,6 @@ import com.example.frontendgestoreta.repository.FallaRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class FallaViewModel : ViewModel() {
 
@@ -23,10 +19,8 @@ class FallaViewModel : ViewModel() {
     fun loadFallas() {
         viewModelScope.launch {
             try {
-                Log.d("FallaViewModel", "Iniciando carga de datos...")
-                val fallasResult = repository.getAllFallas()
-                _fallas.value = fallasResult
-                Log.d("FallaViewModel", "Datos cargados: ${fallasResult.size} fallas.")
+                _fallas.value = repository.getAllFallas()
+
             } catch (e: Exception) {
                 // MANEJO DE ERRORES:
                 println("Error al cargar datos: ${e.message}")

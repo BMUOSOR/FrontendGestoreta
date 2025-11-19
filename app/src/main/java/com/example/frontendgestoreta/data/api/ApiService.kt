@@ -3,6 +3,7 @@ package com.example.frontendgestoreta.data.api
 import com.example.frontendgestoreta.data.models.EventDTO
 import com.example.frontendgestoreta.data.models.EventFilterDTO
 import com.example.frontendgestoreta.data.models.FallaDTO
+import com.example.frontendgestoreta.data.models.GestorDTO
 import com.example.frontendgestoreta.data.models.MemberDTO
 import com.example.frontendgestoreta.data.models.MemberRequestDTO
 import com.example.frontendgestoreta.data.models.TagDTO
@@ -13,6 +14,8 @@ import retrofit2.http.Path
 
 interface ApiService {
 
+    @GET ("gestor/1")
+    suspend fun getFirstGestor(): GestorDTO
 
     @GET("usuario/getAll")
     suspend fun getAllUsers(): List<MemberDTO>

@@ -18,15 +18,13 @@ import kotlinx.coroutines.launch
 class EventViewModel : ViewModel() {
 
     private val repository = EventRepository(RetrofitClient.apiService)
-
     private val fallaRepository = FallaRepository(RetrofitClient.apiService)
-
     private val tagRepository = TagRepository(RetrofitClient.apiService)
 
     private val _events = MutableStateFlow<List<EventDTO>>(emptyList())
     private val _fallas = MutableStateFlow<List<FallaDTO>>(emptyList())
     private val _tags = MutableStateFlow<List<TagDTO>>(emptyList())
-    val events: MutableStateFlow<List<EventDTO>> = _events // events solo lectura
+    val events: MutableStateFlow<List<EventDTO>> = _events
 
     val fallas: StateFlow<List<FallaDTO>> = _fallas
 

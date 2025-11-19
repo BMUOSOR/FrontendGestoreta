@@ -12,7 +12,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 object RetrofitClient {
-    private const val BASE_URL = "http://10.38.104.164:8080/api/"
+    private const val BASE_URL = "http://192.168.1.31:8080/api/"
 
     // 1. ADAPTADOR PARA OffsetDateTime (createdAt)
     private val offsetDateTimeDeserializer = JsonDeserializer<OffsetDateTime> { json, _, _ ->
@@ -42,7 +42,6 @@ object RetrofitClient {
     val apiService: ApiService by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
-            // 4. Aplicar el Gson con los adaptadores
             .addConverterFactory(GsonConverterFactory.create(customGson))
             .build()
             .create(ApiService::class.java)

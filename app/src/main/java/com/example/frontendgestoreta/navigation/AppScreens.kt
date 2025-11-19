@@ -2,12 +2,21 @@ package com.example.frontendgestoreta.navigation
 
 import androidx.annotation.DrawableRes
 import com.example.frontendgestoreta.R
+import com.example.frontendgestoreta.data.models.EventDTO
 
 sealed class AppScreens(
     val route: String,
     val title: String? = null,
     @DrawableRes val icon: Int? = null
 ) {
+    object MainScreen : AppScreens(
+        route = "main_screen",
+        title = "Inicio"
+    )
+    object MainScreenGestor : AppScreens(
+        route = "main_screen_gestor",
+        title = "Inicio"
+    )
     object FallaSettings : AppScreens(
         route = "falla_settings_screen",
         title = "Ajustes de falla",
@@ -50,4 +59,15 @@ sealed class AppScreens(
         title = "Ajustes",
         icon = R.drawable.ic_settings
     )
+
+    object EventDetail : AppScreens(
+        route = "event_detail/{eventJson}",
+        title = "Detalle del Evento"
+    ) {
+        fun createRoute(event: EventDTO): String {
+            val gson = com.google.gson.Gson()
+            val eventJson = gson.toJson(event)
+            return "event_detail/$eventJson"
+        }
+    }
 }
