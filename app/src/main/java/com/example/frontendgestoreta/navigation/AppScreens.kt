@@ -60,6 +60,12 @@ sealed class AppScreens(
         icon = R.drawable.ic_settings
     )
 
+    object Login : AppScreens(
+        route = "login",
+        title = "Inicio de sesión",
+        icon = R.drawable.ic_arrow_back
+    )
+
     object EventDetail : AppScreens(
         route = "event_detail/{eventJson}",
         title = "Detalle del Evento"
