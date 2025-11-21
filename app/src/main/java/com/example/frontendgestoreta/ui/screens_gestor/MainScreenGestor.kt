@@ -166,7 +166,7 @@ fun MainScreenGestor(
             if (showCreateEventScreen) {
                 AlertDialog(
                     onDismissRequest = { showCreateEventScreen = false },
-                    title = { Text("Crear Evento") },
+                    title = { Text("Crear Nuevo Evento") },
                     text = {
                         CreateEventScreen(
                             onBack = { showCreateEventScreen = false }
