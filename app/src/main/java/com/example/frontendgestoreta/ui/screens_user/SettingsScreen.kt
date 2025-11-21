@@ -6,19 +6,24 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.frontendgestoreta.navigation.AppScreens
+import com.example.frontendgestoreta.ui.components.CreateEventScreen
 import com.example.frontendgestoreta.viewModel.AuthViewModel
 import com.example.frontendgestoreta.viewModel.EventViewModel
 
@@ -27,6 +32,7 @@ import com.example.frontendgestoreta.viewModel.EventViewModel
 fun SettingsScreen() {
 
     val context = LocalContext.current
+    val navController = rememberNavController()
 
     Column(
         modifier = Modifier
@@ -46,7 +52,17 @@ fun SettingsScreen() {
         FilledTonalButton(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
-                //Ir a ver
+                /*
+                Ver sus amogus
+
+                navController.navigate(AppScreens.SubscriptionsScreen.route) {
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = true
+                    }
+                    launchSingleTop = true // Avoid multiple copies of the same screen
+                    restoreState = true // If the user was in the middle of something
+                }
+                */
             }
         ) {
             Text("Ver suscripciones (WIP)")

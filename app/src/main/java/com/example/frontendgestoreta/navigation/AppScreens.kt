@@ -66,6 +66,28 @@ sealed class AppScreens(
         icon = R.drawable.ic_arrow_back
     )
 
+    object SubscriptionsScreen : AppScreens(
+        route = "subscriptions_screen",
+        title = "Subscripciones",
+    )
+
+    object EliminateSubscriptionsScreen : AppScreens(
+        route = "eliminate_subscriptions_screen",
+        title = "Borrar Subscripciones",
+    )
+
+
+    object NotificationsScreen : AppScreens(
+        route = "notifications_screen",
+        title = "Notificaciones",
+    )
+
+
+    object ModifyUserScreen : AppScreens(
+        route = "modify_user_screen",
+        title = "Modificar Usuario",
+    )
+
     object EventDetail : AppScreens(
         route = "event_detail/{eventJson}",
         title = "Detalle del Evento"
