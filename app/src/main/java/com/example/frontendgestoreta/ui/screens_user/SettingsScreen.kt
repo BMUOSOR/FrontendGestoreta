@@ -5,7 +5,9 @@ import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -32,12 +34,49 @@ fun SettingsScreen() {
             .background(MaterialTheme.colorScheme.background)
     ) {
 
-        Button(
+        FilledTonalButton(
+            modifier = Modifier.fillMaxWidth(),
             onClick = {
                 restartApp(context)
             }
         ) {
             Text("Cerrar sesión")
+        }
+
+        FilledTonalButton(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = {
+                //Ir a ver
+            }
+        ) {
+            Text("Ver suscripciones (WIP)")
+        }
+
+        FilledTonalButton(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = {
+                //Ir a eliminar
+            }
+        ) {
+            Text("Eliminar suscripciones (WIP)")
+        }
+
+        FilledTonalButton(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = {
+                //Ir a modificar
+            }
+        ) {
+            Text("Modificar usuario (WIP)")
+        }
+
+        FilledTonalButton(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = {
+                //Ir a configurar notificaciones
+            }
+        ) {
+            Text("Notificaciones (WIP)")
         }
 
     }
