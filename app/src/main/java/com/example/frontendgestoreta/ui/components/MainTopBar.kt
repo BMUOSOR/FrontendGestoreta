@@ -22,9 +22,6 @@ fun MainTopBar(
     title: String,
     navController: NavController,
 ) {
-    val context = LocalContext.current
-    
-
     CenterAlignedTopAppBar(
         windowInsets = WindowInsets(0),
         colors = TopAppBarDefaults.topAppBarColors(
@@ -32,18 +29,6 @@ fun MainTopBar(
             titleContentColor = MaterialTheme.colorScheme.primary
         ),
         title = { Text(title) },
-        navigationIcon = {
-            IconButton(
-                onClick = {
-                    restartApp(context)
-                }
-            ) {
-                Icon(
-                    painter = painterResource(id = AppScreens.Login.icon!!),
-                    contentDescription = "Volver al Login"
-                )
-            }
-        },
         actions = {
             IconButton(
                 onClick = {
@@ -75,14 +60,4 @@ fun MainTopBarPreview() {
             navController = navController
         )
     }
-}
-
-fun restartApp(context: Context) {
-    val packageManager = context.packageManager
-    val intent = packageManager.getLaunchIntentForPackage(context.packageName)
-    val componentName = intent!!.component
-    val mainIntent = Intent.makeRestartActivityTask(componentName)
-
-    context.startActivity(mainIntent)
-    Runtime.getRuntime().exit(0)
 }
