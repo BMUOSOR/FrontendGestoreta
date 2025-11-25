@@ -137,7 +137,23 @@ fun MainScreen(
                 }
                 composable(AppScreens.Settings.route) {
                     topBarTitle = AppScreens.Settings.title!!
-                    SettingsScreen()
+                    SettingsScreen(navController = navController)
+                }
+                composable(AppScreens.SubscriptionsScreen.route) {
+                    topBarTitle = AppScreens.SubscriptionsScreen.title!!
+                    SubscriptionsScreen()
+                }
+                composable(AppScreens.EliminateSubscriptionsScreen.route) {
+                    topBarTitle = AppScreens.EliminateSubscriptionsScreen.title!!
+                    EliminateSubscriptionsScreen()
+                }
+                composable(AppScreens.ModifyUserScreen.route) {
+                    topBarTitle = AppScreens.ModifyUserScreen.title!!
+                    ModifyUserScreen()
+                }
+                composable(AppScreens.NotificationsScreen.route) {
+                    topBarTitle = AppScreens.NotificationsScreen.title!!
+                    NotificationsScreen()
                 }
             }
         }

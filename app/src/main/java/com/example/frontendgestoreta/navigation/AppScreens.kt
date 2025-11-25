@@ -73,7 +73,7 @@ sealed class AppScreens(
 
     object EliminateSubscriptionsScreen : AppScreens(
         route = "eliminate_subscriptions_screen",
-        title = "Borrar Subscripciones",
+        title = "Eliminar Subscripciones",
     )
 
 

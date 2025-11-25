@@ -29,10 +29,9 @@ import com.example.frontendgestoreta.viewModel.EventViewModel
 
 
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(navController: NavHostController) {
 
     val context = LocalContext.current
-    val navController = rememberNavController()
 
     Column(
         modifier = Modifier
@@ -52,9 +51,6 @@ fun SettingsScreen() {
         FilledTonalButton(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
-                /*
-                Ver sus amogus
-
                 navController.navigate(AppScreens.SubscriptionsScreen.route) {
                     popUpTo(navController.graph.findStartDestination().id) {
                         saveState = true
@@ -62,37 +58,58 @@ fun SettingsScreen() {
                     launchSingleTop = true // Avoid multiple copies of the same screen
                     restoreState = true // If the user was in the middle of something
                 }
-                */
+
             }
         ) {
-            Text("Ver suscripciones (WIP)")
+            Text("Ver suscripciones")
         }
 
         FilledTonalButton(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
-                //Ir a eliminar
+                navController.navigate(AppScreens.EliminateSubscriptionsScreen.route) {
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = true
+                    }
+                    launchSingleTop = true // Avoid multiple copies of the same screen
+                    restoreState = true // If the user was in the middle of something
+                }
+
             }
         ) {
-            Text("Eliminar suscripciones (WIP)")
+            Text("Eliminar suscripciones")
         }
 
         FilledTonalButton(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
-                //Ir a modificar
+                navController.navigate(AppScreens.ModifyUserScreen.route) {
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = true
+                    }
+                    launchSingleTop = true // Avoid multiple copies of the same screen
+                    restoreState = true // If the user was in the middle of something
+                }
+
             }
         ) {
-            Text("Modificar usuario (WIP)")
+            Text("Modificar usuario")
         }
 
         FilledTonalButton(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
-                //Ir a configurar notificaciones
+                navController.navigate(AppScreens.NotificationsScreen.route) {
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = true
+                    }
+                    launchSingleTop = true // Avoid multiple copies of the same screen
+                    restoreState = true // If the user was in the middle of something
+                }
+
             }
         ) {
-            Text("Notificaciones (WIP)")
+            Text("Notificaciones")
         }
 
     }
