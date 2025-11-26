@@ -78,4 +78,14 @@ class EventViewModel : ViewModel() {
         }
     }
 
+    fun updateEvent(event: EventDTO) {
+        viewModelScope.launch {
+            try {
+                repository.updateEvent(event)
+            } catch(e: Exception) {
+                Log.e("EventViewModel", "Error al editar el evento: ${e.message}")
+            }
+        }
+    }
+
 }
