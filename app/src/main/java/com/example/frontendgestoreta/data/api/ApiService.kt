@@ -10,6 +10,7 @@ import com.example.frontendgestoreta.data.models.TagDTO
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface ApiService {
@@ -38,8 +39,11 @@ interface ApiService {
     @POST("evento/postEvento")
     suspend fun postEvent(@Body event : EventDTO)
 
-    @POST("evento/{idEvento}/update")
-    suspend fun updateEvent(@Body event : EventDTO)
+    @PUT("evento/{idEvento}/update")
+    suspend fun updateEvent(
+        @Path("idEvento") idEvento: Long,
+        @Body event: EventDTO
+    )
 
     @GET("etiqueta/getAll")
     suspend fun getAllTags() : List<TagDTO>

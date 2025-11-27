@@ -172,12 +172,12 @@ fun EditEventScreen(
             Button(
                 onClick = {
                     // Lógica para guardar evento con los datos
-                    val nuevoEvento = EventDTO(
+                    val nuevoEvento = event.copy(
                         titulo = titulo,
                         descripcion = descripcion,
                         ubicacion = ubicacion,
                         fecha = fecha,
-                        maxPersonas = maxPersonas.toLongOrNull(),
+                        maxPersonas = maxPersonas.toLongOrNull()
                     )
                     Log.d("CreateEventScreen", "Evento editado: " + nuevoEvento.titulo)
                     viewModel.updateEvent(nuevoEvento);
