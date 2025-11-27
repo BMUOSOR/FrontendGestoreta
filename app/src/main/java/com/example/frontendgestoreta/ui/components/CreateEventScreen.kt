@@ -174,6 +174,7 @@ fun CreateEventScreen(
                         titulo = titulo,
                         descripcion = descripcion,
                         ubicacion = ubicacion,
+                        idFalla = 1,
                         fecha = fecha,
                         maxPersonas = maxPersonas.toLongOrNull(),
                     )

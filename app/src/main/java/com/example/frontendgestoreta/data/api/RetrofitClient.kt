@@ -22,23 +22,22 @@ object RetrofitClient {
 
     // 2. ADAPTADOR PARA LocalDate (fechaNac)
     private val localDateDeserializer = JsonDeserializer<LocalDate> { json, _, _ ->
-        // Para LocalDate, usamos el formato ISO local, que es "yyyy-MM-dd"
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        LocalDate.parse(json.asString, formatter)
+        LocalDate.parse(json.asString, DateTimeFormatter.ISO_LOCAL_DATE)
     }
 
-    // 3. Configurar Gson
-    private val customGson = GsonBuilder()
-        // Registrar el adaptador de OffsetDateTime
-        .registerTypeAdapter(OffsetDateTime::class.java, offsetDateTimeDeserializer)
+    // 3. ADAPTADOR LocalDate (ENVIAR "yyyy-MM-dd")
+    private val localDateSerializer = JsonSerializer<LocalDate> { src, _, _ ->
+        JsonPrimitive(src.format(DateTimeFormatter.ISO_LOCAL_DATE))
+    }
 
-        // Registrar el adaptador de LocalDate
+    // 4. Configurar Gson
+    private val customGson = GsonBuilder()
+        .registerTypeAdapter(OffsetDateTime::class.java, offsetDateTimeDeserializer)
         .registerTypeAdapter(LocalDate::class.java, localDateDeserializer)
-        .registerTypeAdapter(LocalDate::class.java, JsonSerializer<LocalDate> { src, _, _ ->
-            JsonPrimitive(src.toString()) // yyyy-MM-dd
-        })
+        .registerTypeAdapter(LocalDate::class.java, localDateSerializer)
         .create()
 
+    // 5. Retrofit
     val apiService: ApiService by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
