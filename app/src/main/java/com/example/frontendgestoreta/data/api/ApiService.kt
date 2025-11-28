@@ -48,4 +48,7 @@ interface ApiService {
     @GET("etiqueta/getAll")
     suspend fun getAllTags() : List<TagDTO>
 
+    @GET("evento/getFromFalla/{idFalla}")
+    suspend fun getEventosFromFalla(@Path("idFalla") fallaId : Long) : List<EventDTO>
+
 }
