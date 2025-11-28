@@ -175,15 +175,7 @@ fun EventFilterMenu(
 
                     Spacer(Modifier.height(12.dp))
 
-                    // DESCRIPTION
-                    OutlinedTextField(
-                        value = filter.description.orEmpty(),
-                        onValueChange = { onFilterChange(filter.copy(description = it)) },
-                        label = { Text("Descripción") },
-                        modifier = Modifier.fillMaxWidth()
-                    )
 
-                    Spacer(Modifier.height(12.dp))
 
                     // FALLAS
                     FallaSelector(
