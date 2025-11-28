@@ -31,12 +31,16 @@ import androidx.navigation.navArgument
 import com.example.frontendgestoreta.data.models.EventDTO
 import com.example.frontendgestoreta.ui.components.AppHeaderImage
 import com.example.frontendgestoreta.ui.components.CreateEventScreen
+import com.example.frontendgestoreta.ui.components.EditEventScreen
 import com.example.frontendgestoreta.ui.components.MainTopBar
-import com.example.frontendgestoreta.ui.screens_user.FallaNewsScreen
+import com.example.frontendgestoreta.ui.screens_user.EliminateSubscriptionsScreen
 import com.example.frontendgestoreta.ui.screens_user.MapScreen
+import com.example.frontendgestoreta.ui.screens_user.ModifyUserScreen
 import com.example.frontendgestoreta.ui.screens_user.NewsDetailScreen
 import com.example.frontendgestoreta.ui.screens_user.NewsScreen
+import com.example.frontendgestoreta.ui.screens_user.NotificationsScreen
 import com.example.frontendgestoreta.ui.screens_user.SettingsScreen
+import com.example.frontendgestoreta.ui.screens_user.SubscriptionsScreen
 import com.example.frontendgestoreta.ui.theme.FrontendGestoretaTheme
 import com.example.frontendgestoreta.viewModel.AuthViewModel
 
@@ -114,13 +118,13 @@ fun MainScreenGestor(
                     modifier = Modifier.size(64.dp)
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_falla_news), // Icono para añadir evento
+                        painter = painterResource(id = R.drawable.ic_newspaper), // Icono para añadir evento
                         contentDescription = "Crear evento",
                         modifier = Modifier.size(32.dp)
                     )
                 }
             },
-            floatingActionButtonPosition = FabPosition.Center
+            floatingActionButtonPosition = FabPosition.Start
         ){innerPadding ->
             NavHost(
                 navController = navController,
@@ -129,7 +133,7 @@ fun MainScreenGestor(
             ) {
                 composable(AppScreens.NewsGestor.route) {
                     topBarTitle = AppScreens.NewsGestor.title!!
-                    NewsScreen()
+                    NewsGestorScreen(navController = navController)
                 }
                 composable(AppScreens.Members.route) {
                     topBarTitle = AppScreens.Members.title!!
@@ -141,7 +145,23 @@ fun MainScreenGestor(
                 }
                 composable(AppScreens.Settings.route) {
                     topBarTitle = AppScreens.Settings.title!!
-                    SettingsScreen()
+                    SettingsScreen(navController = navController)
+                }
+                composable(AppScreens.SubscriptionsScreen.route) {
+                    topBarTitle = AppScreens.SubscriptionsScreen.title!!
+                    SubscriptionsScreen()
+                }
+                composable(AppScreens.EliminateSubscriptionsScreen.route) {
+                    topBarTitle = AppScreens.EliminateSubscriptionsScreen.title!!
+                    EliminateSubscriptionsScreen()
+                }
+                composable(AppScreens.ModifyUserScreen.route) {
+                    topBarTitle = AppScreens.ModifyUserScreen.title!!
+                    ModifyUserScreen()
+                }
+                composable(AppScreens.NotificationsScreen.route) {
+                    topBarTitle = AppScreens.NotificationsScreen.title!!
+                    NotificationsScreen()
                 }
 
                 composable(
@@ -153,10 +173,10 @@ fun MainScreenGestor(
 
                     topBarTitle = event.titulo ?: "Detalle del Evento"
 
-                    NewsDetailScreen(
+                    EditEventScreen(
                         event = event,
-                        onInscribirseClick = {
-                            println("Inscrito en: ${event.titulo}")
+                        onEditClick = {
+                            println("Editado: ${event.titulo}")
                         },
                         onBack = { navController.popBackStack() }
                     )

@@ -38,17 +38,19 @@ import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
 @Composable
-fun CreateEventScreen(
+fun EditEventScreen(
     onBack: () -> Unit,
+    onEditClick: () -> Unit,
+    event: EventDTO,
     viewModel: EventViewModel = viewModel()
 ) {
     val eventRepository : EventRepository = EventRepository(RetrofitClient.apiService)
     // Estados para los campos del formulario
-    var titulo by remember { mutableStateOf("") }
-    var descripcion by remember { mutableStateOf("") }
-    var ubicacion by remember { mutableStateOf("") }
-    var maxPersonas by remember { mutableStateOf("") }
-    var fecha by remember { mutableStateOf(LocalDate.now()) }
+    var titulo by remember { mutableStateOf(event.titulo ?: "") }
+    var descripcion by remember { mutableStateOf(event.descripcion ?: "") }
+    var ubicacion by remember { mutableStateOf(event.ubicacion ?: "") }
+    var maxPersonas by remember { mutableStateOf(event.maxPersonas?.toString() ?: "") }
+    var fecha by remember { mutableStateOf(event.fecha ?: LocalDate.now()) }
 
     val scrollState = rememberScrollState()
 
@@ -127,7 +129,7 @@ fun CreateEventScreen(
             label = "Fecha del evento",
             date = fecha,
             onDateSelected = { selected -> fecha = selected },
-            )
+        )
         Spacer(modifier = Modifier.height(16.dp))
 
         // Campo Máximo de Personas
@@ -169,22 +171,21 @@ fun CreateEventScreen(
             Spacer(modifier = Modifier.width(8.dp))
             Button(
                 onClick = {
-                    // Lógica para crear evento con los datos
-                    val nuevoEvento = EventDTO(
+                    // Lógica para guardar evento con los datos
+                    val nuevoEvento = event.copy(
                         titulo = titulo,
                         descripcion = descripcion,
                         ubicacion = ubicacion,
-                        idFalla = 1,
                         fecha = fecha,
-                        maxPersonas = maxPersonas.toLongOrNull(),
+                        maxPersonas = maxPersonas.toLongOrNull()
                     )
-                    Log.d("CreateEventScreen", "Evento creado: " + nuevoEvento.titulo)
-                    viewModel.createEvent(nuevoEvento);
+                    Log.d("CreateEventScreen", "Evento editado: " + nuevoEvento.titulo)
+                    viewModel.updateEvent(nuevoEvento);
                     onBack()
                 },
                 enabled = titulo.isNotBlank() && descripcion.isNotBlank() && ubicacion.isNotBlank()
             ) {
-                Text("Crear Evento")
+                Text("Guardar Cambios")
             }
         }
     }

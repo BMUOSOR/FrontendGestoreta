@@ -19,6 +19,6 @@ class EventRepository (private val apiService: ApiService){
     }
 
     suspend fun updateEvent(event: EventDTO) {
-        apiService.updateEvent(event)
+        apiService.updateEvent(event.idEvento!!, event)
     }
 }
