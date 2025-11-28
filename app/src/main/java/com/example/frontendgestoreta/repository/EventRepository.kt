@@ -21,4 +21,8 @@ class EventRepository (private val apiService: ApiService){
     suspend fun updateEvent(event: EventDTO) {
         apiService.updateEvent(event.idEvento!!, event)
     }
+
+    suspend fun getEventsFromFalla(fallaId : Long) : List<EventDTO> {
+        return apiService.getEventosFromFalla(fallaId)
+    }
 }
