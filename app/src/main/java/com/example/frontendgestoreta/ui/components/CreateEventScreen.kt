@@ -31,16 +31,16 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.frontendgestoreta.data.api.RetrofitClient
 import com.example.frontendgestoreta.data.models.EventDTO
+import com.example.frontendgestoreta.data.models.GestorDTO
 import com.example.frontendgestoreta.repository.EventRepository
 import com.example.frontendgestoreta.viewModel.EventViewModel
 import java.time.LocalDate
-import java.time.OffsetDateTime
-import java.time.ZoneOffset
 
 @Composable
 fun CreateEventScreen(
     onBack: () -> Unit,
-    viewModel: EventViewModel = viewModel()
+    viewModel: EventViewModel = viewModel(),
+    userGestor: GestorDTO
 ) {
     val eventRepository : EventRepository = EventRepository(RetrofitClient.apiService)
     // Estados para los campos del formulario
@@ -174,7 +174,7 @@ fun CreateEventScreen(
                         titulo = titulo,
                         descripcion = descripcion,
                         ubicacion = ubicacion,
-                        idFalla = 1,
+                        idFalla = userGestor.falla,
                         fecha = fecha,
                         maxPersonas = maxPersonas.toLongOrNull(),
                     )

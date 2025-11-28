@@ -9,22 +9,14 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.*
 import com.example.frontendgestoreta.navigation.AppScreens
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.NavigationBar
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.example.frontendgestoreta.R
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
@@ -34,14 +26,10 @@ import com.example.frontendgestoreta.ui.components.CreateEventScreen
 import com.example.frontendgestoreta.ui.components.EditEventScreen
 import com.example.frontendgestoreta.ui.components.MainTopBar
 import com.example.frontendgestoreta.ui.screens_user.EliminateSubscriptionsScreen
-import com.example.frontendgestoreta.ui.screens_user.MapScreen
 import com.example.frontendgestoreta.ui.screens_user.ModifyUserScreen
-import com.example.frontendgestoreta.ui.screens_user.NewsDetailScreen
-import com.example.frontendgestoreta.ui.screens_user.NewsScreen
 import com.example.frontendgestoreta.ui.screens_user.NotificationsScreen
 import com.example.frontendgestoreta.ui.screens_user.SettingsScreen
 import com.example.frontendgestoreta.ui.screens_user.SubscriptionsScreen
-import com.example.frontendgestoreta.ui.theme.FrontendGestoretaTheme
 import com.example.frontendgestoreta.viewModel.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -189,7 +177,8 @@ fun MainScreenGestor(
                     title = { Text("Crear Nuevo Evento") },
                     text = {
                         CreateEventScreen(
-                            onBack = { showCreateEventScreen = false }
+                            onBack = { showCreateEventScreen = false },
+                            userGestor = user!!
                         )
                     },
                     confirmButton = {
