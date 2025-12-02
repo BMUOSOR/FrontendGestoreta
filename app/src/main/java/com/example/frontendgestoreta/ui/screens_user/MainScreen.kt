@@ -139,14 +139,6 @@ fun MainScreen(
                     topBarTitle = AppScreens.Settings.title!!
                     SettingsScreen(navController = navController)
                 }
-                composable(AppScreens.SubscriptionsScreen.route) {
-                    topBarTitle = AppScreens.SubscriptionsScreen.title!!
-                    SubscriptionsScreen()
-                }
-                composable(AppScreens.EliminateSubscriptionsScreen.route) {
-                    topBarTitle = AppScreens.EliminateSubscriptionsScreen.title!!
-                    EliminateSubscriptionsScreen()
-                }
                 composable(AppScreens.ModifyUserScreen.route) {
                     topBarTitle = AppScreens.ModifyUserScreen.title!!
                     ModifyUserScreen()

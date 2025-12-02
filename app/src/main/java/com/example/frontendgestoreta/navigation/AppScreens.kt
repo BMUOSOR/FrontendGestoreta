@@ -66,17 +66,6 @@ sealed class AppScreens(
         icon = R.drawable.ic_arrow_back
     )
 
-    object SubscriptionsScreen : AppScreens(
-        route = "subscriptions_screen",
-        title = "Subscripciones",
-    )
-
-    object EliminateSubscriptionsScreen : AppScreens(
-        route = "eliminate_subscriptions_screen",
-        title = "Eliminar Subscripciones",
-    )
-
-
     object NotificationsScreen : AppScreens(
         route = "notifications_screen",
         title = "Notificaciones",

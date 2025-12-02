@@ -25,11 +25,9 @@ import com.example.frontendgestoreta.ui.components.AppHeaderImage
 import com.example.frontendgestoreta.ui.components.CreateEventScreen
 import com.example.frontendgestoreta.ui.components.EditEventScreen
 import com.example.frontendgestoreta.ui.components.MainTopBar
-import com.example.frontendgestoreta.ui.screens_user.EliminateSubscriptionsScreen
 import com.example.frontendgestoreta.ui.screens_user.ModifyUserScreen
 import com.example.frontendgestoreta.ui.screens_user.NotificationsScreen
 import com.example.frontendgestoreta.ui.screens_user.SettingsScreen
-import com.example.frontendgestoreta.ui.screens_user.SubscriptionsScreen
 import com.example.frontendgestoreta.viewModel.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -134,14 +132,6 @@ fun MainScreenGestor(
                 composable(AppScreens.Settings.route) {
                     topBarTitle = AppScreens.Settings.title!!
                     SettingsScreen(navController = navController)
-                }
-                composable(AppScreens.SubscriptionsScreen.route) {
-                    topBarTitle = AppScreens.SubscriptionsScreen.title!!
-                    SubscriptionsScreen()
-                }
-                composable(AppScreens.EliminateSubscriptionsScreen.route) {
-                    topBarTitle = AppScreens.EliminateSubscriptionsScreen.title!!
-                    EliminateSubscriptionsScreen()
                 }
                 composable(AppScreens.ModifyUserScreen.route) {
                     topBarTitle = AppScreens.ModifyUserScreen.title!!
