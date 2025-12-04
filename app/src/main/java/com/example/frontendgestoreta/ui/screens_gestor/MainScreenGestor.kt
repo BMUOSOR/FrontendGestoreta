@@ -9,14 +9,22 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.*
 import com.example.frontendgestoreta.navigation.AppScreens
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.NavigationBar
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.example.frontendgestoreta.R
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
@@ -28,7 +36,12 @@ import com.example.frontendgestoreta.ui.components.MainTopBar
 import com.example.frontendgestoreta.ui.screens_user.ModifyUserScreen
 import com.example.frontendgestoreta.ui.screens_user.NotificationsScreen
 import com.example.frontendgestoreta.ui.screens_user.SettingsScreen
+import com.example.frontendgestoreta.ui.theme.FrontendGestoretaTheme
 import com.example.frontendgestoreta.viewModel.AuthViewModel
+import com.example.frontendgestoreta.viewModel.EventViewModel
+import com.example.frontendgestoreta.ui.screens_user.NewsDetailScreen
+import com.google.gson.Gson
+import com.example.frontendgestoreta.ui.screens_user.NewsScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -104,7 +117,7 @@ fun MainScreenGestor(
                     modifier = Modifier.size(64.dp)
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_newspaper), // Icono para añadir evento
+                        painter = painterResource(id = R.drawable.ic_falla_news), // Icono para añadir evento
                         contentDescription = "Crear evento",
                         modifier = Modifier.size(32.dp)
                     )
@@ -119,7 +132,7 @@ fun MainScreenGestor(
             ) {
                 composable(AppScreens.NewsGestor.route) {
                     topBarTitle = AppScreens.NewsGestor.title!!
-                    NewsGestorScreen(navController = navController)
+                    NewsScreen(navController = navController)
                 }
                 composable(AppScreens.Members.route) {
                     topBarTitle = AppScreens.Members.title!!
@@ -143,10 +156,48 @@ fun MainScreenGestor(
                     arguments = listOf(navArgument("eventJson") { type = NavType.StringType })
                 ) { backStackEntry ->
                     val eventJson = backStackEntry.arguments?.getString("eventJson")!!
-                    val event = remember { com.google.gson.Gson().fromJson(eventJson, EventDTO::class.java) }
+                    val event = remember { Gson().fromJson(eventJson, EventDTO::class.java) }
 
-                    topBarTitle = event.titulo ?: "Detalle del Evento"
+                    // 1. Instanciamos el ViewModel
+                    val eventViewModel: EventViewModel = viewModel()
+                    LaunchedEffect(Unit) { eventViewModel.loadEvents() }
 
+                    // 2. Observamos Eventos y Fallas
+                    val allEvents by eventViewModel.events.collectAsState(initial = emptyList())
+                    val allFallas by eventViewModel.fallas.collectAsState(initial = emptyList()) // <--- NUEVO
+
+                    // 3. Lógica para buscar el nombre del publicador
+                    val nombrePublicador = remember(allFallas, event) {
+                        allFallas.find { it.idFalla == event.idFalla }?.nombre ?: "Junta Central Fallera"
+                    }
+
+                    // 4. Lógica para eventos relacionados (igual que tenías)
+                    val relatedEvents = remember(allEvents, event) {
+                        allEvents
+                            .filter { it.titulo != event.titulo }
+                            .shuffled()
+                            .take(3)
+                    }
+
+                    topBarTitle = "Detalle del Evento"
+
+                    // 5. Pasamos el nombrePublicador a la pantalla
+                    NewsDetailScreen(
+                        event = event,
+                        nombrePublicador = nombrePublicador, // <--- PASAMOS EL DATO AQUÍ
+                        relatedEvents = relatedEvents,
+                        onInscribirseClick = {
+                            android.util.Log.d("Inscripción", "Usuario inscrito en: ${event.titulo}")
+                        },
+                        onBack = { navController.popBackStack() },
+                        onRelatedEventClick = { relatedEvent ->
+                            val json = Gson().toJson(relatedEvent)
+                            // Asegúrate de que tu ruta base sea correcta aquí
+                            // Si la ruta es "event_detail/{eventJson}", usa esto:
+                            val route = AppScreens.EventDetail.route.replace("{eventJson}", json)
+                            navController.navigate(route)
+                        }
+                    )
                     EditEventScreen(
                         event = event,
                         onEditClick = {
@@ -160,7 +211,7 @@ fun MainScreenGestor(
             if (showCreateEventScreen) {
                 AlertDialog(
                     onDismissRequest = { showCreateEventScreen = false },
-                    title = { Text("Crear Nuevo Evento") },
+                    title = { Text("Crear Evento") },
                     text = {
                         CreateEventScreen(
                             onBack = { showCreateEventScreen = false },
