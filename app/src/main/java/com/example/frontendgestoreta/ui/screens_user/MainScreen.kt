@@ -141,7 +141,11 @@ fun MainScreen(
                 }
                 composable(AppScreens.ModifyUserScreen.route) {
                     topBarTitle = AppScreens.ModifyUserScreen.title!!
-                    ModifyUserScreen()
+                    ModifyUserScreen(
+                        onBack = { navController.popBackStack() },
+                        member =  user!!,
+                        viewModel = viewModel(),
+                    )
                 }
                 composable(AppScreens.NotificationsScreen.route) {
                     topBarTitle = AppScreens.NotificationsScreen.title!!

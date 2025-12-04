@@ -29,13 +29,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.frontendgestoreta.data.api.RetrofitClient
 import com.example.frontendgestoreta.data.models.EventDTO
-import com.example.frontendgestoreta.repository.EventRepository
 import com.example.frontendgestoreta.viewModel.EventViewModel
 import java.time.LocalDate
-import java.time.OffsetDateTime
-import java.time.ZoneOffset
 
 @Composable
 fun EditEventScreen(
@@ -44,7 +40,6 @@ fun EditEventScreen(
     event: EventDTO,
     viewModel: EventViewModel = viewModel()
 ) {
-    val eventRepository : EventRepository = EventRepository(RetrofitClient.apiService)
     // Estados para los campos del formulario
     var titulo by remember { mutableStateOf(event.titulo ?: "") }
     var descripcion by remember { mutableStateOf(event.descripcion ?: "") }

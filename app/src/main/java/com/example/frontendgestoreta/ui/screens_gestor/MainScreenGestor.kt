@@ -131,11 +131,7 @@ fun MainScreenGestor(
                 }
                 composable(AppScreens.Settings.route) {
                     topBarTitle = AppScreens.Settings.title!!
-                    SettingsScreen(navController = navController)
-                }
-                composable(AppScreens.ModifyUserScreen.route) {
-                    topBarTitle = AppScreens.ModifyUserScreen.title!!
-                    ModifyUserScreen()
+                    SettingsGestorScreen(navController = navController)
                 }
                 composable(AppScreens.NotificationsScreen.route) {
                     topBarTitle = AppScreens.NotificationsScreen.title!!

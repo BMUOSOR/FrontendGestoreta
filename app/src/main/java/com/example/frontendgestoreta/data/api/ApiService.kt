@@ -45,6 +45,12 @@ interface ApiService {
         @Body event: EventDTO
     )
 
+    @PUT("usuario/{idUsuario}/update")
+    suspend fun updateUsuario(
+        @Path("idUsuario") idUsuario: Long,
+        @Body member: MemberDTO
+    )
+
     @GET("etiqueta/getAll")
     suspend fun getAllTags() : List<TagDTO>
 
