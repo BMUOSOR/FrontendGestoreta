@@ -33,6 +33,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.frontendgestoreta.data.models.EventFilterDTO
+import com.example.frontendgestoreta.data.models.Tag
 import com.example.frontendgestoreta.viewModel.EventViewModel
 import java.time.LocalDate
 import java.time.LocalTime
@@ -192,11 +193,12 @@ fun EventFilterMenu(
                     // TAG
                     TagSelector(
                         tags = tags,
-                        selectedTagId = filter.tagId,
-                        onTagSelected = { id ->
-                            onFilterChange(filter.copy(tagId = id))
+                        selectedTag = filter.tagId as Tag?,          // ahora Tag?
+                        onTagSelected = { tag ->           // ahora Tag?
+                            onFilterChange(filter.copy(tagId = tag as Long?))
                         }
                     )
+
 
                     Spacer(Modifier.height(12.dp))
 

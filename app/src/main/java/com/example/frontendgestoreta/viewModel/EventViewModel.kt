@@ -7,10 +7,9 @@ import com.example.frontendgestoreta.data.api.RetrofitClient
 import com.example.frontendgestoreta.data.models.EventDTO
 import com.example.frontendgestoreta.data.models.EventFilterDTO
 import com.example.frontendgestoreta.data.models.FallaDTO
-import com.example.frontendgestoreta.data.models.TagDTO
+import com.example.frontendgestoreta.data.models.Tag
 import com.example.frontendgestoreta.repository.EventRepository
 import com.example.frontendgestoreta.repository.FallaRepository
-import com.example.frontendgestoreta.repository.TagRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -19,16 +18,15 @@ class EventViewModel : ViewModel() {
 
     private val repository = EventRepository(RetrofitClient.apiService)
     private val fallaRepository = FallaRepository(RetrofitClient.apiService)
-    private val tagRepository = TagRepository(RetrofitClient.apiService)
 
     private val _events = MutableStateFlow<List<EventDTO>>(emptyList())
     private val _fallas = MutableStateFlow<List<FallaDTO>>(emptyList())
-    private val _tags = MutableStateFlow<List<TagDTO>>(emptyList())
+    private val _tags = MutableStateFlow<List<Tag>>(emptyList())
     val events: MutableStateFlow<List<EventDTO>> = _events
 
     val fallas: StateFlow<List<FallaDTO>> = _fallas
 
-    val tags: StateFlow<List<TagDTO>> =_tags
+    val tags: StateFlow<List<Tag>> =_tags
 
 
     fun loadEvents(){
@@ -37,10 +35,8 @@ class EventViewModel : ViewModel() {
                 Log.d("EventViewModel", "Iniciando carga de datos...")
                 val eventsResult = repository.getAllEvents()
                 val fallasResult = fallaRepository.getAllFallas()
-                val tagsResult = tagRepository.getAllTags()
                 _events.value = eventsResult
                 _fallas.value = fallasResult
-                _tags.value = tagsResult
                 Log.d("EventViewModel", "Datos cargados: ${eventsResult.size} miembros, ${eventsResult.size} solicitudes.")
 
             }catch (e: Exception) {

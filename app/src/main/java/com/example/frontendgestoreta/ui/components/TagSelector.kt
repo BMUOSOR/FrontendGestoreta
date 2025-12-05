@@ -15,26 +15,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.frontendgestoreta.data.models.TagDTO
+import com.example.frontendgestoreta.data.models.Tag
+
+
 @Composable
 fun TagSelector(
-    tags: List<TagDTO>,
-    selectedTagId: Long?,
-    onTagSelected: (Long?) -> Unit
+    tags: List<Tag>,          // Lista de enum Tag
+    selectedTag: Tag?,        // Tag seleccionado
+    onTagSelected: (Tag?) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     var searchText by remember { mutableStateOf("") }
 
-    // Estado local para mostrar la descripción seleccionada
-    var selectedDescription by remember(selectedTagId, tags) {
-        mutableStateOf(
-            selectedTagId?.let { id -> tags.find { it.idTag == id }?.description ?: "Etiqueta ${id}" } ?: ""
-        )
-    }
+    // Convertir Tag? a texto visible
+    val selectedDescription = selectedTag?.name ?: ""
 
+    // Filtrar según búsqueda
     val filteredTags = remember(searchText, tags) {
         if (searchText.isBlank()) tags
-        else tags.filter { it.description.contains(searchText, ignoreCase = true) == true }
+        else tags.filter { it.name.contains(searchText, ignoreCase = true) }
     }
 
     Column {
@@ -53,7 +52,7 @@ fun TagSelector(
             onDismissRequest = { expanded = false },
             modifier = Modifier.fillMaxWidth()
         ) {
-            // Barra de búsqueda
+            // Barra de búsqueda dentro del menú
             OutlinedTextField(
                 value = searchText,
                 onValueChange = { searchText = it },
@@ -63,14 +62,14 @@ fun TagSelector(
                     .padding(8.dp)
             )
 
-            // Lista de tags
+            // Items filtrados
             filteredTags.forEach { tag ->
                 DropdownMenuItem(
-                    text = { Text(tag.description.orEmpty()) },
+                    text = { Text(tag.name) },
                     onClick = {
-                        selectedDescription = tag.description.orEmpty() // Actualiza el campo
-                        onTagSelected(tag.idTag)                       // Actualiza DTO
+                        onTagSelected(tag)
                         expanded = false
+                        searchText = "" // limpiar búsqueda
                     }
                 )
             }
@@ -78,7 +77,7 @@ fun TagSelector(
             if (filteredTags.isEmpty()) {
                 DropdownMenuItem(
                     text = { Text("No se encontraron etiquetas") },
-                    onClick = { }
+                    onClick = {}
                 )
             }
         }

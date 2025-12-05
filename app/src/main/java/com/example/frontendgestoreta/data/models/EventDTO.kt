@@ -1,5 +1,6 @@
 package com.example.frontendgestoreta.data.models
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.OffsetDateTime
 
 data class EventDTO (
@@ -13,4 +14,6 @@ data class EventDTO (
     val titulo: String? = null,
     val descripcion: String? = null,
     val maxPersonas: Long? = null,
+    var hora: LocalTime? = null,
+    var tag: Tag? = null
 )

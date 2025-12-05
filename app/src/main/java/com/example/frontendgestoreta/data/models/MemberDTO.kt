@@ -10,5 +10,6 @@ data class MemberDTO(
     val nombre: String?,
     val apellidos: String?,
     val dni: String?,
-    val idFalla: Long
+    val idFalla: Long,
+    var fotoPerfil: String?
 )
