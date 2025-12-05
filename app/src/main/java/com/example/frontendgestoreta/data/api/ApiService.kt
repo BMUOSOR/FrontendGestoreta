@@ -44,6 +44,12 @@ interface ApiService {
         @Body event: EventDTO
     )
 
+    @PUT("usuario/{idUsuario}/update")
+    suspend fun updateUsuario(
+        @Path("idUsuario") idUsuario: Long,
+        @Body member: MemberDTO
+    )
+
     @GET("evento/getFromFalla/{idFalla}")
     suspend fun getEventosFromFalla(@Path("idFalla") fallaId : Long) : List<EventDTO>
 

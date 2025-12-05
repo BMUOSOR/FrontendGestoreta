@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.frontendgestoreta.data.api.RetrofitClient
+import com.example.frontendgestoreta.data.models.EventDTO
 import com.example.frontendgestoreta.data.models.MemberDTO
 import com.example.frontendgestoreta.data.models.MemberRequestDTO
 import com.example.frontendgestoreta.repository.MemberRepository
@@ -35,6 +36,16 @@ class MemberViewModel : ViewModel() {
                 // MANEJO DE ERRORES:
                 println("Error al cargar datos: ${e.message}")
                 e.printStackTrace()
+            }
+        }
+    }
+
+    fun updateUsuario(member: MemberDTO) {
+        viewModelScope.launch {
+            try {
+                repository.updateUsuario(member)
+            } catch(e: Exception) {
+                Log.e("MemberViewModel", "Error al editar el miembro: ${e.message}")
             }
         }
     }

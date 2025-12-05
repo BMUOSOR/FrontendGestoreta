@@ -51,38 +51,6 @@ fun SettingsScreen(navController: NavHostController) {
         FilledTonalButton(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
-                navController.navigate(AppScreens.SubscriptionsScreen.route) {
-                    popUpTo(navController.graph.findStartDestination().id) {
-                        saveState = true
-                    }
-                    launchSingleTop = true // Avoid multiple copies of the same screen
-                    restoreState = true // If the user was in the middle of something
-                }
-
-            }
-        ) {
-            Text("Ver suscripciones")
-        }
-
-        FilledTonalButton(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = {
-                navController.navigate(AppScreens.EliminateSubscriptionsScreen.route) {
-                    popUpTo(navController.graph.findStartDestination().id) {
-                        saveState = true
-                    }
-                    launchSingleTop = true // Avoid multiple copies of the same screen
-                    restoreState = true // If the user was in the middle of something
-                }
-
-            }
-        ) {
-            Text("Eliminar suscripciones")
-        }
-
-        FilledTonalButton(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = {
                 navController.navigate(AppScreens.ModifyUserScreen.route) {
                     popUpTo(navController.graph.findStartDestination().id) {
                         saveState = true

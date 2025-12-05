@@ -11,4 +11,9 @@ class FallaRepository(private val apiService: ApiService) {
         return apiService.getAllFallas()
     }
 
+    suspend fun getFallaById(id: Long): FallaDTO? {
+        val todas = apiService.getAllFallas()
+        return todas.find { it.idFalla == id }
+    }
+
 }
