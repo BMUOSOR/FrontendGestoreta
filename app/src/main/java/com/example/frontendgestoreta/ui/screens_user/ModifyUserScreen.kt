@@ -128,7 +128,7 @@ fun ModifyUserScreen(
                     viewModel.updateUsuario(editedMember);
                     onBack()
                 },
-                enabled = nombre.isNotBlank()
+                enabled = nombre.isNotBlank() && apellidos.isNotBlank() && dni.isNotBlank()
             ) {
                 Text("Guardar Cambios")
             }
