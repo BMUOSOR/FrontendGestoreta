@@ -4,8 +4,10 @@ import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilledTonalButton
@@ -18,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -39,8 +42,11 @@ fun SettingsScreen(navController: NavHostController) {
             .background(MaterialTheme.colorScheme.background)
     ) {
 
+        Spacer(modifier = Modifier.height(8.dp))
+
         FilledTonalButton(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth()
+                     .height(48.dp),
             onClick = {
                 restartApp(context)
             }
@@ -48,8 +54,11 @@ fun SettingsScreen(navController: NavHostController) {
             Text("Cerrar sesión")
         }
 
+        Spacer(modifier = Modifier.height(8.dp))
+
         FilledTonalButton(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth()
+                     .height(48.dp),
             onClick = {
                 navController.navigate(AppScreens.ModifyUserScreen.route) {
                     popUpTo(navController.graph.findStartDestination().id) {
@@ -64,8 +73,11 @@ fun SettingsScreen(navController: NavHostController) {
             Text("Modificar usuario")
         }
 
+        Spacer(modifier = Modifier.height(8.dp))
+
         FilledTonalButton(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth()
+                        .height(48.dp),
             onClick = {
                 navController.navigate(AppScreens.NotificationsScreen.route) {
                     popUpTo(navController.graph.findStartDestination().id) {
