@@ -43,8 +43,12 @@ fun ModifyUserScreen(
 ) {
     // Estados para los campos del formulario
     var nombre by remember { mutableStateOf(member.nombre ?: "") }
+    var apellidos by remember { mutableStateOf(member.apellidos ?: "") }
+    var dni by remember { mutableStateOf(member.dni ?: "") }
+
 
     val scrollState = rememberScrollState()
+
 
     Column(
         modifier = Modifier
@@ -65,6 +69,38 @@ fun ModifyUserScreen(
             onValueChange = { nombre = it },
             modifier = Modifier.fillMaxWidth(),
             placeholder = { Text("Ingresa tu nombre") },
+            singleLine = true
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Campo Apellidos
+        Text(
+            text = "Apellidos",
+            fontWeight = FontWeight.Medium,
+            fontSize = 16.sp
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        OutlinedTextField(
+            value = apellidos,
+            onValueChange = { apellidos = it },
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = { Text("Ingresa tus apellidos") },
+            singleLine = true
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Campo DNI
+        Text(
+            text = "DNI",
+            fontWeight = FontWeight.Medium,
+            fontSize = 16.sp
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        OutlinedTextField(
+            value = dni,
+            onValueChange = { dni = it },
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = { Text("Ingresa tu dni") },
             singleLine = true
         )
 
@@ -92,7 +128,7 @@ fun ModifyUserScreen(
                     viewModel.updateUsuario(editedMember);
                     onBack()
                 },
-                enabled = nombre.isNotBlank()
+                enabled = nombre.isNotBlank() && apellidos.isNotBlank() && dni.isNotBlank()
             ) {
                 Text("Guardar Cambios")
             }

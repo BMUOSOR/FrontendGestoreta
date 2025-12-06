@@ -6,6 +6,8 @@ import com.example.frontendgestoreta.data.models.FallaDTO
 import com.example.frontendgestoreta.data.models.GestorDTO
 import com.example.frontendgestoreta.data.models.MemberDTO
 import com.example.frontendgestoreta.data.models.MemberRequestDTO
+import com.example.frontendgestoreta.data.models.SuscripcionDTO
+import com.example.frontendgestoreta.data.models.TagDTO
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -52,5 +54,8 @@ interface ApiService {
 
     @GET("evento/getFromFalla/{idFalla}")
     suspend fun getEventosFromFalla(@Path("idFalla") fallaId : Long) : List<EventDTO>
+
+    @GET("solicitud/getFromUser/{idCuenta}")
+    suspend fun getSuscripcionesFromUser(@Path("idCuenta") idCuenta : Long) : List<SuscripcionDTO>
 
 }
