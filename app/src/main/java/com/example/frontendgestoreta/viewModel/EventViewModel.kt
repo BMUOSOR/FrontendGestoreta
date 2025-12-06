@@ -1,6 +1,7 @@
 package com.example.frontendgestoreta.viewModel
 
 import android.util.Log
+import android.util.Log.println
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.frontendgestoreta.data.api.RetrofitClient
@@ -13,6 +14,8 @@ import com.example.frontendgestoreta.repository.FallaRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.sql.DriverManager.println
+import java.util.Collections.emptyList
 
 class EventViewModel : ViewModel() {
 
