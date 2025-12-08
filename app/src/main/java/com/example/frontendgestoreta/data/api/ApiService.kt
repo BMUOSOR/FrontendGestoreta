@@ -7,7 +7,7 @@ import com.example.frontendgestoreta.data.models.GestorDTO
 import com.example.frontendgestoreta.data.models.MemberDTO
 import com.example.frontendgestoreta.data.models.MemberRequestDTO
 import com.example.frontendgestoreta.data.models.SuscripcionDTO
-import com.example.frontendgestoreta.data.models.TagDTO
+//import com.example.frontendgestoreta.data.models.TagDTO
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST

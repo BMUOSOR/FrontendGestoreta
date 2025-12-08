@@ -14,6 +14,7 @@ data class EventDTO (
     val titulo: String? = null,
     val descripcion: String? = null,
     val maxPersonas: Long? = null,
-    var hora: LocalTime? = null,
-    var tag: Tag? = null
+    var hora: String? = null,
+    var tag: Tag? = null,
+    var imagen: String? = null
 )

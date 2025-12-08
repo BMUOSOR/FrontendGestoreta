@@ -26,6 +26,8 @@ class EventViewModel : ViewModel() {
     private val _fallas = MutableStateFlow<List<FallaDTO>>(emptyList())
     private val _tags = MutableStateFlow<List<Tag>>(emptyList())
     val events: MutableStateFlow<List<EventDTO>> = _events
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
 
     val fallas: StateFlow<List<FallaDTO>> = _fallas
 
@@ -34,6 +36,7 @@ class EventViewModel : ViewModel() {
 
     fun loadEvents(){
         viewModelScope.launch {
+            _isLoading.value = true
             try {
                 Log.d("EventViewModel", "Iniciando carga de datos...")
                 val eventsResult = repository.getAllEvents()
@@ -46,11 +49,14 @@ class EventViewModel : ViewModel() {
                 println("Error al cargar datos: ${e.message}")
                 Log.e("EventViewModel","Error al cargar datos: ${e.message}")
                 e.printStackTrace()
+            } finally {
+                _isLoading.value = false
             }
         }
     }
 
     fun loadEventsWithFilter(filter: EventFilterDTO) {
+        _isLoading.value = true
         viewModelScope.launch {
             try {
                 Log.d("EventViewModel","Antes de eventFilter: " + filter.beforeDate.toString())
@@ -63,6 +69,8 @@ class EventViewModel : ViewModel() {
 
             } catch (e: Exception) {
                 Log.e("EventViewModel", "Error filtrando eventos: ${e.message}")
+            } finally {
+                _isLoading.value = false
             }
         }
     }

@@ -146,7 +146,7 @@ private fun NewsListItemHeader(event: EventDTO, showSummary: Boolean = true) {
 @Composable
 private fun NewsListItemImage(event: EventDTO, modifier: Modifier = Modifier) {
     AsyncImage(
-        model = null, // Cambiar por event.imageUrl cuando exista
+        model = event.imagen, // Cambiar por event.imageUrl cuando exista
         contentDescription = "Imagen del evento",
         modifier = modifier,
         placeholder = painterResource(id = R.drawable.ic_newspaper),
