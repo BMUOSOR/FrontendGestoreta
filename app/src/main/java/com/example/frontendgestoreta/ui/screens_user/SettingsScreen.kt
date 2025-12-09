@@ -26,8 +26,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.frontendgestoreta.R
 import com.example.frontendgestoreta.navigation.AppScreens
 import com.example.frontendgestoreta.ui.components.CreateEventScreen
+import com.example.frontendgestoreta.ui.components.SettingsItem
 import com.example.frontendgestoreta.viewModel.AuthViewModel
 import com.example.frontendgestoreta.viewModel.EventViewModel
 
@@ -40,14 +42,15 @@ fun SettingsScreen(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(MaterialTheme.colorScheme.onBackground)
     ) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        FilledTonalButton(
-            modifier = Modifier.fillMaxWidth()
-                     .height(48.dp),
+        SettingsItem(
+            leftImagePainter = painterResource(id = R.drawable.ic_g_cuenta),
+            title = "Cuenta",
+            description = "Modificar datos de usuario",
             onClick = {
                 navController.navigate(AppScreens.ModifyUserScreen.route) {
                     popUpTo(navController.graph.findStartDestination().id) {
@@ -56,17 +59,15 @@ fun SettingsScreen(navController: NavHostController) {
                     launchSingleTop = true // Avoid multiple copies of the same screen
                     restoreState = true // If the user was in the middle of something
                 }
-
             }
-        ) {
-            Text("Cuenta")
-        }
+        )
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        FilledTonalButton(
-            modifier = Modifier.fillMaxWidth()
-                        .height(48.dp),
+        SettingsItem(
+            leftImagePainter = painterResource(id = R.drawable.ic_casales),
+            title = "Notificaciones",
+            description = "Configuración de las notificaciones recibidas por suscripciones",
             onClick = {
                 navController.navigate(AppScreens.NotificationsScreen.route) {
                     popUpTo(navController.graph.findStartDestination().id) {
@@ -75,11 +76,8 @@ fun SettingsScreen(navController: NavHostController) {
                     launchSingleTop = true // Avoid multiple copies of the same screen
                     restoreState = true // If the user was in the middle of something
                 }
-
             }
-        ) {
-            Text("Notificaciones")
-        }
+        )
 
         Spacer(modifier = Modifier.weight(1f))
 
@@ -90,7 +88,10 @@ fun SettingsScreen(navController: NavHostController) {
                 restartApp(context)
             }
         ) {
-            Text("Cerrar sesión", textDecoration = TextDecoration.Underline)
+            Text("Cerrar sesión",
+                textDecoration = TextDecoration.Underline,
+                        color = MaterialTheme.colorScheme.surface
+            )
         }
 
         Spacer(modifier = Modifier.height(24.dp))

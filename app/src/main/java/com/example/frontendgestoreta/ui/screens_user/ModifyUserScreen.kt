@@ -44,11 +44,8 @@ fun ModifyUserScreen(
     // Estados para los campos del formulario
     var nombre by remember { mutableStateOf(member.nombre ?: "") }
     var apellidos by remember { mutableStateOf(member.apellidos ?: "") }
-    var dni by remember { mutableStateOf(member.dni ?: "") }
-
 
     val scrollState = rememberScrollState()
-
 
     Column(
         modifier = Modifier
@@ -87,16 +84,6 @@ fun ModifyUserScreen(
             placeholder = { Text("Ingresa tus apellidos") },
             singleLine = true
         )
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Campo DNI
-        Text(
-            text = "DNI",
-            fontWeight = FontWeight.Medium,
-            fontSize = 16.sp
-        )
-
-
 
         Spacer(modifier = Modifier.height(24.dp))
 
