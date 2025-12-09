@@ -15,27 +15,69 @@ import kotlinx.coroutines.launch
 class MemberViewModel : ViewModel() {
 
     private val repository = MemberRepository(RetrofitClient.apiService)
-
+    private val DEFAULT_FALLA_ID = 1;
     private val _members = MutableStateFlow<List<MemberDTO>>(emptyList())
     val members: StateFlow<List<MemberDTO>> = _members
 
     private val _requests = MutableStateFlow<List<MemberRequestDTO>>(emptyList())
     val requests: StateFlow<List<MemberRequestDTO>> = _requests
 
+    private val _message = MutableStateFlow<String?>(null)
+    val message: StateFlow<String?> = _message
+
     fun loadMembers() {
         viewModelScope.launch {
             try {
                 Log.d("MembersViewModel", "Iniciando carga de datos...")
-                val membersResult = repository.getAllMembers()
-                val requestsResult = repository.getAllRequests()
+                val membersResult = repository.getMembersFromFalla(1)
+                val requestsResult = repository.getRequestsFromFalla(1)
 
                 _members.value = membersResult
                 _requests.value = requestsResult
                 Log.d("MembersViewModel", "Datos cargados: ${membersResult.size} miembros, ${requestsResult.size} solicitudes.")
             } catch (e: Exception) {
-                // MANEJO DE ERRORES:
-                println("Error al cargar datos: ${e.message}")
-                e.printStackTrace()
+                val errorMsg = "Error al cargar datos: ${e.message}"
+                println(errorMsg)
+                _message.value = errorMsg
+            }
+        }
+    }
+    fun acceptRequest(id: Long) {
+        viewModelScope.launch {
+            try {
+                _message.value = "Aceptando solicitud..."
+                repository.acceptRequest(id)
+                _message.value = "Solicitud aceptada correctamente"
+                loadMembers()
+            } catch (e: Exception) {
+                _message.value = "Error al aceptar: ${e.message}"
+            }
+        }
+    }
+    fun rejectRequest(requestId: Long) {
+        viewModelScope.launch {
+            try {
+                // 1. Llamar a la API para rechazar (eliminar) la solicitud
+                repository.rejectRequest(requestId) // Asumiendo este método en el Repository
+                _message.value = "Solicitud $requestId rechazada."
+                // 2. Recargar los datos
+                loadMembers()
+            } catch (e: Exception) {
+                val errorMsg = "Error al rechazar solicitud: ${e.message}"
+                println(errorMsg)
+                _message.value = errorMsg
+            }
+        }
+    }
+    fun deleteMember(member: MemberDTO) {
+        viewModelScope.launch {
+            try {
+                _message.value = "Eliminando miembro..."
+                member.idUsuario?.let { repository.deleteMember(it) }
+                _message.value = "Miembro eliminado correctamente"
+                loadMembers()
+            } catch (e: Exception) {
+                _message.value = "Error: ${e.message}"
             }
         }
     }

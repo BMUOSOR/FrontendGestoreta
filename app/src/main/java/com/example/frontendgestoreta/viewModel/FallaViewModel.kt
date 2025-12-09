@@ -1,5 +1,6 @@
 package com.example.frontendgestoreta.viewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.frontendgestoreta.data.api.RetrofitClient
@@ -22,9 +23,8 @@ class FallaViewModel : ViewModel() {
                 _fallas.value = repository.getAllFallas()
 
             } catch (e: Exception) {
-                // MANEJO DE ERRORES:
-                println("Error al cargar datos: ${e.message}")
-                e.printStackTrace()
+
+                Log.e("FallaViewModel", "Error al cargar datos: ${e.message}", e)
             }
         }
     }

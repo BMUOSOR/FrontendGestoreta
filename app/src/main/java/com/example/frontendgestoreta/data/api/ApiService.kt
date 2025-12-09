@@ -9,6 +9,7 @@ import com.example.frontendgestoreta.data.models.MemberRequestDTO
 import com.example.frontendgestoreta.data.models.SuscripcionDTO
 //import com.example.frontendgestoreta.data.models.TagDTO
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -37,6 +38,42 @@ interface ApiService {
     @GET("evento/getAll")
     suspend fun getAllEvents(): List<EventDTO>
 
+
+    @GET("solicitud/getFromFalla/{idFalla}")
+    suspend fun getRequestsFromFalla(@Path("idFalla") idFalla: Long): List<MemberRequestDTO>
+
+
+    @GET("solicitud/getById/{idSolicitud}")
+    suspend fun getRequestById(@Path("idSolicitud") idSolicitud: Long): MemberRequestDTO
+
+
+    @DELETE("usuario/removeUsuario/{idUsuario}")
+    suspend fun deleteMember(@Path("idUsuario") idUsuario: Long): MemberDTO
+
+    @DELETE("solicitud/deleteSolicitud/{idSolicitud}")
+    suspend fun deleteRequest(@Path("idSolicitud") idSolicitud: Long): MemberRequestDTO
+
+    @POST("usuario/postUsuario")
+    suspend fun createMember(@Body member: MemberDTO): MemberDTO
+
+    @POST("solicitud/postSolicitud")
+    suspend fun postRequest(@Body solicitud: MemberRequestDTO): MemberRequestDTO
+
+    @PUT("usuario/updateUsuario/{idUsuario}")
+    suspend fun updateMember(
+        @Path("idUsuario") idUsuario: Long,
+        @Body member: MemberDTO
+    ): MemberDTO
+
+    @PUT("falla/updateFalla/{idFalla}")
+    suspend fun updateFalla(
+        @Path("idFalla") idFalla: Long,
+        @Body fallaDTO: FallaDTO
+    ): FallaDTO
+    @GET("usuario/getById/{idUsuario}") // Mapea a /api/usuario/getById/{idUsuario}
+    suspend fun getById(@Path("idUsuario") idUsuario: Long): MemberDTO // MemberDTO es UsuarioDTO en el backend
+
+
     @POST("evento/filterEvents")
     suspend fun filterEvents(@Body filter : EventFilterDTO) : List<EventDTO>
 
@@ -49,7 +86,8 @@ interface ApiService {
         @Body event: EventDTO
     )
 
-    @PUT("usuario/{idUsuario}/update")
+
+    @PUT("usuario/updateUsuario/{idUsuario}")
     suspend fun updateUsuario(
         @Path("idUsuario") idUsuario: Long,
         @Body member: MemberDTO

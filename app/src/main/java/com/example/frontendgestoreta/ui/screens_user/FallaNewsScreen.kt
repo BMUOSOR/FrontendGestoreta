@@ -43,6 +43,7 @@ fun FallaNewsScreen(navController: NavController, viewModel: EventViewModel = vi
                 .padding(innerPadding)
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding = PaddingValues(bottom = 80.dp)
         ) {
             item {
                 EventFilterMenu(
@@ -54,7 +55,7 @@ fun FallaNewsScreen(navController: NavController, viewModel: EventViewModel = vi
                     onClearFilter = {filter = EventFilterDTO()}
                 )
             }
-            
+
             items(events.value) { event ->
                 NewsListItem(event = event, navController = navController)
             }

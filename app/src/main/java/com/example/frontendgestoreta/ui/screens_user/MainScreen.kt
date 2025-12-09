@@ -32,10 +32,10 @@ import com.example.frontendgestoreta.ui.theme.FrontendGestoretaTheme
 import com.example.frontendgestoreta.viewModel.AuthViewModel
 import com.example.frontendgestoreta.viewModel.EventViewModel
 import com.google.gson.Gson
-import java.net.URLEncoder // IMPORTANTE
-import java.nio.charset.StandardCharsets // IMPORTANTE
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 import android.util.Base64
-
+import androidx.compose.runtime.collectAsState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,7 +44,7 @@ fun MainScreen(
     eventViewModel: EventViewModel = viewModel()
 ) {
 
-    val user = authViewModel.currentUser.value
+    val user by authViewModel.currentUser.collectAsState()
     val navController = rememberNavController()
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -85,7 +85,6 @@ fun MainScreen(
                         containerColor = MaterialTheme.colorScheme.tertiary
                     ) {
                         val currentDestination = navBackStackEntry?.destination
-
                         navigationItems.forEach { screen ->
                             NavigationBarItem(
                                 colors = NavigationBarItemDefaults.colors(
@@ -143,7 +142,7 @@ fun MainScreen(
                     }
                     composable(AppScreens.Fallas.route) {
                         topBarTitle = AppScreens.Fallas.title!!
-                        FallasScreen()
+                        FallasScreen(authViewModel = authViewModel)
                     }
                     composable(AppScreens.FallaNews.route) {
                         topBarTitle = AppScreens.FallaNews.title!!
@@ -155,17 +154,18 @@ fun MainScreen(
                     }
                     composable(AppScreens.ModifyUserScreen.route) {
                         topBarTitle = AppScreens.ModifyUserScreen.title!!
-                        ModifyUserScreen(
-                            onBack = { navController.popBackStack() },
-                            member = user!!,
-                            viewModel = viewModel(),
-                        )
+                        user?.let { nonNullUser ->
+                            ModifyUserScreen(
+                                onBack = { navController.popBackStack() },
+                                member = nonNullUser,
+                                viewModel = viewModel()
+                            )
+                        }
                     }
                     composable(AppScreens.NotificationsScreen.route) {
                         topBarTitle = AppScreens.NotificationsScreen.title!!
                         NotificationsScreen()
                     }
-
                     // Detalle del evento
                     composable(
                         route = AppScreens.EventDetail.route,
@@ -204,16 +204,16 @@ fun MainScreen(
                             onBack = { navController.popBackStack() },
                             onRelatedEventClick = { relatedEvent ->
                                 val json = Gson().toJson(relatedEvent)
-                                val encodedJson = Base64.encodeToString(json.toByteArray(), Base64.URL_SAFE or Base64.NO_WRAP)
-                                val route = "event_detail/$encodedJson"
-                                navController.navigate(route) {
+                                val encoded = Base64.encodeToString(
+                                    json.toByteArray(),
+                                    Base64.URL_SAFE or Base64.NO_WRAP
+                                )
+                                navController.navigate("event_detail/$encoded") {
                                     launchSingleTop = true
                                 }
-
                             }
                         )
                     }
-
                 }
             }
         }

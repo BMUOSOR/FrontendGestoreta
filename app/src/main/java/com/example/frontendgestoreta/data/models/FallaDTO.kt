@@ -12,4 +12,5 @@ data class FallaDTO(
     val acta: String?,
     val escudo: String?,
     val direccion: String?,
+    val descripcion: String?
 )
