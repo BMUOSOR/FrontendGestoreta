@@ -63,7 +63,8 @@ fun MainScreen(
         AppScreens.News,
         AppScreens.Map,
         AppScreens.Fallas,
-        AppScreens.FallaNews
+        AppScreens.FallaNews,
+        AppScreens.Settings
     )
 
     // Control del título de la TopBar
@@ -148,6 +149,22 @@ fun MainScreen(
                         topBarTitle = AppScreens.FallaNews.title!!
                         FallaNewsScreen(navController = navController)
                     }
+                    composable(AppScreens.Settings.route) {
+                        topBarTitle = AppScreens.Settings.title!!
+                        SettingsScreen(navController = navController)
+                    }
+                    composable(AppScreens.ModifyUserScreen.route) {
+                        topBarTitle = AppScreens.ModifyUserScreen.title!!
+                        ModifyUserScreen(
+                            onBack = { navController.popBackStack() },
+                            member = user!!,
+                            viewModel = viewModel(),
+                        )
+                    }
+                    composable(AppScreens.NotificationsScreen.route) {
+                        topBarTitle = AppScreens.NotificationsScreen.title!!
+                        NotificationsScreen()
+                    }
 
                     // Detalle del evento
                     composable(
@@ -197,24 +214,6 @@ fun MainScreen(
                         )
                     }
 
-                    composable(AppScreens.Settings.route) {
-                        topBarTitle = AppScreens.Settings.title!!
-                        SettingsScreen(navController = navController)
-                    }
-
-                    composable(AppScreens.ModifyUserScreen.route) {
-                        topBarTitle = AppScreens.ModifyUserScreen.title!!
-                        ModifyUserScreen(
-                            onBack = { navController.popBackStack() },
-                            member = user!!,
-                            viewModel = viewModel(),
-                        )
-                    }
-
-                    composable(AppScreens.NotificationsScreen.route) {
-                        topBarTitle = AppScreens.NotificationsScreen.title!!
-                        NotificationsScreen()
-                    }
                 }
             }
         }

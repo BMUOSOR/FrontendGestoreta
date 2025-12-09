@@ -57,7 +57,7 @@ sealed class AppScreens(
     object Settings : AppScreens(
         route = "settings_screen",
         title = "Ajustes",
-        icon = R.drawable.ic_settings
+        icon = R.drawable.ic_g_perfil
     )
 
     object Login : AppScreens(
