@@ -16,6 +16,9 @@ import retrofit2.http.Path
 
 interface ApiService {
 
+    @GET("asistencia/apuntarUsuario")
+    suspend fun apuntarUsuario(@Path("idEvento") idEvento: Long, @Path("idUsuario") idUsuario: Long)
+
     @GET ("gestor/1")
     suspend fun getFirstGestor(): GestorDTO
 

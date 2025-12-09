@@ -57,21 +57,36 @@ fun NewsDetailScreen(
     Box(modifier = Modifier.fillMaxSize().background(Color.White)) {
 
         // --- IMAGEN DE CABECERA ---
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(event.imagen)
-                .crossfade(true)
-                .size(1000)
-                .build(),
-            placeholder = painterResource(id = R.drawable.img_evento_default),
-            error = painterResource(id = R.drawable.img_evento_default),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(headerHeight)
-                .align(Alignment.TopCenter)
-        )
+        val isAyuntamientoEvent = event.imagen?.toIntOrNull() != null
+
+        if (isAyuntamientoEvent) {
+            Image(
+                painter = painterResource(id = event.imagen!!.toInt()),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(headerHeight)
+                    .align(Alignment.TopCenter)
+            )
+        } else {
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(event.imagen)
+                    .crossfade(true)
+                    .size(1000)
+                    .build(),
+                placeholder = painterResource(id = R.drawable.img_evento_default),
+                error = painterResource(id = R.drawable.img_evento_default),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(headerHeight)
+                    .align(Alignment.TopCenter)
+            )
+        }
+
 
         // --- BOTÓN FLOAT SOBRE LA IMAGEN ---
         Box(

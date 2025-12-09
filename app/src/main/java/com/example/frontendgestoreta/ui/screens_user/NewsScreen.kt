@@ -18,11 +18,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.frontendgestoreta.R
 import com.example.frontendgestoreta.data.models.EventDTO
 import com.example.frontendgestoreta.data.models.EventFilterDTO
 import com.example.frontendgestoreta.data.models.Tag
@@ -74,7 +76,7 @@ fun NewsScreen(
             descripcion = "El Ayuntamiento de València ha organizado un gran espectáculo pirotécnico que iluminará el cielo nocturno con miles de luces y colores. Se esperan músicos en vivo, puestos de comida y actividades familiares, haciendo de esta una experiencia inolvidable para todos los asistentes.",
             maxPersonas = 5000,
             tag = Tag.Pirotecnia,
-            imagen = null
+            imagen = R.drawable.img_falla_ayuntamento_fuegos_artificiales.toString()
         ),
         EventDTO(
             idEvento = 9992,
@@ -90,7 +92,7 @@ fun NewsScreen(
             descripcion = "Durante todo este mes, los museos municipales abrirán sus puertas para ofrecer talleres, visitas guiadas y exposiciones interactivas. Desde pintura y escultura hasta música y teatro, los visitantes podrán disfrutar de una experiencia educativa y entretenida pensada para todas las edades.",
             maxPersonas = 300,
             tag = Tag.Cultura,
-            imagen = null
+            imagen = R.drawable.img_falla_ayuntamento_museo.toString()
         ),
         EventDTO(
             idEvento = 9993,
@@ -106,7 +108,7 @@ fun NewsScreen(
             descripcion = "Debido a la celebración de varios pasacalles tradicionales, algunas calles del centro de Valencia estarán cerradas al tráfico durante la mañana y el mediodía. Se recomienda a los conductores planificar rutas alternativas y a los peatones disfrutar de los desfiles con seguridad.",
             maxPersonas = 0,
             tag = Tag.Pasacalle,
-            imagen = null
+            imagen = R.drawable.img_falla_ayuntamento_trafico.toString()
         ),
         EventDTO(
             idEvento = 9994,
@@ -122,7 +124,7 @@ fun NewsScreen(
             descripcion = "Prepárate para disfrutar de la gran verbena popular que tendrá lugar este sábado en la Plaza del Ayuntamiento. Habrá música en vivo, bailes tradicionales, puestos de comida y actividades para niños. Un evento perfecto para toda la familia y para celebrar la cultura valenciana.",
             maxPersonas = 2000,
             tag = Tag.Verbena,
-            imagen = null
+            imagen = R.drawable.img_falla_ayuntamento_verbena.toString()
         )
     )
 
@@ -191,7 +193,7 @@ fun NewsScreen(
                         state = scrollState,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(300.dp), // <- altura mucho menor
+                            .height(400.dp), // <- altura mucho menor
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                         contentPadding = PaddingValues(vertical = 6.dp) // pequeño padding vertical
                     ) {

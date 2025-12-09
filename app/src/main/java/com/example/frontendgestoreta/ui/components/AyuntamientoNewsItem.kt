@@ -1,5 +1,6 @@
 package com.example.frontendgestoreta.ui.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -7,8 +8,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -32,7 +35,7 @@ fun AyuntamientoNewsItem(
         modifier = modifier
             .width(280.dp)
             .clickable { onClick() }
-            .height(320.dp),
+            .height(380.dp),
 
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = cardBackgroundColor),
@@ -42,7 +45,6 @@ fun AyuntamientoNewsItem(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(20.dp), // Padding general unificado
-            // CAMBIO IMPORTANTE: Quitamos SpaceBetween para controlar los huecos manualmente
         ) {
 
             // --- BLOQUE SUPERIOR (Iconos + Fecha + Título) ---
@@ -90,10 +92,27 @@ fun AyuntamientoNewsItem(
                 maxLines = 4,
                 overflow = TextOverflow.Ellipsis
             )
+            Spacer(modifier = Modifier.height(12.dp))
 
-            // --- ESPACIO VARIABLE ---
-            // Esto empuja todo lo de abajo (la línea y tags) al final de la tarjeta
             Spacer(modifier = Modifier.weight(1f))
+
+            // --- IMAGEN ASOCIADA AL EVENTO ---
+            val drawableId = event.imagen?.toIntOrNull()
+
+            if (drawableId != null) {
+                Image(
+                    painter = painterResource(id = drawableId),
+                    contentDescription = "Imagen del evento",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(100.dp)
+                        .width(50.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+            }
 
             // 4. PIE DE TARJETA
             Column {

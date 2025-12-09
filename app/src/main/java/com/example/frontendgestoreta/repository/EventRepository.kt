@@ -25,4 +25,7 @@ class EventRepository (private val apiService: ApiService){
     suspend fun getEventsFromFalla(fallaId : Long) : List<EventDTO> {
         return apiService.getEventosFromFalla(fallaId)
     }
+    suspend fun apuntarUsuario(idEvento : Long, idUsuario : Long){
+        return apiService.apuntarUsuario(idEvento, idUsuario)
+    }
 }

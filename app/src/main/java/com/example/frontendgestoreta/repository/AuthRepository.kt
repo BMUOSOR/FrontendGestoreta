@@ -14,7 +14,7 @@ class AuthRepository {
             Log.d("AuthRepository", "Usuario $index: id=${user.idUsuario}, dni=${user.dni}, nombre=${user.nombre}")
         }
 
-        val user = users.firstOrNull { it.idUsuario == 1L }
+        val user = users.firstOrNull()
         Log.d("AuthRepository", "Usuario encontrado: ${user?.dni}")
 
         if (user != null) {
