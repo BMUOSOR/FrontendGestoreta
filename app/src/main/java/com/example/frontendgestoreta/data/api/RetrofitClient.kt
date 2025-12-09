@@ -5,14 +5,19 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonPrimitive
 import com.google.gson.JsonSerializer
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.time.OffsetDateTime
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.ZonedDateTime
+import java.util.concurrent.TimeUnit
+
 
 object RetrofitClient {
-    private const val BASE_URL = "http://192.168.111.220:8080/api/"
+    private const val BASE_URL = "http://10.156.62.72:8080/api/"
+
 
     // ADAPTADOR PARA OffsetDateTime (createdAt)
     private val offsetDateTimeDeserializer = JsonDeserializer<OffsetDateTime> { json, _, _ ->
@@ -50,4 +55,10 @@ object RetrofitClient {
             .build()
             .create(ApiService::class.java)
     }
+    private val okHttpClient = OkHttpClient.Builder()
+        .connectTimeout(30, TimeUnit.SECONDS)
+        .readTimeout(60, TimeUnit.SECONDS)
+        .writeTimeout(60, TimeUnit.SECONDS)
+        .build()
+
 }

@@ -10,10 +10,14 @@ class FallaRepository(private val apiService: ApiService) {
     suspend fun getAllFallas() : List<FallaDTO> {
         return apiService.getAllFallas()
     }
+    suspend fun updateFalla(idFalla: Long, fallaDTO: FallaDTO): FallaDTO {
+        return apiService.updateFalla(idFalla, fallaDTO)
+    }
 
-    suspend fun getFallaById(id: Long): FallaDTO? {
-        val todas = apiService.getAllFallas()
-        return todas.find { it.idFalla == id }
+    suspend fun getFallaById(idFalla: Long): FallaDTO {
+
+        val allFallas = apiService.getAllFallas()
+        return allFallas.first { it.idFalla == idFalla }
     }
 
 }

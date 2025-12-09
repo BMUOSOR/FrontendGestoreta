@@ -6,13 +6,16 @@ import androidx.lifecycle.viewModelScope
 import com.example.frontendgestoreta.data.models.GestorDTO
 import com.example.frontendgestoreta.data.models.MemberDTO
 import com.example.frontendgestoreta.repository.AuthRepository
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class AuthViewModel : ViewModel() {
     private val repository = AuthRepository()
 
-    var currentUser = mutableStateOf<MemberDTO?>(null)
-        private set
+    private val _currentUser = MutableStateFlow<MemberDTO?>(null)
+    val currentUser: StateFlow<MemberDTO?> = _currentUser
     var currentUserGestor = mutableStateOf<GestorDTO?>(null)
         private set
 
@@ -28,7 +31,7 @@ class AuthViewModel : ViewModel() {
             error.value = null
             try {
                 val user = repository.loginAsUser()
-                currentUser.value = user
+                _currentUser.value = user
                 onSuccess()
             } catch (e: Exception) {
                 error.value = e.message
