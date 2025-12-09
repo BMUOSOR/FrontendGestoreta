@@ -40,11 +40,8 @@ fun SettingsItem(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .background(MaterialTheme.colorScheme.onBackground)
+            .background(Color.White)
             .clickable(onClick = onClick)
-            .padding(16.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -76,7 +73,7 @@ fun SettingsItem(
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Medium
                         ),
-                        color = MaterialTheme.colorScheme.surface
+                        color = Color.Black
                     )
 
                     if (!description.isNullOrBlank()) {
@@ -84,7 +81,7 @@ fun SettingsItem(
                         Text(
                             text = description,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            color = Color.Gray,
                             fontSize = 14.sp
                         )
                     }
@@ -108,7 +105,6 @@ fun SettingsItemPreview() {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
                 .background(Color.White)
         ) {
             SettingsItem(
