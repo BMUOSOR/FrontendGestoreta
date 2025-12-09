@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -48,18 +49,6 @@ fun SettingsScreen(navController: NavHostController) {
             modifier = Modifier.fillMaxWidth()
                      .height(48.dp),
             onClick = {
-                restartApp(context)
-            }
-        ) {
-            Text("Cerrar sesión")
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        FilledTonalButton(
-            modifier = Modifier.fillMaxWidth()
-                     .height(48.dp),
-            onClick = {
                 navController.navigate(AppScreens.ModifyUserScreen.route) {
                     popUpTo(navController.graph.findStartDestination().id) {
                         saveState = true
@@ -70,7 +59,7 @@ fun SettingsScreen(navController: NavHostController) {
 
             }
         ) {
-            Text("Modificar usuario")
+            Text("Cuenta")
         }
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -91,6 +80,20 @@ fun SettingsScreen(navController: NavHostController) {
         ) {
             Text("Notificaciones")
         }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        TextButton(
+            modifier = Modifier.fillMaxWidth()
+                .height(48.dp),
+            onClick = {
+                restartApp(context)
+            }
+        ) {
+            Text("Cerrar sesión", textDecoration = TextDecoration.Underline)
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
 
     }
 

@@ -11,11 +11,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.frontendgestoreta.ui.screens_user.restartApp
 
 
 @Composable
@@ -29,18 +33,19 @@ fun SettingsGestorScreen(navController: NavHostController) {
             .background(MaterialTheme.colorScheme.background)
     ) {
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.weight(1f))
 
-        FilledTonalButton(
+        TextButton(
             modifier = Modifier.fillMaxWidth()
-                        .height(48.dp),
+                .height(48.dp),
             onClick = {
                 restartApp(context)
             }
         ) {
-            Text("Cerrar sesión")
+            Text("Cerrar sesión", textDecoration = TextDecoration.Underline)
         }
 
+        Spacer(modifier = Modifier.height(24.dp))
 
     }
 

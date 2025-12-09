@@ -57,7 +57,7 @@ sealed class AppScreens(
     object Settings : AppScreens(
         route = "settings_screen",
         title = "Ajustes",
-        icon = R.drawable.ic_settings
+        icon = R.drawable.ic_g_perfil
     )
 
     object Login : AppScreens(
@@ -69,12 +69,14 @@ sealed class AppScreens(
     object NotificationsScreen : AppScreens(
         route = "notifications_screen",
         title = "Notificaciones",
+        icon = R.drawable.ic_casales
     )
 
 
     object ModifyUserScreen : AppScreens(
         route = "modify_user_screen",
         title = "Modificar Usuario",
+        icon = R.drawable.ic_g_cuenta
     )
 
     object EventDetail : AppScreens(

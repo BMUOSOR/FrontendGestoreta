@@ -95,14 +95,6 @@ fun ModifyUserScreen(
             fontWeight = FontWeight.Medium,
             fontSize = 16.sp
         )
-        Spacer(modifier = Modifier.height(4.dp))
-        OutlinedTextField(
-            value = dni,
-            onValueChange = { dni = it },
-            modifier = Modifier.fillMaxWidth(),
-            placeholder = { Text("Ingresa tu dni") },
-            singleLine = true
-        )
 
 
 
@@ -128,7 +120,7 @@ fun ModifyUserScreen(
                     viewModel.updateUsuario(editedMember);
                     onBack()
                 },
-                enabled = nombre.isNotBlank() && apellidos.isNotBlank() && dni.isNotBlank()
+                enabled = nombre.isNotBlank() && apellidos.isNotBlank()
             ) {
                 Text("Guardar Cambios")
             }
