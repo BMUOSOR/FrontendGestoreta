@@ -27,12 +27,15 @@ import com.example.frontendgestoreta.data.models.EventDTO
 import com.example.frontendgestoreta.navigation.AppScreens
 import com.example.frontendgestoreta.ui.components.AppHeaderImage
 import com.example.frontendgestoreta.ui.components.MainTopBar
-// Asegúrate de importar tus pantallas correctamente
 import com.example.frontendgestoreta.ui.screens_user.FallasScreen
 import com.example.frontendgestoreta.ui.theme.FrontendGestoretaTheme
 import com.example.frontendgestoreta.viewModel.AuthViewModel
 import com.example.frontendgestoreta.viewModel.EventViewModel
 import com.google.gson.Gson
+import java.net.URLEncoder // IMPORTANTE
+import java.nio.charset.StandardCharsets // IMPORTANTE
+import android.util.Base64
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,15 +78,6 @@ fun MainScreen(
         Scaffold(
             contentWindowInsets = WindowInsets(0, 0, 0, 0),
             containerColor = Color.Transparent,
-            topBar = {
-                // Ocultamos TopBar si está cargando, o si estamos en mapa/detalle
-                if (!isLoading && currentRoute != AppScreens.Map.route && !currentRoute.toString().contains("event_detail")) {
-                    MainTopBar(
-                        title = topBarTitle,
-                        navController = navController
-                    )
-                }
-            },
             bottomBar = {
                 if (!isLoading) {
                     NavigationBar(
@@ -140,7 +134,7 @@ fun MainScreen(
                 ) {
                     composable(AppScreens.News.route) {
                         topBarTitle = AppScreens.News.title!!
-                        NewsScreen(navController = navController)
+                        NewsScreen(navController = navController, authViewModel = authViewModel)
                     }
                     composable(AppScreens.Map.route) {
                         topBarTitle = AppScreens.Map.title!!
@@ -160,8 +154,9 @@ fun MainScreen(
                         route = AppScreens.EventDetail.route,
                         arguments = listOf(navArgument("eventJson") { type = NavType.StringType })
                     ) { backStackEntry ->
-                        val eventJson = backStackEntry.arguments?.getString("eventJson")!!
-                        val event = remember { Gson().fromJson(eventJson, EventDTO::class.java) }
+                        val encodedJson = backStackEntry.arguments?.getString("eventJson")!!
+                        val decodedJson = String(Base64.decode(encodedJson, Base64.URL_SAFE or Base64.NO_WRAP))
+                        val event = remember { Gson().fromJson(decodedJson, EventDTO::class.java) }
 
                         val nombrePublicador = remember(allFallas, event) {
                             allFallas.find { it.idFalla == event.idFalla }?.nombre
@@ -175,7 +170,6 @@ fun MainScreen(
                                 .take(3)
                         }
 
-                        // Actualizamos título manualmente para detalles
                         LaunchedEffect(Unit) {
                             topBarTitle = "Detalle del Evento"
                         }
@@ -193,13 +187,16 @@ fun MainScreen(
                             onBack = { navController.popBackStack() },
                             onRelatedEventClick = { relatedEvent ->
                                 val json = Gson().toJson(relatedEvent)
-                                val route = AppScreens.EventDetail.route.replace("{eventJson}", json)
-                                navController.navigate(route)
+                                val encodedJson = Base64.encodeToString(json.toByteArray(), Base64.URL_SAFE or Base64.NO_WRAP)
+                                val route = "event_detail/$encodedJson"
+                                navController.navigate(route) {
+                                    launchSingleTop = true
+                                }
+
                             }
                         )
                     }
 
-                    // Otras pantallas dentro del NavHost
                     composable(AppScreens.Settings.route) {
                         topBarTitle = AppScreens.Settings.title!!
                         SettingsScreen(navController = navController)
@@ -207,8 +204,9 @@ fun MainScreen(
 
                     composable(AppScreens.ModifyUserScreen.route) {
                         topBarTitle = AppScreens.ModifyUserScreen.title!!
-                        ModifyUserScreen(                        onBack = { navController.popBackStack() },
-                            member =  user!!,
+                        ModifyUserScreen(
+                            onBack = { navController.popBackStack() },
+                            member = user!!,
                             viewModel = viewModel(),
                         )
                     }
@@ -217,7 +215,7 @@ fun MainScreen(
                         topBarTitle = AppScreens.NotificationsScreen.title!!
                         NotificationsScreen()
                     }
-                } // Fin del NavHost
+                }
             }
         }
     }

@@ -4,10 +4,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,11 +30,15 @@ import android.content.Intent
 import android.provider.CalendarContract
 import java.time.ZoneId
 import androidx.compose.ui.platform.LocalContext
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import org.json.JSONObject
 
 //Fuente Raleway
 val RalewayFont = FontFamily(
-    Font(R.font.raleway_light, FontWeight.Normal), // Asegúrate de que este recurso exista o usa R.font.tu_fuente
+    Font(R.font.raleway_light, FontWeight.Normal),
     Font(R.font.raleway_semibold, FontWeight.Bold)
 )
 
@@ -44,20 +46,25 @@ val RalewayFont = FontFamily(
 fun NewsDetailScreen(
     event: EventDTO,
     nombrePublicador: String,
-    relatedEvents: List<EventDTO> = emptyList(), // Lista para noticias relacionadas
+    relatedEvents: List<EventDTO> = emptyList(),
     onInscribirseClick: () -> Unit,
     onBack: () -> Unit,
-    onRelatedEventClick: (EventDTO) -> Unit // Click en noticia relacionada
+    onRelatedEventClick: (EventDTO) -> Unit
 ) {
     val context = LocalContext.current
-    val scrollState = rememberScrollState()
-    val headerHeight = 400.dp //altura imagen cabecera
+    val headerHeight = 400.dp
 
     Box(modifier = Modifier.fillMaxSize().background(Color.White)) {
 
-        // --- 1. IMAGEN DE FONDO
-        Image(
-            painter = painterResource(id = R.drawable.img_evento_default), // Tu imagen
+        // --- IMAGEN DE CABECERA ---
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(event.imagen)
+                .crossfade(true)
+                .size(1000)
+                .build(),
+            placeholder = painterResource(id = R.drawable.img_evento_default),
+            error = painterResource(id = R.drawable.img_evento_default),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -66,11 +73,11 @@ fun NewsDetailScreen(
                 .align(Alignment.TopCenter)
         )
 
-        // Botón flotante sobre la imagen (Icono calendario/guardar como en la foto)
+        // --- BOTÓN FLOAT SOBRE LA IMAGEN ---
         Box(
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .padding(top = 340.dp, end = 24.dp) // Posicionado justo donde empieza la curva blanca
+                .padding(top = 340.dp, end = 24.dp)
                 .zIndex(2f)
         ) {
             Surface(
@@ -81,7 +88,7 @@ fun NewsDetailScreen(
             ) {
                 IconButton(onClick = { agregarAlCalendario(context, event) }) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_calendar), // Icono calendario
+                        painter = painterResource(id = R.drawable.ic_calendar),
                         contentDescription = "Guardar",
                         tint = Color.Black,
                         modifier = Modifier.size(24.dp)
@@ -90,141 +97,139 @@ fun NewsDetailScreen(
             }
         }
 
-        // --- 2. CONTENIDO SCROLLABLE
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(scrollState)
+        // --- CONTENIDO SCROLLABLE ---
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(bottom = 40.dp)
         ) {
 
-            Spacer(modifier = Modifier.height(headerHeight - 40.dp))
+            // Espacio inicial para que el contenido empiece debajo de la imagen
+            item {
+                Spacer(modifier = Modifier.height(headerHeight - 40.dp))
+            }
 
-            // Contenedor Blanco con esquinas redondeadas
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
-                color = Color.White,
-                shadowElevation = 0.dp
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 24.dp, vertical = 32.dp)
+            // CONTENEDOR BLANCO
+            item {
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
+                    color = Color.White
                 ) {
 
-                    // Fila superior: Categoría y Autor
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 24.dp, vertical = 32.dp)
                     ) {
-                        // Tag
-                        Text(
-                            text = "PROCLAMACIÓN FM 2026", // O event.categoria
-                            style = TextStyle(
-                                fontFamily = RalewayFont,
-                                fontWeight = FontWeight.SemiBold,
-                                fontSize = 12.sp,
-                                color = Color.Gray
-                            )
-                        )
 
-                        // Publicado por (Derecha)
-                        Column(horizontalAlignment = Alignment.End) {
+                        // --- FILA SUPERIOR ---
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
                             Text(
-                                text = "Publicado por",
+                                text = event.tag.toString().uppercase(),
                                 style = TextStyle(
                                     fontFamily = RalewayFont,
-                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontSize = 12.sp,
                                     color = Color.Gray
                                 )
                             )
-                            val idFalla = event.idFalla;
+
+                            Column(horizontalAlignment = Alignment.End) {
+                                Text(
+                                    text = "Publicado por",
+                                    style = TextStyle(
+                                        fontFamily = RalewayFont,
+                                        fontSize = 10.sp,
+                                        color = Color.Gray
+                                    )
+                                )
+                                Text(
+                                    text = nombrePublicador,
+                                    style = TextStyle(
+                                        fontFamily = RalewayFont,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 11.sp,
+                                        color = Color.Black
+                                    )
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        // --- TÍTULO ---
+                        Text(
+                            text = event.titulo ?: "",
+                            style = TextStyle(
+                                fontFamily = RalewayFont,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 26.sp,
+                                lineHeight = 32.sp,
+                                color = Color(0xFF1C1C1C)
+                            )
+                        )
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        // --- CUERPO HTML ---
+                        HtmlTextContainer(text = event.descripcion.orEmpty()) { annotatedText ->
                             Text(
-                                text = nombrePublicador,
+                                text = annotatedText,
                                 style = TextStyle(
                                     fontFamily = RalewayFont,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 11.sp,
-                                    color = Color.Black
+                                    fontSize = 16.sp,
+                                    lineHeight = 24.sp,
+                                    color = Color.DarkGray
                                 )
                             )
                         }
-                    }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(32.dp))
 
-                    // TÍTULO GRANDE
-                    Text(
-                        text = event.titulo ?: "Anunciada la presentación oficial de las Falleras Mayores",
-                        style = TextStyle(
-                            fontFamily = RalewayFont,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 26.sp,
-                            lineHeight = 32.sp,
-                            color = Color(0xFF1C1C1C)
-                        )
-                    )
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    // CUERPO DE LA NOTICIA
-                    HtmlTextContainer(text = event.descripcion.orEmpty()) { annotatedText ->
-                        Text(
-                            text = annotatedText,
-                            style = TextStyle(
-                                fontFamily = RalewayFont,
-                                fontWeight = FontWeight.Normal,
-                                fontSize = 16.sp,
-                                lineHeight = 24.sp,
-                                color = Color.DarkGray
-                            )
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(32.dp))
-
-                    // BOTÓN INSCRIBIRSE
-                    if (event.maxPersonas != 0L) {
-                        Button(
-                            onClick = onInscribirseClick,
-                            modifier = Modifier.fillMaxWidth().height(50.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color.Black,
-                                contentColor = Color.White
-                            ),
-                            shape = RoundedCornerShape(8.dp)
-                        ) {
-                            Text("Inscribirse al evento", fontFamily = RalewayFont)
+                        // --- BOTÓN INSCRIBIRSE ---
+                        if (event.maxPersonas != 0L) {
+                            Button(
+                                onClick = onInscribirseClick,
+                                modifier = Modifier.fillMaxWidth().height(50.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color.Black,
+                                    contentColor = Color.White
+                                ),
+                                shape = RoundedCornerShape(8.dp)
+                            ) {
+                                Text("Inscribirse al evento", fontFamily = RalewayFont)
+                            }
                         }
+
+                        Spacer(modifier = Modifier.height(48.dp))
+
+                        // --- SECCIÓN NOTICIAS RELACIONADAS ---
+                        RelatedNewsSection(
+                            events = relatedEvents,
+                            onClick = onRelatedEventClick
+                        )
                     }
-
-                    Spacer(modifier = Modifier.height(48.dp))
-
-                    // --- SECCIÓN NOTICIAS RELACIONADAS ---
-                    RelatedNewsSection(events = relatedEvents, onClick = onRelatedEventClick)
-
-                    // Espacio extra al final para scroll cómodo
-                    Spacer(modifier = Modifier.height(40.dp))
                 }
             }
         }
 
-        // --- 3. BARRA SUPERIOR DE NAVEGACIÓN (FIXED) ---
-        // Icono Back y Logo. Se quedan fijos arriba mientras haces scroll.
+        // --- TOP BAR FIJA ---
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 48.dp, start = 24.dp, end = 24.dp), // Ajustar según insets del sistema
+                .padding(top = 48.dp, start = 24.dp, end = 24.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Botón Atrás
             IconButton(
                 onClick = onBack,
                 modifier = Modifier
                     .size(40.dp)
-                    .background(Color.White.copy(alpha = 0.8f), CircleShape) // Fondo semitransparente para ver la flecha
+                    .background(Color.White.copy(alpha = 0.8f), CircleShape)
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_arrow_back),
@@ -233,18 +238,16 @@ fun NewsDetailScreen(
                 )
             }
 
-            // Logo de la marca (opcional, como en la foto)
             Icon(
-                painter = painterResource(id = R.drawable.ic_launcher_foreground), // Tu logo aquí
+                painter = painterResource(id = R.drawable.ic_launcher_foreground),
                 contentDescription = "Logo",
-                tint = Color.Unspecified, // Para mantener colores originales si es SVG/PNG
+                tint = Color.Unspecified,
                 modifier = Modifier.size(32.dp)
             )
         }
     }
 }
 
-// --- COMPONENTE NOTICIAS RELACIONADAS ---
 @Composable
 fun RelatedNewsSection(
     events: List<EventDTO>,
@@ -252,7 +255,6 @@ fun RelatedNewsSection(
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
 
-        // Cabecera con línea inferior
         Column(modifier = Modifier.fillMaxWidth()) {
             Text(
                 text = "Noticias Relacionadas",
@@ -264,34 +266,28 @@ fun RelatedNewsSection(
                 ),
                 modifier = Modifier.padding(bottom = 8.dp)
             )
-            // Línea divisoria gris oscura/negra
-            HorizontalDivider(
-                thickness = 1.dp,
-                color = Color.Gray
-            )
+            HorizontalDivider(thickness = 1.dp, color = Color.Gray)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Si no hay eventos, mostramos datos dummy para visualizar el diseño como la foto
-        val displayList = if(events.isNotEmpty()) events else listOf(
+        val list = if (events.isNotEmpty()) events else listOf(
             EventDTO(titulo = "València celebrará un espectáculo de fuegos artificiales navideño este año"),
             EventDTO(titulo = "El ayuntamiento avisa de cortes de tráfico temporales por pasacalles"),
             EventDTO(titulo = "Los artistas falleros empiezan a presentar sus bocetos para las próximas fallas")
         )
 
-        displayList.forEach { relatedEvent ->
+        list.forEach { e ->
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 12.dp)
-                    .clickable { onClick(relatedEvent) }
+                    .clickable { onClick(e) }
             ) {
                 Text(
-                    text = relatedEvent.titulo ?: "",
+                    text = e.titulo ?: "",
                     style = TextStyle(
                         fontFamily = RalewayFont,
-                        fontWeight = FontWeight.Normal,
                         fontSize = 15.sp,
                         color = Color.Black
                     )
@@ -304,7 +300,7 @@ fun RelatedNewsSection(
                         fontWeight = FontWeight.Medium,
                         fontSize = 14.sp,
                         color = Color.Gray,
-                        textDecoration = TextDecoration.Underline // Subrayado como en la foto
+                        textDecoration = TextDecoration.Underline
                     )
                 )
             }
@@ -314,43 +310,26 @@ fun RelatedNewsSection(
 
 fun agregarAlCalendario(context: Context, event: EventDTO) {
     val ubicacionLimpia = try {
-        val rawUbicacion = event.ubicacion
-
-        // Verificamos si parece un JSON (empieza por llave '{')
-        if (!rawUbicacion.isNullOrBlank() && rawUbicacion.trim().startsWith("{")) {
-            val jsonObj = JSONObject(rawUbicacion)
-
-            // Extraemos los campos con seguridad (si no existen, devuelve cadena vacía)
-            val direccion = jsonObj.optString("direccion", "")
-            val ciudad = jsonObj.optString("ciudad", "")
-
-            // Unimos las partes que tengan texto con una coma
-            listOf(direccion, ciudad)
-                .filter { it.isNotBlank() } // Filtra los vacíos
-                .joinToString(", ") // Une con coma y espacio
-
-        } else {
-            // Si no es JSON o es nulo, usamos el valor original o un default
-            rawUbicacion ?: "Valencia"
-        }
+        val raw = event.ubicacion
+        if (!raw.isNullOrBlank() && raw.trim().startsWith("{")) {
+            val json = JSONObject(raw)
+            val direccion = json.optString("direccion", "")
+            val ciudad = json.optString("ciudad", "")
+            listOf(direccion, ciudad).filter { it.isNotBlank() }.joinToString(", ")
+        } else raw ?: "Valencia"
     } catch (e: Exception) {
-        // Si falla al leer el JSON, mostramos el original para no romper la app
         event.ubicacion ?: "Valencia"
     }
-    //Creamos INTENT
+
     val intent = Intent(Intent.ACTION_INSERT).apply {
         data = CalendarContract.Events.CONTENT_URI
-
         putExtra(CalendarContract.Events.TITLE, event.titulo ?: "Evento Fallero")
         putExtra(CalendarContract.Events.DESCRIPTION, event.descripcion ?: "")
-
         putExtra(CalendarContract.Events.EVENT_LOCATION, ubicacionLimpia)
 
-        // Gestionar la fecha
-        event.fecha?.let { localDate ->
-            val startMillis = localDate.atStartOfDay(ZoneId.systemDefault())
-                .toInstant()
-                .toEpochMilli()
+        event.fecha?.let { date ->
+            val startMillis = date.atStartOfDay(ZoneId.systemDefault())
+                .toInstant().toEpochMilli()
 
             putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startMillis)
             putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true)

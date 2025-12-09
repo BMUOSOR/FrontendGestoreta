@@ -11,6 +11,7 @@ data class EventDTO (
     val idFalla: Long? = null,
     val idAnuncio: Long? = null,
     val idEtiqueta: Long? = null,
+    val publico: Boolean? = null,
     val titulo: String? = null,
     val descripcion: String? = null,
     val maxPersonas: Long? = null,

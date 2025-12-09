@@ -32,9 +32,20 @@ import coil.compose.AsyncImage
 import com.example.frontendgestoreta.R
 import com.example.frontendgestoreta.data.models.EventDTO
 import com.example.frontendgestoreta.navigation.AppScreens
+import com.google.gson.Gson // IMPORTANTE
 import kotlinx.coroutines.delay
+import java.net.URLEncoder // IMPORTANTE
+import java.nio.charset.StandardCharsets // IMPORTANTE
 import java.time.LocalDate
 import java.time.OffsetDateTime
+import android.util.Base64
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.sp
+import coil.request.ImageRequest
 
 @Composable
 fun NewsListItem(
@@ -42,71 +53,71 @@ fun NewsListItem(
     navController: NavController,
     modifier: Modifier = Modifier,
 ) {
-    var isExpanded by remember { mutableStateOf(false) }
-    var tapCount by remember { mutableStateOf(0) }
-
-    val rotationAngle by animateFloatAsState(targetValue = if (isExpanded) 180f else 0f)
-
-    LaunchedEffect(tapCount) {
-        if (tapCount > 0) {
-            delay(500)
-            if (tapCount == 1) {
-                tapCount = 0
-            }
+    // Función para manejar la navegación segura
+    val navigateToDetail = {
+        val json = Gson().toJson(event)
+        val encodedJson = Base64.encodeToString(json.toByteArray(), Base64.URL_SAFE or Base64.NO_WRAP)
+        navController.navigate("event_detail/$encodedJson") {
+            launchSingleTop = true
         }
     }
 
-    ElevatedCard(
+    // Diseño vertical: Columna (Imagen -> Título -> Saber Más)
+    Column(
         modifier = modifier
             .fillMaxWidth()
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onTap = {
-                        tapCount++
-
-                        when (tapCount) {
-                            1 -> {
-                                isExpanded = !isExpanded
-                            }
-                            2 -> {
-                                val route = AppScreens.EventDetail.createRoute(event)
-                                navController.navigate(route)
-                                isExpanded = false
-                                tapCount = 0
-                            }
-                        }
-                    }
-                )
-            },
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp)
+            .clickable { navigateToDetail() } // Toda la tarjeta es clicable
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            NewsListItemHeader(event = event, showSummary = !isExpanded)
+        // 1. Imagen redondeada
+        val imageUrl = event.imagen
+        val cleanUrl = imageUrl?.trim()?.replace(" ", "%20")
 
-            AnimatedVisibility(
-                visible = isExpanded,
-                enter = fadeIn() + expandVertically(),
-                exit = fadeOut() + shrinkVertically()
-            ) {
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    HtmlTextContainer(text = event.descripcion.orEmpty()) { annotatedText ->
-                        Text(
-                            text = annotatedText,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-            }
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(cleanUrl)
+                .crossfade(true)
+                .build(),
+            contentDescription = "Imagen del evento",
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(110.dp) // Altura fija como en la foto
+                .clip(RoundedCornerShape(12.dp)), // Bordes redondeados de la imagen
+            placeholder = painterResource(id = R.drawable.ic_newspaper), // Asegúrate de tener este recurso o usa uno default
+            error = painterResource(id = R.drawable.ic_newspaper),
+            contentScale = ContentScale.Crop
+        )
 
-            NewsListItemFooter(rotationAngle = rotationAngle)
-        }
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // 2. Título
+        Text(
+            text = event.titulo ?: "Sin título",
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontWeight = FontWeight.Medium, // Semi-negrita
+                fontSize = 13.sp,
+                lineHeight = 18.sp
+            ),
+            color = Color.Black,
+            maxLines = 3, // Máximo 3 líneas para que no rompa el grid
+            overflow = TextOverflow.Ellipsis
+        )
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        // 3. Link "Saber más"
+        Text(
+            text = "Saber más",
+            style = MaterialTheme.typography.bodySmall.copy(
+                fontSize = 12.sp,
+                color = Color.Gray,
+                textDecoration = TextDecoration.Underline // Subrayado
+            ),
+            modifier = Modifier.clickable { navigateToDetail() }
+        )
     }
 }
 
+// ... Resto del código (NewsListItemHeader, NewsListItemImage, etc.) se mantiene igual
 @Composable
 private fun NewsListItemHeader(event: EventDTO, showSummary: Boolean = true) {
     Row(
@@ -145,8 +156,14 @@ private fun NewsListItemHeader(event: EventDTO, showSummary: Boolean = true) {
 
 @Composable
 private fun NewsListItemImage(event: EventDTO, modifier: Modifier = Modifier) {
+    val imageUrl = event.imagen
+    val cleanUrl = imageUrl?.replace(" ", "%20")
     AsyncImage(
-        model = event.imagen, // Cambiar por event.imageUrl cuando exista
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(event.imagen)
+            .crossfade(true)
+            .size(1000)
+            .build(),
         contentDescription = "Imagen del evento",
         modifier = modifier,
         placeholder = painterResource(id = R.drawable.ic_newspaper),
@@ -171,29 +188,6 @@ private fun NewsListItemFooter(rotationAngle: Float, modifier: Modifier = Modifi
                 .size(24.dp)
                 .rotate(rotationAngle),
             tint = MaterialTheme.colorScheme.primary
-        )
-    }
-}
-
-// PREVIEW FUNCIONANDO
-@Preview(showBackground = true)
-@Composable
-fun NewsListItemPreview() {
-    val fakeNavController = rememberNavController()
-    val sampleEvent = EventDTO(
-        idEvento = 1L,
-        createdAt = OffsetDateTime.now(),
-        fecha = LocalDate.now().plusDays(10),
-        titulo = "Junta General Extraordinaria",
-        descripcion = "Se convoca a todos los miembros a la junta general...",
-        maxPersonas = 75L
-    )
-
-    MaterialTheme {
-        NewsListItem(
-            event = sampleEvent,
-            navController = fakeNavController,
-            modifier = Modifier.padding(16.dp)
         )
     }
 }
