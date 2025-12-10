@@ -1,5 +1,7 @@
 package com.example.frontendgestoreta.viewModel
 
+import android.content.Context
+import android.net.Uri
 import android.util.Log
 import android.util.Log.println
 import androidx.lifecycle.ViewModel
@@ -14,6 +16,9 @@ import com.example.frontendgestoreta.repository.FallaRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
+import retrofit2.http.Part
+import retrofit2.http.Path
 import java.sql.DriverManager.println
 import java.util.Collections.emptyList
 
@@ -75,12 +80,14 @@ class EventViewModel : ViewModel() {
         }
     }
 
-    fun createEvent(event: EventDTO) {
+    fun createEvent(event: EventDTO, onResult: (EventDTO?) -> Unit) {
         viewModelScope.launch {
             try {
-                repository.postEvent(event)
+                val created = repository.postEvent(event)
+                onResult(created)
             } catch(e: Exception) {
                 Log.e("EventViewModel", "Error creando el evento: ${e.message}")
+                onResult(null)
             }
         }
     }
@@ -95,4 +102,15 @@ class EventViewModel : ViewModel() {
         }
     }
 
+    fun uploadImagenEvento(eventoId: Long, uri: Uri, nombreImagen: String, onResult: (String?) -> Unit) {
+        viewModelScope.launch {
+            try {
+                val imageName = repository.uploadImagenEvento(eventoId, uri, nombreImagen)
+                onResult(imageName)
+            } catch (e: Exception) {
+                Log.e("EventViewModel", "Error subiendo imagen", e)
+                onResult(null)
+            }
+        }
+    }
 }

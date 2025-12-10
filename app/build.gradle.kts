@@ -60,6 +60,8 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.text)
+    implementation(libs.androidx.core.i18n)
     coreLibraryDesugaring ("com.android.tools:desugar_jdk_libs:2.0.4") // Usa la versión más reciente
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -70,5 +72,5 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.coil.compose)
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.0")
-
+    implementation("com.github.yalantis:ucrop:2.2.8")
 }

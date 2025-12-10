@@ -7,13 +7,17 @@ import com.example.frontendgestoreta.data.models.GestorDTO
 import com.example.frontendgestoreta.data.models.MemberDTO
 import com.example.frontendgestoreta.data.models.MemberRequestDTO
 import com.example.frontendgestoreta.data.models.SuscripcionDTO
-//import com.example.frontendgestoreta.data.models.TagDTO
+import com.example.frontendgestoreta.data.models.Tag
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.*
 
 interface ApiService {
 
@@ -78,7 +82,8 @@ interface ApiService {
     suspend fun filterEvents(@Body filter : EventFilterDTO) : List<EventDTO>
 
     @POST("evento/postEvento")
-    suspend fun postEvent(@Body event : EventDTO)
+    suspend fun postEvent(@Body event : EventDTO): EventDTO
+
 
     @PUT("evento/{idEvento}/update")
     suspend fun updateEvent(
@@ -98,5 +103,14 @@ interface ApiService {
 
     @GET("solicitud/getFromUser/{idCuenta}")
     suspend fun getSuscripcionesFromUser(@Path("idCuenta") idCuenta : Long) : List<SuscripcionDTO>
+
+
+    @POST("evento/{idEvento}/image/upload")
+    @Multipart
+    suspend fun uploadImagenEvento(
+        @Path("idEvento") idEvento: Long,
+        @Part file: MultipartBody.Part,
+        @Part("nombreImagen") nombreImagen: RequestBody
+    ) : ResponseBody
 
 }
