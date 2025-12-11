@@ -101,8 +101,8 @@ interface ApiService {
     @GET("evento/getFromFalla/{idFalla}")
     suspend fun getEventosFromFalla(@Path("idFalla") fallaId : Long) : List<EventDTO>
 
-    @GET("solicitud/getFromUser/{idCuenta}")
-    suspend fun getSuscripcionesFromUser(@Path("idCuenta") idCuenta : Long) : List<SuscripcionDTO>
+    @GET("suscripcion/getFromUser/{idUsuario}")
+    suspend fun getSuscripcionesFromUser(@Path("idUsuario") idUsuario : Long) : List<SuscripcionDTO>
 
 
     @POST("evento/{idEvento}/image/upload")
