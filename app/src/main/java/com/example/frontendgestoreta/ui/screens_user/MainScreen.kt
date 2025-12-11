@@ -35,7 +35,13 @@ import com.google.gson.Gson
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 import android.util.Base64
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.colorResource
+import com.example.frontendgestoreta.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,9 +67,8 @@ fun MainScreen(
 
     val navigationItems = listOf(
         AppScreens.News,
-        AppScreens.Map,
         AppScreens.Fallas,
-        AppScreens.FallaNews,
+        AppScreens.Map,
         AppScreens.Settings
     )
 
@@ -73,45 +78,61 @@ fun MainScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(Color.Transparent)
     ) {
         AppHeaderImage()
         Scaffold(
             contentWindowInsets = WindowInsets(0, 0, 0, 0),
-            containerColor = Color.Transparent,
+            containerColor = colorResource(R.color.white),
             bottomBar = {
                 if (!isLoading) {
-                    NavigationBar(
-                        containerColor = MaterialTheme.colorScheme.tertiary
+                    Surface(
+                        color = colorResource(R.color.black),
+                        shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
+                        shadowElevation = 10.dp,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
                     ) {
-                        val currentDestination = navBackStackEntry?.destination
-                        navigationItems.forEach { screen ->
-                            NavigationBarItem(
-                                colors = NavigationBarItemDefaults.colors(
-                                    indicatorColor = MaterialTheme.colorScheme.secondary,
-                                    selectedIconColor = MaterialTheme.colorScheme.onSecondary,
-                                ),
-                                selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                                onClick = {
-                                    navController.navigate(screen.route) {
-                                        popUpTo(navController.graph.findStartDestination().id) {
-                                            saveState = true
+                        NavigationBar(
+                            containerColor = Color.Transparent,
+                            modifier = Modifier.navigationBarsPadding()
+                        ) {
+                            val currentDestination = navBackStackEntry?.destination
+
+                            navigationItems.forEach { screen ->
+                                NavigationBarItem(
+                                    selected = currentDestination?.hierarchy?.any {
+                                        it.route == screen.route
+                                    } == true,
+                                    onClick = {
+                                        navController.navigate(screen.route) {
+                                            popUpTo(navController.graph.findStartDestination().id) {
+                                                saveState = true
+                                            }
+                                            launchSingleTop = true
+                                            restoreState = true
                                         }
-                                        launchSingleTop = true
-                                        restoreState = true
+                                    },
+                                    colors = NavigationBarItemDefaults.colors(
+                                        unselectedIconColor = colorResource(R.color.white),
+                                        selectedIconColor = colorResource(R.color.purple_200),
+                                        indicatorColor = Color.Transparent,
+                                    ),
+                                    icon = {
+                                        Icon(
+                                            painterResource(id = screen.icon!!),
+                                            contentDescription = screen.title
+                                        )
                                     }
-                                },
-                                icon = {
-                                    Icon(
-                                        painterResource(id = screen.icon!!),
-                                        contentDescription = screen.title
-                                    )
-                                }
-                            )
+                                )
+                            }
                         }
                     }
                 }
             }
+
+
         ) { innerPadding ->
 
             if (isLoading) {

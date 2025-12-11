@@ -25,18 +25,18 @@ sealed class AppScreens(
     object Members : AppScreens(
         route = "members_screen",
         title = "Miembros",
-        icon = R.drawable.ic_fallas
+        icon = R.drawable.ic_falla
     )
     object NewsGestor : AppScreens(
         route = "news_gestor_screen",
         title = "Noticias",
-        icon = R.drawable.ic_newspaper
+        icon = R.drawable.ic_news
     )
 
     object News : AppScreens(
         route = "news_screen",
         title = "Noticias",
-        icon = R.drawable.ic_newspaper
+        icon = R.drawable.ic_news
     )
     object Map : AppScreens(
         route = "map_screen",
@@ -46,7 +46,7 @@ sealed class AppScreens(
     object Fallas : AppScreens(
         route = "fallas_screen",
         title = "Fallas",
-        icon = R.drawable.ic_fallas
+        icon = R.drawable.ic_falla
     )
     object FallaNews : AppScreens(
         route = "falla_news_screen",
@@ -57,7 +57,7 @@ sealed class AppScreens(
     object Settings : AppScreens(
         route = "settings_screen",
         title = "Ajustes",
-        icon = R.drawable.ic_g_perfil
+        icon = R.drawable.ic_settings
     )
 
     object Login : AppScreens(

@@ -18,6 +18,8 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -25,6 +27,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.NavigationBar
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
@@ -62,6 +65,7 @@ fun MainScreenGestor(
     val navigationItems = listOf(
         AppScreens.NewsGestor,
         AppScreens.Members,
+        AppScreens.Map,
         AppScreens.FallaSettings
 
     )
@@ -71,69 +75,77 @@ fun MainScreenGestor(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(Color.Transparent)
     ){
         AppHeaderImage()
         Scaffold(
-            topBar = {
-                MainTopBar(
-                title = topBarTitle,
-                navController = navController
-                )
-            },
+            contentWindowInsets = WindowInsets(0, 0, 0, 0),
+            containerColor = colorResource(R.color.white),
             bottomBar = {
-                NavigationBar (
-                    containerColor = MaterialTheme.colorScheme.tertiary
-                ){
-                    val navBackStackEntry by navController.currentBackStackEntryAsState()
-                    val currentDestination = navBackStackEntry?.destination
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentDestination = navBackStackEntry?.destination
+                Surface(
+                    color = colorResource(R.color.black),
+                    shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
+                    shadowElevation = 10.dp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
+                ) {
+                    NavigationBar(
+                        containerColor = Color.Transparent,
+                        modifier = Modifier.navigationBarsPadding()
+                    ) {
+                        val currentDestination = navBackStackEntry?.destination
 
-                    navigationItems.forEach { screen ->
-                        NavigationBarItem(
-                            colors = NavigationBarItemDefaults.colors(
-                                indicatorColor = MaterialTheme.colorScheme.secondary,
-                                selectedIconColor = MaterialTheme.colorScheme.primary,
-                            ),
-                            selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                            onClick = {
-                                navController.navigate(screen.route) {
-                                    popUpTo(navController.graph.findStartDestination().id) {
-                                        saveState = true
+                        navigationItems.forEach { screen ->
+                            NavigationBarItem(
+                                selected = currentDestination?.hierarchy?.any {
+                                    it.route == screen.route
+                                } == true,
+                                onClick = {
+                                    navController.navigate(screen.route) {
+                                        popUpTo(navController.graph.findStartDestination().id) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
                                     }
-                                    launchSingleTop = true // Avoid multiple copies of the same screen
-                                    restoreState = true // If the user was in the middle of something
+                                },
+                                colors = NavigationBarItemDefaults.colors(
+                                    unselectedIconColor = colorResource(R.color.white),
+                                    selectedIconColor = colorResource(R.color.purple_200),
+                                    indicatorColor = Color.Transparent,
+                                ),
+                                icon = {
+                                    Icon(
+                                        painterResource(id = screen.icon!!),
+                                        contentDescription = screen.title
+                                    )
                                 }
-                            },
-                            icon = {
-                                Icon(
-                                    painterResource(id = screen.icon!!),
-                                    contentDescription = screen.title
-                                )
-                            }
-
-                        )
+                            )
+                        }
                     }
                 }
             },
             floatingActionButton = {
-                // Botón redondo con + en el centro inferior
                 FloatingActionButton(
-                    onClick = {
-                        showCreateEventScreen = true
-                    },
+                    onClick = { showCreateEventScreen = true },
                     shape = CircleShape,
                     containerColor = colorResource(R.color.black),
                     contentColor = colorResource(R.color.white),
-                    modifier = Modifier.size(64.dp)
+                    modifier = Modifier
+                        .size(68.dp)
+                        .offset(y = 45.dp) // <--- más abajo
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_add_new), // Icono para añadir evento
+                        painter = painterResource(id = R.drawable.ic_add_new),
                         contentDescription = "Crear evento",
                         modifier = Modifier.fillMaxSize()
                     )
                 }
             },
-            floatingActionButtonPosition = FabPosition.Start
+            floatingActionButtonPosition = FabPosition.Center
         ){innerPadding ->
             NavHost(
                 navController = navController,
