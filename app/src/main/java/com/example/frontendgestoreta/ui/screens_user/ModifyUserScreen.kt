@@ -15,6 +15,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -24,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -66,7 +68,11 @@ fun ModifyUserScreen(
             onValueChange = { nombre = it },
             modifier = Modifier.fillMaxWidth(),
             placeholder = { Text("Ingresa tu nombre") },
-            singleLine = true
+            singleLine = true,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = Color.Black,
+                unfocusedTextColor = Color.Black,
+            )
         )
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -81,8 +87,12 @@ fun ModifyUserScreen(
             value = apellidos,
             onValueChange = { apellidos = it },
             modifier = Modifier.fillMaxWidth(),
-            placeholder = { Text("Ingresa tus apellidos") },
-            singleLine = true
+            placeholder = { Text("Ingresa tu nombre") },
+            singleLine = true,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = Color.Black,
+                unfocusedTextColor = Color.Black,
+            )
         )
 
         Spacer(modifier = Modifier.height(24.dp))
