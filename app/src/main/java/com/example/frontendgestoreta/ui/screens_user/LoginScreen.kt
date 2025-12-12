@@ -1,6 +1,10 @@
 package com.example.frontendgestoreta.ui.screens_user
 
+import android.graphics.Paint
+import android.text.Layout
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -9,10 +13,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -29,30 +36,33 @@ fun LoginScreen(navController: NavHostController, authViewModel: AuthViewModel) 
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+                .background(colorResource(R.color.white))
                 .padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             // 1. Icono Grande
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(150.dp))
             Image(
-                painter = painterResource(id = R.drawable.ic_gestoreta),
+                painter = painterResource(id = R.drawable.ic_gestoreta_logo),
                 contentScale = ContentScale.Fit,
+                alignment =  Alignment.BottomCenter,
                 contentDescription = "Logo",
                 modifier = Modifier
-                    .size(160.dp)
-                    .scale(1.8f)
-                    .padding(bottom = 8.dp)
+                    .size(100.dp)
+                    .scale(0.7f)
             )
-            Spacer(modifier = Modifier.height(100.dp))
+            Spacer(modifier = Modifier.height(70.dp))
 
             // 2. Bienvenido
             Text(
-                text = "Bienvenido",
+                text = "Sigue las Fallas al minuto, descubre actividades y conecta con tu comisión. \n" +
+                        "Descubre una nueva forma de vivir las Fallas",
                 style = MaterialTheme.typography.headlineSmall.copy(
-                    fontWeight = FontWeight.Bold,
-                    fontStyle = FontStyle.Italic
+                    textAlign = TextAlign.Center,
+                    fontStyle = FontStyle.Italic,
+                    fontSize = 16.sp
                 ),
-                color = MaterialTheme.colorScheme.primary,
+                color = colorResource(R.color.black),
                 modifier = Modifier.padding(bottom = 32.dp)
             )
 
@@ -68,6 +78,11 @@ fun LoginScreen(navController: NavHostController, authViewModel: AuthViewModel) 
                 },
                 modifier = Modifier
                     .fillMaxWidth()
+                    .border(
+                        width = 2.dp,
+                        color = colorResource(R.color.black),
+                        shape = RoundedCornerShape(size = 12.dp)
+                    )
                     .height(56.dp),
                 shape = RoundedCornerShape(12.dp),
                 // Usamos los colores por defecto del tema (generalmente Primary)
@@ -91,14 +106,16 @@ fun LoginScreen(navController: NavHostController, authViewModel: AuthViewModel) 
                         }
                     }
                 },
+
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
                 shape = RoundedCornerShape(12.dp),
                 // Forzamos el uso del color Naranja (Secondary)
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.secondary,
-                    contentColor = MaterialTheme.colorScheme.onSecondary // Asegura contraste (blanco o negro)
+
+                    containerColor = colorResource(R.color.purple_200),
+                    contentColor = colorResource(R.color.black)
                 )
             ) {
                 Text("Entrar como Gestor", fontSize = 18.sp)
