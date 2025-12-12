@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -172,18 +173,19 @@ fun MemberDetailScreenWithDelete(member: MemberDTO, onBack: () -> Unit, onDelete
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .background(colorResource(R.color.white)),
         horizontalAlignment = Alignment.Start
     ) {
         Text(
             text = "Detalles de ${member.nombre ?: "Sin nombre"}",
             fontSize = 22.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            color = colorResource(R.color.black)
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Text("DNI: ${member.dni ?: "Sin DNI"}")
-        Text("Apellidos: ${member.apellidos ?: "Sin Apellidos"}")
-        Text("Fecha Nacimiento: ${member.fechaNac ?: "Sin Fecha"}")
+        Text("DNI: ${member.dni ?: "Sin DNI"}",color = colorResource(R.color.black))
+        Text("Apellidos: ${member.apellidos ?: "Sin Apellidos"}",color = colorResource(R.color.black))
+        Text("Fecha Nacimiento: ${member.fechaNac ?: "Sin Fecha"}",color = colorResource(R.color.black))
 
         Spacer(modifier = Modifier.height(32.dp))
 
@@ -191,12 +193,15 @@ fun MemberDetailScreenWithDelete(member: MemberDTO, onBack: () -> Unit, onDelete
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(onClick = onBack) {
-                Text("Volver")
+            Button(onClick = onBack
+            ) {
+                Text(text ="Volver",
+                    textDecoration = TextDecoration.Underline
+                )
             }
             Button(
                 onClick = { member.idUsuario?.let { onDelete(it) } },
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
+                colors = ButtonDefaults.buttonColors(containerColor = colorResource(R.color.purple_200))
             ) {
                 Text("Eliminar Miembro")
             }

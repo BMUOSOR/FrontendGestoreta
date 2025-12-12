@@ -1,4 +1,4 @@
-package com.example.frontendgestoreta.ui.components
+ package com.example.frontendgestoreta.ui.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
