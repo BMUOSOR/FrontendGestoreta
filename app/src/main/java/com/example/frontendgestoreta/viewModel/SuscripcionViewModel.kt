@@ -32,6 +32,8 @@ class SuscripcionViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 repository.getSuscriptionsFromUser(member.idUsuario)
+                val fallasResult = fallaRepository.getAllFallas()
+                _fallas.value = fallasResult
             } catch(e: Exception) {
                 Log.e("SuscripcionViewModel", "Error al obtener suscripciones: ${e.message}")
             }
