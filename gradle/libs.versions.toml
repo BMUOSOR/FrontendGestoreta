@@ -16,6 +16,8 @@ ui = "1.9.4"
 osmdroid = "6.1.18"
 uiText = "1.10.0"
 coreI18n = "1.0.0"
+foundation = "1.10.0"
+uiVersion = "1.10.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -40,6 +42,8 @@ androidx-compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref 
 osmdroid-android = { group = "org.osmdroid", name = "osmdroid-android", version.ref = "osmdroid" }
 androidx-compose-ui-text = { group = "androidx.compose.ui", name = "ui-text", version.ref = "uiText" }
 androidx-core-i18n = { group = "androidx.core", name = "core-i18n", version.ref = "coreI18n" }
+androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
+ui = { group = "androidx.compose.ui", name = "ui", version.ref = "uiVersion" }
 
 
 [plugins]

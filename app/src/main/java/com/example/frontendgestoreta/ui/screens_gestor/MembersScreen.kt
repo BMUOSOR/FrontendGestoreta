@@ -1,12 +1,19 @@
 package com.example.frontendgestoreta.ui.screens_gestor
 
+import android.R.attr.background
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -18,7 +25,7 @@ import com.example.frontendgestoreta.ui.components.MemberCard
 import com.example.frontendgestoreta.ui.components.MemberRequestCard
 import com.example.frontendgestoreta.ui.components.MemberDetailScreen
 import com.example.frontendgestoreta.ui.components.MemberRequestDetailScreen
-
+import com.example.frontendgestoreta.R
 
 @Composable
 fun MembersScreen(viewModel: MemberViewModel = viewModel()) {
@@ -29,6 +36,7 @@ fun MembersScreen(viewModel: MemberViewModel = viewModel()) {
     var selectedMember by remember { mutableStateOf<MemberDTO?>(null) }
     var selectedMemberRequest by remember { mutableStateOf<MemberRequestDTO?>(null) }
     var showRequests by remember { mutableStateOf(false) }
+
 
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -68,26 +76,58 @@ fun MembersScreen(viewModel: MemberViewModel = viewModel()) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .background(colorResource(R.color.white))
                     .padding(paddingValues) // Importante para el Scaffold
                     .padding(16.dp)
             ) {
                 Text(
-                    text = "Gestión de la Falla",
+                    text = "Miembros",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                    color = Color.Black,
+                    modifier = Modifier.padding(bottom = 8.dp) // menos padding abajo
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Botón para alternar entre Miembros y Solicitudes
-                Button(
-                    onClick = { showRequests = !showRequests },
-                    modifier = Modifier.fillMaxWidth()
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(40.dp)
+                        .clip(RoundedCornerShape(14.dp))
+                        .background(colorResource(R.color.lillac)),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(if (showRequests) "Ver Miembros Actuales (${members.size})" else "Ver Solicitudes Pendientes (${requests.size})")
-                }
 
+                    // ACEPTADOS
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .padding(4.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(if (!showRequests) colorResource(R.color.white) else Color.Transparent)
+                            .clickable { showRequests = false },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("Aceptados", color = Color.Black)
+                    }
+
+                    // SOLICITUDES
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .padding(4.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(if (showRequests) colorResource(R.color.white) else Color.Transparent)
+                            .clickable { showRequests = true },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("Solicitudes", color = Color.Black)
+                    }
+                }
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
@@ -106,14 +146,14 @@ fun MembersScreen(viewModel: MemberViewModel = viewModel()) {
                         items(members) { member ->
                             MemberCard(
                                 member = member,
-                                onCardClick = { selectedMember = member }
+                                onButtonClick = { selectedMember = member }
                             )
                         }
                     } else {
                         items(requests) { req ->
                             MemberRequestCard(
                                 request = req,
-                                onCardClick = { selectedMemberRequest = req },
+                                onInfoClick = { selectedMemberRequest = req },
                                 // Llama a las funciones del ViewModel
                                 onAcceptClick = { viewModel.acceptRequest(req.idSolicitud!!) },
                                 onRejectClick = { viewModel.rejectRequest(req.idSolicitud!!) }
