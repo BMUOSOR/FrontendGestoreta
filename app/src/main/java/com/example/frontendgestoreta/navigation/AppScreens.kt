@@ -60,6 +60,12 @@ sealed class AppScreens(
         icon = R.drawable.ic_settings
     )
 
+    object SettingsGestorScreen : AppScreens(
+        route = "settings_gestor_screen",
+        title = "Ajustes de Gestor",
+        icon = R.drawable.ic_settings
+    )
+
     object Login : AppScreens(
         route = "login",
         title = "Inicio de sesión",

@@ -161,7 +161,7 @@ fun MainScreenGestor(
                 }
                 composable(AppScreens.FallaSettings.route) {
                     topBarTitle = AppScreens.FallaSettings.title!!
-                    FallaSettingsScreen()
+                    FallaSettingsScreen(navController = navController)
                 }
                 composable(AppScreens.Settings.route) {
                     topBarTitle = AppScreens.Settings.title!!
