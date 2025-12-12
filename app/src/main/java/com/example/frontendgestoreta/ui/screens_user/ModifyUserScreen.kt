@@ -2,6 +2,7 @@ package com.example.frontendgestoreta.ui.screens_user
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -100,11 +101,41 @@ fun ModifyUserScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         //Campo Fecha Nacimiento
-        DatePickerField(
-            label = "Fecha de nacimiento",
-            date = fecha,
-            onDateSelected = { selected -> fecha = selected },
+        Text(
+            text = "Fecha de nacimiento",
+            fontWeight = FontWeight.Medium,
+            fontSize = 16.sp
         )
+        Spacer(modifier = Modifier.height(4.dp))
+
+        Box (    modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center) {
+
+            // Campo Temporal para ver la fecha de color negro
+            Box() {
+                OutlinedTextField(
+                    value = fecha.toString(),
+                    onValueChange = { },
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = { Text("Ingresa tu nacimiento") },
+                    singleLine = true,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedTextColor = Color.Black,
+                        unfocusedTextColor = Color.Black,
+                    ),
+                    readOnly = true,
+                )
+            }
+
+            Box() {
+                DatePickerField(
+                    label = "Fecha de nacimiento",
+                    date = fecha,
+                    onDateSelected = { selected -> fecha = selected },
+                )
+            }
+
+        }
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -124,7 +155,11 @@ fun ModifyUserScreen(
                 onClick = {
                     val editedMember = member.copy(
                         nombre = nombre,
+                        apellidos = apellidos,
+                        fechaNac = fecha,
                     )
+                    Log.d("ModifyUserScreen", "Miembro editado: " + editedMember.apellidos)
+                    Log.d("ModifyUserScreen", "Miembro editado: " + editedMember.fechaNac)
                     viewModel.updateUsuario(editedMember);
                     onBack()
                 },
