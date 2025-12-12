@@ -185,7 +185,7 @@ fun MainScreen(
                     }
                     composable(AppScreens.NotificationsScreen.route) {
                         topBarTitle = AppScreens.NotificationsScreen.title!!
-                        NotificationsScreen()
+                        NotificationsScreen(member = user!!)
                     }
                     // Detalle del evento
                     composable(

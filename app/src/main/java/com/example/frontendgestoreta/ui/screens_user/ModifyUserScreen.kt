@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.frontendgestoreta.data.models.EventDTO
 import com.example.frontendgestoreta.data.models.MemberDTO
+import com.example.frontendgestoreta.ui.components.DatePickerField
 import com.example.frontendgestoreta.viewModel.EventViewModel
 import com.example.frontendgestoreta.viewModel.MemberViewModel
 import java.time.LocalDate
@@ -46,6 +47,7 @@ fun ModifyUserScreen(
     // Estados para los campos del formulario
     var nombre by remember { mutableStateOf(member.nombre ?: "") }
     var apellidos by remember { mutableStateOf(member.apellidos ?: "") }
+    var fecha by remember { mutableStateOf(member.fechaNac ?: LocalDate.now()) }
 
     val scrollState = rememberScrollState()
 
@@ -93,6 +95,15 @@ fun ModifyUserScreen(
                 focusedTextColor = Color.Black,
                 unfocusedTextColor = Color.Black,
             )
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        //Campo Fecha Nacimiento
+        DatePickerField(
+            label = "Fecha de nacimiento",
+            date = fecha,
+            onDateSelected = { selected -> fecha = selected },
         )
 
         Spacer(modifier = Modifier.height(24.dp))

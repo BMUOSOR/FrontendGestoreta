@@ -27,11 +27,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.frontendgestoreta.data.models.FallaDTO
+import com.example.frontendgestoreta.data.models.MemberDTO
 import com.example.frontendgestoreta.viewModel.FallaViewModel
 import com.example.frontendgestoreta.viewModel.SuscripcionViewModel
 
 @Composable
-fun NotificationsScreen(viewModel: SuscripcionViewModel = viewModel()) {
+fun NotificationsScreen(viewModel: SuscripcionViewModel = viewModel(), member: MemberDTO) {
+
+    viewModel.getFromCuenta(member)
     val fallas by viewModel.fallas.collectAsState()
     var selectedFalla by remember { mutableStateOf<FallaDTO?>(null) }
 
