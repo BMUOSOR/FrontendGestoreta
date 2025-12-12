@@ -62,6 +62,8 @@ dependencies {
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.text)
     implementation(libs.androidx.core.i18n)
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.ui)
     coreLibraryDesugaring ("com.android.tools:desugar_jdk_libs:2.0.4") // Usa la versión más reciente
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

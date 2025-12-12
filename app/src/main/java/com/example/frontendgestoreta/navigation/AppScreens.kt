@@ -20,7 +20,7 @@ sealed class AppScreens(
     object FallaSettings : AppScreens(
         route = "falla_settings_screen",
         title = "Ajustes de falla",
-        icon = R.drawable.ic_falla_news
+        icon = R.drawable.ic_settings
     )
     object Members : AppScreens(
         route = "members_screen",
@@ -46,7 +46,7 @@ sealed class AppScreens(
     object Fallas : AppScreens(
         route = "fallas_screen",
         title = "Fallas",
-        icon = R.drawable.ic_falla
+        icon = R.drawable.ic_fallas
     )
     object FallaNews : AppScreens(
         route = "falla_news_screen",
