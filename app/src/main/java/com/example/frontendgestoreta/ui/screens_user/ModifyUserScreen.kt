@@ -1,6 +1,12 @@
 package com.example.frontendgestoreta.ui.screens_user
 
+import android.content.Context
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -20,6 +27,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,6 +35,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.decodeToImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -35,22 +45,60 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.frontendgestoreta.data.models.EventDTO
 import com.example.frontendgestoreta.data.models.MemberDTO
 import com.example.frontendgestoreta.ui.components.DatePickerField
+import com.example.frontendgestoreta.viewModel.AuthViewModel
 import com.example.frontendgestoreta.viewModel.EventViewModel
 import com.example.frontendgestoreta.viewModel.MemberViewModel
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
 import java.time.LocalDate
+
+private fun byteArrayToFile(
+    context: Context,
+    byteArray: ByteArray,
+    fileName: String = "temp_image.jpg"
+): File {
+
+    val file = File(context.cacheDir, fileName)
+
+    file.outputStream().use { output ->
+        output.write(byteArray)
+    }
+
+    return file
+}
 
 @Composable
 fun ModifyUserScreen(
     onBack: () -> Unit,
     member: MemberDTO,
-    viewModel: MemberViewModel = viewModel()
+    viewModel: MemberViewModel = viewModel(),
+    authViewModel: AuthViewModel
 ) {
+
     // Estados para los campos del formulario
     var nombre by remember { mutableStateOf(member.nombre ?: "") }
     var apellidos by remember { mutableStateOf(member.apellidos ?: "") }
     var fecha by remember { mutableStateOf(member.fechaNac ?: LocalDate.now()) }
 
+    val imageByteArray by authViewModel.pfp.collectAsState()
     val scrollState = rememberScrollState()
+    // -----------------------------
+    // 1) Image Picker Launcher
+    // -----------------------------
+    val context = LocalContext.current
+
+    val imagePickerLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            if (uri != null) {
+                val input = context.contentResolver.openInputStream(uri)
+                val bytes = input?.readBytes()
+                if(bytes != null) {
+                    authViewModel.setPFP(bytes)
+                }
+            }
+        }
 
     Column(
         modifier = Modifier
@@ -59,6 +107,11 @@ fun ModifyUserScreen(
             .verticalScroll(scrollState),
         horizontalAlignment = Alignment.Start
     ) {
+
+
+
+        Spacer(modifier = Modifier.height(8.dp))
+
         // Campo Nombre
         Text(
             text = "Nombre",
@@ -139,6 +192,32 @@ fun ModifyUserScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
+        Box(
+            modifier = Modifier
+                .size(200.dp)
+                .clickable { imagePickerLauncher.launch("image/jpeg") }  // <-- ABRIR GALERÍA
+        ) {
+            Log.d("AuthViewModel", "${imageByteArray.size}")
+            if (imageByteArray != null && imageByteArray.size > 1) {
+                Image(
+                    bitmap = imageByteArray.decodeToImageBitmap(),
+                    contentDescription = "Imagen de perfil de $nombre $apellidos",
+                    modifier = Modifier.fillMaxSize()
+                )
+            } else {
+                // Imagen por defecto si no hay nada
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Gray),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text("Seleccionar imagen", color = Color.White)
+                }
+            }
+        }
+        Spacer(modifier = Modifier.height(24.dp))
+
         // Botones de acción
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -161,6 +240,18 @@ fun ModifyUserScreen(
                     Log.d("ModifyUserScreen", "Miembro editado: " + editedMember.apellidos)
                     Log.d("ModifyUserScreen", "Miembro editado: " + editedMember.fechaNac)
                     viewModel.updateUsuario(editedMember);
+                    if(imageByteArray.size > 1) {
+                        val file = byteArrayToFile(context,imageByteArray)
+                        val requestFile = file
+                            .asRequestBody("image/jpeg".toMediaTypeOrNull())
+                        val part = MultipartBody.Part.createFormData(
+                            "file",
+                            file.name,
+                            requestFile)
+                        authViewModel.updateProfilePicture(imageByteArray,part)
+
+                    }
+
                     onBack()
                 },
                 enabled = nombre.isNotBlank() && apellidos.isNotBlank()
@@ -168,5 +259,7 @@ fun ModifyUserScreen(
                 Text("Guardar Cambios")
             }
         }
+
+
     }
 }

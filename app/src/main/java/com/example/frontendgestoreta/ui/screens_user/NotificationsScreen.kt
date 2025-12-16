@@ -34,16 +34,15 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.frontendgestoreta.R
 import com.example.frontendgestoreta.data.models.FallaDTO
 import com.example.frontendgestoreta.data.models.MemberDTO
+import com.example.frontendgestoreta.viewModel.AuthViewModel
 import com.example.frontendgestoreta.viewModel.FallaViewModel
 import com.example.frontendgestoreta.viewModel.SuscripcionViewModel
 
 @Composable
-fun NotificationsScreen(viewModel: SuscripcionViewModel = viewModel(), member: MemberDTO) {
+fun NotificationsScreen(viewModel: AuthViewModel, member: MemberDTO) {
 
-    viewModel.getFromCuenta(member)
-    val fallas by viewModel.fallas.collectAsState()
-    var selectedFalla by remember { mutableStateOf<FallaDTO?>(null) }
 
+    var subs = viewModel.suscripciones.collectAsState().value
     Column(Modifier.padding(16.dp)) {
         // NOTIS SWITCH
         Row(
@@ -75,24 +74,13 @@ fun NotificationsScreen(viewModel: SuscripcionViewModel = viewModel(), member: M
 
         Spacer(modifier = Modifier.height(8.dp))
         LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            items(fallas) { falla ->
+            items(subs.size) { sub ->
                 Card(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { selectedFalla = falla },
+                        .fillMaxWidth(),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
                 ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Text(
-                            text = falla.nombre ?: "Sin nombre",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 18.sp
-                        )
-                        Text(
-                            text = falla.direccion ?: "Sin dirección",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
+                   
                 }
             }
         }

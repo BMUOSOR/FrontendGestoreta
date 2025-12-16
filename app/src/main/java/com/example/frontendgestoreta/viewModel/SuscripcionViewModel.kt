@@ -16,24 +16,21 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class SuscripcionViewModel : ViewModel() {
-    private val repository = SuscripcionRepository(RetrofitClient.apiService)
+    private val subscriptionRepo = SuscripcionRepository(RetrofitClient.apiService)
 
-    private val fallaRepository = FallaRepository(RetrofitClient.apiService)
 
     // Estados de datos
     private val _suscripciones = MutableStateFlow<List<SuscripcionDTO>>(emptyList())
-    private val _fallas = MutableStateFlow<List<FallaDTO>>(emptyList())
 
     val suscripciones: MutableStateFlow<List<SuscripcionDTO>> = _suscripciones
-    val fallas: StateFlow<List<FallaDTO>> = _fallas
 
 
     fun getFromCuenta(member: MemberDTO) {
         viewModelScope.launch {
             try {
-                repository.getSuscriptionsFromUser(member.idUsuario)
-                val fallasResult = fallaRepository.getAllFallas()
-                _fallas.value = fallasResult
+                val subscritionsResult = subscriptionRepo.getSuscriptionsFromUser(member.idUsuario)
+                _suscripciones.value = subscritionsResult
+
             } catch(e: Exception) {
                 Log.e("SuscripcionViewModel", "Error al obtener suscripciones: ${e.message}")
             }

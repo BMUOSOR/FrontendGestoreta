@@ -179,13 +179,14 @@ fun MainScreen(
                             ModifyUserScreen(
                                 onBack = { navController.popBackStack() },
                                 member = nonNullUser,
-                                viewModel = viewModel()
+                                viewModel = viewModel(),
+                                authViewModel = authViewModel
                             )
                         }
                     }
                     composable(AppScreens.NotificationsScreen.route) {
                         topBarTitle = AppScreens.NotificationsScreen.title!!
-                        NotificationsScreen(member = user!!)
+                        NotificationsScreen(member = user!!, viewModel = authViewModel)
                     }
                     // Detalle del evento
                     composable(
