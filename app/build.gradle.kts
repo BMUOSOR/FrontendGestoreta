@@ -58,6 +58,8 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation(libs.androidx.room.ktx)
+    implementation("com.google.android.material:material:1.10.0")
+    implementation("com.github.yalantis:ucrop:2.2.8")
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.text)
@@ -74,5 +76,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.coil.compose)
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.0")
-    implementation("com.github.yalantis:ucrop:2.2.8")
+    testImplementation(libs.mockk)
+    testImplementation(libs.turbine)
+    testImplementation(libs.coroutinesTestLib)
+    testImplementation(libs.kotlinTestLib)
 }
