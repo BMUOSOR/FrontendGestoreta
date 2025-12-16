@@ -7,9 +7,16 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import com.example.frontendgestoreta.data.models.FallaDTO
+import com.example.frontendgestoreta.navigation.AppScreens
+import com.example.frontendgestoreta.ui.screens_user.restartApp
 import com.example.frontendgestoreta.viewModel.FallaSettingsViewModel
 import com.example.frontendgestoreta.viewModel.FallaSettingsUiState
 import com.example.frontendgestoreta.viewModel.MemberViewModel
@@ -18,8 +25,11 @@ import com.example.frontendgestoreta.viewModel.MemberViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FallaSettingsScreen(
-    viewModel: FallaSettingsViewModel = viewModel()
+    viewModel: FallaSettingsViewModel = viewModel(),
+    navController: NavHostController
 ) {
+    val context = LocalContext.current
+
     // Recoge el estado del ViewModel
     val uiState by viewModel.uiState.collectAsState()
 
@@ -33,44 +43,66 @@ fun FallaSettingsScreen(
         }
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(title = { Text("Ajustes de la Falla") })
-        },
-        snackbarHost = { SnackbarHost(snackbarHostState) }
-    ) { padding ->
+    Column() {
 
-        Column(
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            when {
-                uiState.isLoading && uiState.falla == null -> {
-                    // Muestra un indicador de carga inicial
-                    CircularProgressIndicator(Modifier.padding(24.dp))
-                    Text("Cargando información...")
-                }
-                uiState.errorMessage != null -> {
-                    // Muestra un mensaje de error
-                    Text("Error: ${uiState.errorMessage}", color = MaterialTheme.colorScheme.error)
-                }
-                uiState.falla != null -> {
-                    FallaDetailsForm(
-                        falla = uiState.falla!!,
-                        onFieldChange = { nombre, descripcion, direccion ->
-                            viewModel.updateFallaField(
-                                nombre = nombre,
-                                descripcion = descripcion,
-                                direccion = direccion
-                            )
-                        },
-                        onSave = viewModel::saveFallaDetails,
-                        isSaving = uiState.isLoading
-                    )
+    TextButton(
+        modifier = Modifier.fillMaxWidth()
+            .height(48.dp),
+        onClick = {
+            restartApp(context)
+        }
+    ) {
+        Text(
+            "Cerrar sesión",
+            textDecoration = TextDecoration.Underline,
+            color = Color.Black
+        )
+    }
+        Scaffold(
+            topBar = {
+                TopAppBar(title = { Text("Ajustes de la Falla") })
+            },
+            snackbarHost = { SnackbarHost(snackbarHostState) }
+        ) { padding ->
+
+            Column(
+                modifier = Modifier
+                    .padding(padding)
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+                when {
+                    uiState.isLoading && uiState.falla == null -> {
+                        // Muestra un indicador de carga inicial
+                        CircularProgressIndicator(Modifier.padding(24.dp))
+                        Text("Cargando información...")
+                    }
+
+                    uiState.errorMessage != null -> {
+                        // Muestra un mensaje de error
+                        Text(
+                            "Error: ${uiState.errorMessage}",
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+
+                    uiState.falla != null -> {
+                        FallaDetailsForm(
+                            falla = uiState.falla!!,
+                            onFieldChange = { nombre, descripcion, direccion ->
+                                viewModel.updateFallaField(
+                                    nombre = nombre,
+                                    descripcion = descripcion,
+                                    direccion = direccion
+                                )
+                            },
+                            onSave = viewModel::saveFallaDetails,
+                            isSaving = uiState.isLoading
+                        )
+                    }
                 }
             }
         }
