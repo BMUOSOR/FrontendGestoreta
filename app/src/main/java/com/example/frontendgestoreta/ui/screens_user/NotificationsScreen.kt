@@ -1,6 +1,7 @@
 package com.example.frontendgestoreta.ui.screens_user
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,6 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -41,8 +43,17 @@ import com.example.frontendgestoreta.viewModel.SuscripcionViewModel
 
 @Composable
 fun NotificationsScreen(viewModel: AuthViewModel, member: MemberDTO) {
-    
+
     var subs = viewModel.suscripciones.collectAsState().value
+    var notisActivated by remember { mutableStateOf(true) }
+
+    val textOnEnable = "Notificaciones activas!"
+    val textOnDisable = "Notificaciones desactivadas!"
+    val duration = Toast.LENGTH_SHORT
+    val toastEnable = Toast.makeText(LocalContext.current, textOnEnable, duration)
+    val toastDisable = Toast.makeText(LocalContext.current, textOnDisable, duration)
+
+    Log.d("NotificationsScreen", "Subs: ${subs.size}")
 
     Column(Modifier.padding(16.dp)) {
         // NOTIS SWITCH
@@ -59,8 +70,16 @@ fun NotificationsScreen(viewModel: AuthViewModel, member: MemberDTO) {
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             Switch(
-                checked = true, //notificationsOn ?: true,
-                onCheckedChange = { newValue ->
+                checked = notisActivated,
+                onCheckedChange = {
+                    notisActivated = it
+
+                    if (it) {
+                        toastEnable.show()
+                    } else {
+                        toastDisable.show()
+                    }
+
 
                 },
                 colors = SwitchDefaults.colors(
