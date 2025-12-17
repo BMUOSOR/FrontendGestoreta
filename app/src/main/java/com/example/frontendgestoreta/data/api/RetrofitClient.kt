@@ -16,7 +16,8 @@ import java.util.concurrent.TimeUnit
 
 
 object RetrofitClient {
-    private const val BASE_URL = "http://10.0.2.2:8080/api/"
+    private const val BASE_URL = "http://192.168.1.31:8080/api/"
+
 
     // ADAPTADOR PARA OffsetDateTime (createdAt)
     private val offsetDateTimeDeserializer = JsonDeserializer<OffsetDateTime> { json, _, _ ->

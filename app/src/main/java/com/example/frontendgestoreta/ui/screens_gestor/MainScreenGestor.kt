@@ -47,7 +47,6 @@ import com.example.frontendgestoreta.ui.components.CreateEventScreen
 import com.example.frontendgestoreta.ui.components.EditEventScreen
 import com.example.frontendgestoreta.ui.components.MainTopBar
 import com.example.frontendgestoreta.ui.screens_user.ModifyUserScreen
-import com.example.frontendgestoreta.ui.screens_user.NotificationsScreen
 import com.example.frontendgestoreta.ui.screens_user.SettingsScreen
 import com.example.frontendgestoreta.ui.theme.FrontendGestoretaTheme
 import com.example.frontendgestoreta.viewModel.AuthViewModel
@@ -165,15 +164,11 @@ fun MainScreenGestor(
                 }
                 composable(AppScreens.FallaSettings.route) {
                     topBarTitle = AppScreens.FallaSettings.title!!
-                    FallaSettingsScreen()
+                    FallaSettingsScreen(navController = navController)
                 }
                 composable(AppScreens.Settings.route) {
                     topBarTitle = AppScreens.Settings.title!!
                     SettingsGestorScreen(navController = navController)
-                }
-                composable(AppScreens.NotificationsScreen.route) {
-                    topBarTitle = AppScreens.NotificationsScreen.title!!
-                    NotificationsScreen()
                 }
 
                 composable(

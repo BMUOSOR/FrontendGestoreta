@@ -45,6 +45,9 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import android.Manifest
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 
 val LightPurpleBg = Color(0xFFD0C4FF)
 val SelectedPurple = Color(0xFF6750A4)
@@ -85,6 +88,8 @@ fun MapScreen() {
     var mapController by remember { mutableStateOf<org.osmdroid.api.IMapController?>(null) }
     val scope = rememberCoroutineScope()
     var searchQuery by remember { mutableStateOf("") }
+    var mapView by remember { mutableStateOf<MapView?>(null) }
+    var showNoEventsMessage by remember { mutableStateOf(false) }
 
     // Coordenadas para pines
     val allEvents = remember {
@@ -127,6 +132,70 @@ fun MapScreen() {
         )
     }
     val selectedCategory = categories.find { it.isSelected }
+
+    LaunchedEffect(selectedCategory) {
+        selectedCategory?.let { cat ->
+            val eventsInCategory = allEvents.filter { it.categoryName == cat.name }
+
+            if (eventsInCategory.isEmpty()) {
+                showNoEventsMessage = true
+                return@let
+            } else {
+                showNoEventsMessage = false
+            }
+
+            val mv = mapView ?: return@LaunchedEffect
+
+            val minLat = eventsInCategory.minOf { it.lat }
+            val maxLat = eventsInCategory.maxOf { it.lat }
+            val minLon = eventsInCategory.minOf { it.lon }
+            val maxLon = eventsInCategory.maxOf { it.lon }
+
+            val boundingBox = org.osmdroid.util.BoundingBox(
+                maxLat,
+                maxLon,
+                minLat,
+                minLon
+            )
+
+            // Centra antes de animar
+            mv.controller.setCenter(
+                GeoPoint(
+                    (minLat + maxLat) / 2,
+                    (minLon + maxLon) / 2
+                )
+            )
+
+            // Ajuste correcto de zoom mostrando todos los pines
+            val paddingFactor = 0.20 // 10% de margen
+
+            val latPadding = (maxLat - minLat) * paddingFactor
+            val lonPadding = (maxLon - minLon) * paddingFactor
+
+            val paddedBoundingBox = org.osmdroid.util.BoundingBox(
+                maxLat + latPadding,
+                maxLon + lonPadding,
+                minLat - latPadding,
+                minLon - lonPadding
+            )
+
+            // Centra el mapa antes de aplicar el zoom
+            mv.controller.setCenter(
+                GeoPoint(
+                    (minLat + maxLat) / 2,
+                    (minLon + maxLon) / 2
+                )
+            )
+
+            // Ahora ajusta el zoom incluyendo el margen
+            mv.zoomToBoundingBox(paddedBoundingBox, true)
+
+        }
+    }
+
+
+
+
 
     Box(modifier = Modifier.fillMaxSize()) {
         BottomSheetScaffold(
@@ -174,7 +243,11 @@ fun MapScreen() {
                         onEventClick = { event ->
                             selectedEventPopup = event
                         },
-                        onMapReady = { mapView -> mapController = mapView.controller }
+                        onMapReady = { mv ->
+                            mapView = mv
+                            mapController = mv.controller
+                        }
+
                     )
 
                     androidx.compose.animation.AnimatedVisibility(
@@ -199,6 +272,26 @@ fun MapScreen() {
                                     }
                                 },
                                 onClose = { selectedEventPopup = null }
+                            )
+                        }
+                    }
+                    AnimatedVisibility(
+                        visible = showNoEventsMessage,
+                        enter = fadeIn() + slideInVertically { it },
+                        exit = fadeOut() + slideOutVertically { it },
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .padding(top = 100.dp)
+                    ) {
+                        Surface(
+                            color = Color(0xFF6750A4),
+                            shape = RoundedCornerShape(12.dp),
+                            shadowElevation = 8.dp
+                        ) {
+                            Text(
+                                text = "No hay eventos en esta categoría",
+                                color = Color.White,
+                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
                             )
                         }
                     }

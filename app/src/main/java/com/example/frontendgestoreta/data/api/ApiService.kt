@@ -11,6 +11,7 @@ import com.example.frontendgestoreta.data.models.Tag
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -112,5 +113,20 @@ interface ApiService {
         @Part file: MultipartBody.Part,
         @Part("nombreImagen") nombreImagen: RequestBody
     ) : ResponseBody
+
+    @Multipart
+    @POST("usuario/{id}/profile-image/upload")
+    suspend fun uploadFoto(
+        @Path("id") id: Long,
+        @Part file: MultipartBody.Part
+    ) : Response<String>
+
+    @GET("usuario/{id}/profile-image/file")
+    suspend fun getProfileImageOfUser(@Path("id") idUsuario: Long) : Response<ResponseBody>
+
+    @GET("falla/getEscudo/{idFalla}")
+    suspend fun getEscudoFalla(
+        @Path("idFalla") idFalla: Long
+    ): Response<ResponseBody>
 
 }

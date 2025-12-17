@@ -1,10 +1,12 @@
 package com.example.frontendgestoreta.repository
 
+import android.util.Log
 import com.example.frontendgestoreta.data.api.ApiService
 import com.example.frontendgestoreta.data.api.RetrofitClient
 import com.example.frontendgestoreta.data.models.EventDTO
 import com.example.frontendgestoreta.data.models.MemberDTO
 import com.example.frontendgestoreta.data.models.MemberRequestDTO
+import okhttp3.MultipartBody
 import java.time.LocalDate
 import java.time.OffsetDateTime
 
@@ -70,6 +72,15 @@ class MemberRepository(private val apiService: ApiService) {
 
     suspend fun updateUsuario(member: MemberDTO) {
         apiService.updateUsuario(member.idUsuario, member)
+    }
+
+    suspend fun getUserImage(idUsuario : Long) : ByteArray {
+        return apiService.getProfileImageOfUser(idUsuario).body()?.bytes() ?: ByteArray(0)
+    }
+
+    suspend fun uploadUserImage(idUsuario: Long, file : MultipartBody.Part) {
+        val response = apiService.uploadFoto(idUsuario,file)
+        Log.d("AuthViewModel", "Respuesta: $response")
     }
 
 }

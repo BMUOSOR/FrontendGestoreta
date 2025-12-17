@@ -14,6 +14,11 @@ roomKtx = "2.8.3"
 material3 = "1.4.0"
 ui = "1.9.4"
 osmdroid = "6.1.18"
+mockk = "1.13.11"
+turbine = "1.0.0"
+coroutinesTest = "1.7.3"
+kotlinTest = "1.9.22"
+
 uiText = "1.10.0"
 coreI18n = "1.0.0"
 foundation = "1.10.0"
@@ -40,6 +45,10 @@ androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = 
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 androidx-compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "ui" }
 osmdroid-android = { group = "org.osmdroid", name = "osmdroid-android", version.ref = "osmdroid" }
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
+coroutinesTestLib = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesTest" }
+kotlinTestLib = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlinTest" }
 androidx-compose-ui-text = { group = "androidx.compose.ui", name = "ui-text", version.ref = "uiText" }
 androidx-core-i18n = { group = "androidx.core", name = "core-i18n", version.ref = "coreI18n" }
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
