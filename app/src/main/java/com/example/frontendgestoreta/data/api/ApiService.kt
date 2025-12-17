@@ -89,7 +89,7 @@ interface ApiService {
     suspend fun updateEvent(
         @Path("idEvento") idEvento: Long,
         @Body event: EventDTO
-    )
+    ): EventDTO
 
 
     @PUT("usuario/updateUsuario/{idUsuario}")

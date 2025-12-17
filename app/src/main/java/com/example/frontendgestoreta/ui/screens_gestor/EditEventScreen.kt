@@ -1,4 +1,4 @@
-package com.example.frontendgestoreta.ui.components
+package com.example.frontendgestoreta.ui.screens_gestor
 
 import android.app.Activity
 import android.content.Context
@@ -30,6 +30,7 @@ import com.example.frontendgestoreta.viewModel.EventViewModel
 import java.time.LocalDate
 import coil.compose.rememberAsyncImagePainter
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContract
 import androidx.compose.foundation.Image
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -40,29 +41,35 @@ import java.io.FileOutputStream
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import com.example.frontendgestoreta.data.models.Tag
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateEventScreen(
+fun EditEventScreen(
     onBack: () -> Unit,
     viewModel: EventViewModel = viewModel(),
-    userGestor: GestorDTO
+    userGestor: GestorDTO,
+    event: EventDTO
 ) {
-    var titulo by remember { mutableStateOf("") }
-    var tag: Tag? by remember { mutableStateOf(null) }
-    var descripcion by remember { mutableStateOf("") }
-    var ubicacion by remember { mutableStateOf("") }
-    var maxPersonas by remember { mutableStateOf("") }
-    var fecha by remember { mutableStateOf(LocalDate.now()) }
+    var titulo by remember { mutableStateOf(""+event.titulo) }
+    var tag: Tag? by remember { mutableStateOf(event.tag) }
+    var descripcion by remember { mutableStateOf(""+event.descripcion) }
+    var ubicacion by remember { mutableStateOf(""+event.ubicacion) }
+    var maxPersonas by remember { mutableStateOf(""+event.maxPersonas) }
+    var fecha by remember { mutableStateOf(event.fecha) }
     var showDatePickerDialog by remember { mutableStateOf(false) }
-    var croppedImageUri by remember { mutableStateOf<Uri?>(null) }
+    var croppedImageUri by remember { mutableStateOf<Uri?>(Uri.parse(event.imagen!!)) }
     val context = LocalContext.current
+
     val cropLauncher = rememberLauncherForActivityResult(
-        contract = object : androidx.activity.result.contract.ActivityResultContract<UCrop, Uri?>() {
-            override fun createIntent(context: Context, input: UCrop): android.content.Intent {
+        contract = object : ActivityResultContract<UCrop, Uri?>() {
+            override fun createIntent(context: Context, input: UCrop): Intent {
                 return input.getIntent(context)
             }
-            override fun parseResult(resultCode: Int, intent: android.content.Intent?): Uri? {
+            override fun parseResult(resultCode: Int, intent: Intent?): Uri? {
                 return if (resultCode == Activity.RESULT_OK && intent != null) {
                     UCrop.getOutput(intent)
                 } else null
@@ -103,7 +110,7 @@ fun CreateEventScreen(
         containerColor = colorResource(R.color.white), // Fondo blanco explícito
         topBar = {
             TopAppBar(
-                title = { Text("Crear Evento",
+                title = { Text("Editar Evento",
                     fontWeight = FontWeight.Bold,
                     color = colorResource(R.color.black))
                 },
@@ -269,7 +276,7 @@ fun CreateEventScreen(
                 Text("Fecha", fontWeight = FontWeight.Medium, fontSize = 16.sp)
                 Spacer(Modifier.height(4.dp))
                 OutlinedTextField(
-                    value = fecha.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")), // Mostrar la fecha formateada
+                    value = fecha!!.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")), // Mostrar la fecha formateada
                     onValueChange = { /* Solo lectura */ },
                     readOnly = true, // Es de solo lectura
                     modifier = Modifier
@@ -360,6 +367,7 @@ fun CreateEventScreen(
                     Button(
                         onClick = {
                             val nuevoEvento = EventDTO(
+                                idEvento = event.idEvento,
                                 titulo = titulo,
                                 descripcion = descripcion,
                                 ubicacion = ubicacion,
@@ -369,29 +377,41 @@ fun CreateEventScreen(
                                 tag = tag,
                                 imagen = null
                             )
-                            viewModel.createEvent(nuevoEvento) { createdEvent ->
+                            viewModel.updateEvent(nuevoEvento) { createdEvent ->
                                 if (createdEvent != null) {
-                                    Log.d("CreateEvent", "Evento creado con ID: ${createdEvent.idEvento}")
-
-                                    viewModel.uploadImagenEvento(createdEvent.idEvento!!, croppedImageUri!!, File(croppedImageUri!!.path).name) { createdImageName ->
-                                        if (createdImageName != null) {
-                                            Log.d("CreateEvent", "Imagen subida con nombre: $createdImageName")
-                                            createdEvent.imagen = createdImageName
-                                            viewModel.updateEvent(createdEvent, onResult = { updatedEvent ->
-                                                if (updatedEvent != null) {
-                                                    Log.d("CreateEvent", "Evento actualizado con ID: ${updatedEvent.idEvento}")
-                                                }
-                                            })
+                                    viewModel.viewModelScope.launch(Dispatchers.IO) {
+                                        val tempFile = if (croppedImageUri.toString().startsWith("http")) {
+                                            urlToTempFile(context, croppedImageUri.toString())
                                         } else {
-                                            Log.e("CreateEvent", "Error subiendo imagen")
-                                        }}
-                                    onBack()
+                                            uriToTempFile(context, croppedImageUri!!)
+                                        }
+
+                                        if (tempFile != null) {
+                                            viewModel.uploadImagenEvento(
+                                                createdEvent.idEvento!!,
+                                                Uri.fromFile(tempFile),
+                                                tempFile.name
+                                            ) { createdImageName ->
+                                                if (createdImageName != null) {
+                                                    Log.d("EditEvent", "Imagen subida con nombre: $createdImageName")
+                                                    createdEvent.imagen = createdImageName
+                                                    viewModel.updateEvent(createdEvent) { updatedEvent ->
+                                                        if (updatedEvent != null) {
+                                                            Log.d("EditEvent", "Evento actualizado con ID: ${updatedEvent.idEvento}")
+                                                        }
+                                                    }
+                                                } else {
+                                                    Log.e("EditEvent", "Error subiendo imagen")
+                                                }
+                                            }
+                                        }
+                                    }
                                 } else {
-                                    Log.e("CreateEvent", "Error creando evento")
+                                    Log.e("EditEvent", "Error creando evento")
                                 }
                             }
 
-                            Log.d("CreateEventScreen", "Evento creado: " + nuevoEvento.titulo)
+                            Log.d("EditEventScreen", "Evento editado: " + nuevoEvento.titulo)
                             onBack()
                         },
                         enabled = isEnabled,
@@ -402,10 +422,45 @@ fun CreateEventScreen(
                             disabledContentColor = colorResource(R.color.white)     // texto cuando está deshabilitado
                         )
                     ) {
-                        Text("Crear Evento")
+                        Text("Editar Evento")
                     }
                 }
             }
         }
     }
 }
+fun uriToTempFile(context: Context, uri: Uri): File? {
+    return try {
+        val inputStream = context.contentResolver.openInputStream(uri) ?: return null
+        val tempFile = File(context.cacheDir, "upload_${System.currentTimeMillis()}.jpg")
+        FileOutputStream(tempFile).use { output ->
+            inputStream.copyTo(output)
+        }
+        tempFile
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
+    }
+}
+
+
+
+suspend fun urlToTempFile(context: Context, urlString: String): File? {
+    return withContext(Dispatchers.IO) {
+        try {
+            val url = java.net.URL(urlString)
+            val connection = url.openConnection()
+            connection.connect()
+            val inputStream = connection.getInputStream()
+            val tempFile = File(context.cacheDir, "upload_${System.currentTimeMillis()}.jpg")
+            FileOutputStream(tempFile).use { output ->
+                inputStream.copyTo(output)
+            }
+            tempFile
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+}
+

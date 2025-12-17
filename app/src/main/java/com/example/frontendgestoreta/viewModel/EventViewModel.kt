@@ -92,12 +92,14 @@ class EventViewModel : ViewModel() {
         }
     }
 
-    fun updateEvent(event: EventDTO) {
+    fun updateEvent(event: EventDTO, onResult: (EventDTO?) -> Unit) {
         viewModelScope.launch {
             try {
-                repository.updateEvent(event)
-            } catch(e: Exception) {
+                val created = repository.updateEvent(event)
+                onResult(created)
+            }catch(e: Exception) {
                 Log.e("EventViewModel", "Error al editar el evento: ${e.message}")
+                onResult(null)
             }
         }
     }

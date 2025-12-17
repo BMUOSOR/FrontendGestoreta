@@ -40,7 +40,7 @@ fun EditEventScreen(
     event: EventDTO,
     viewModel: EventViewModel = viewModel()
 ) {
-    // Estados para los campos del formulario
+    /*// Estados para los campos del formulario
     var titulo by remember { mutableStateOf(event.titulo ?: "") }
     var descripcion by remember { mutableStateOf(event.descripcion ?: "") }
     var ubicacion by remember { mutableStateOf(event.ubicacion ?: "") }
@@ -183,5 +183,5 @@ fun EditEventScreen(
                 Text("Guardar Cambios")
             }
         }
-    }
+    }*/
 }

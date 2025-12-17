@@ -15,9 +15,10 @@ class AuthViewModel : ViewModel() {
     private val repository = AuthRepository()
 
     private val _currentUser = MutableStateFlow<MemberDTO?>(null)
+    private val _currentUserGestor = MutableStateFlow<GestorDTO?>(null)
     val currentUser: StateFlow<MemberDTO?> = _currentUser
-    var currentUserGestor = mutableStateOf<GestorDTO?>(null)
-        private set
+    val currentUserGestor: StateFlow<GestorDTO?> = _currentUserGestor
+
 
     var isLoading = mutableStateOf(false)
         private set
@@ -46,7 +47,7 @@ class AuthViewModel : ViewModel() {
             error.value = null
             try {
                 val gestor = repository.loginAsGestor()
-                currentUserGestor.value = gestor
+                _currentUserGestor.value = gestor
                 onSuccess()
             } catch (e: Exception) {
                 error.value = e.message

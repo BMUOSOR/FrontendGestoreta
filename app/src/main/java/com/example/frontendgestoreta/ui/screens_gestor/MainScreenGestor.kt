@@ -1,5 +1,6 @@
 package com.example.frontendgestoreta.ui.screens_gestor
 
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -50,15 +51,16 @@ import com.example.frontendgestoreta.ui.screens_user.NotificationsScreen
 import com.example.frontendgestoreta.ui.screens_user.SettingsScreen
 import com.example.frontendgestoreta.ui.theme.FrontendGestoretaTheme
 import com.example.frontendgestoreta.viewModel.AuthViewModel
-import com.example.frontendgestoreta.viewModel.EventViewModel
 import com.example.frontendgestoreta.ui.screens_user.NewsDetailScreen
 import com.google.gson.Gson
 import com.example.frontendgestoreta.ui.screens_user.NewsScreen
+import com.example.frontendgestoreta.viewModel.EventViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreenGestor(
-    authViewModel: AuthViewModel = viewModel()
+    authViewModel: AuthViewModel = viewModel() ,
+    eventViewModel: EventViewModel = viewModel()
 ) {
     val user = authViewModel.currentUserGestor.value
     val navController = rememberNavController()
@@ -72,6 +74,7 @@ fun MainScreenGestor(
     var showCreateEventScreen by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var topBarTitle by remember { mutableStateOf(AppScreens.NewsGestor.title ?: "") }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -154,7 +157,7 @@ fun MainScreenGestor(
             ) {
                 composable(AppScreens.NewsGestor.route) {
                     topBarTitle = AppScreens.NewsGestor.title!!
-                    NewsScreen(navController = navController)
+                    NewsGestorScreen(navController = navController, authViewModel = authViewModel, viewModel = eventViewModel)
                 }
                 composable(AppScreens.Members.route) {
                     topBarTitle = AppScreens.Members.title!!
