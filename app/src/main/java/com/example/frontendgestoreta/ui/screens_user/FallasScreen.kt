@@ -1,5 +1,6 @@
 package com.example.frontendgestoreta.ui.screens_user
 
+import android.os.Build
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -16,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -24,6 +26,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
+import coil.decode.GifDecoder
+import coil.decode.ImageDecoderDecoder
+import coil.request.ImageRequest
 import com.example.frontendgestoreta.R
 import com.example.frontendgestoreta.data.models.FallaDTO
 import com.example.frontendgestoreta.data.models.MemberDTO
@@ -93,11 +99,20 @@ fun FallasScreen(authViewModel: AuthViewModel, viewModel: FallaViewModel = viewM
                         )
                     }
                     // ICONO DE FILTRO
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_map_filter),
-                        contentDescription = "Filtros",
-                        modifier = Modifier.size(28.dp),
-                        tint = Color.Black
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(R.drawable.gif_flame)
+                            .decoderFactory(
+                                if (Build.VERSION.SDK_INT >= 28) {
+                                    ImageDecoderDecoder.Factory()
+                                } else {
+                                    GifDecoder.Factory()
+                                }
+                            )
+                            .build(),
+                        contentDescription = "Loading flame",
+                        modifier = Modifier.size(40.dp),
+                        contentScale = ContentScale.Fit
                     )
                 }
 
@@ -184,6 +199,9 @@ fun FallaCardItem(
         falla.idFalla?.let { id ->
             viewModel.getMemberCount(id) { count -> memberCount = count }
         }
+    }
+    LaunchedEffect(falla.idFalla) {
+        viewModel.loadEscudo(falla.idFalla)
     }
 
     Card(
@@ -304,14 +322,16 @@ fun FallaCardItem(
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                if (escudoResId != null) {
+                val escudoBitmap = viewModel.escudos[falla.idFalla]
+
+                if (escudoBitmap != null) {
                     Image(
-                        painter = painterResource(id = escudoResId),
-                        contentDescription = null,
-                        contentScale = ContentScale.Fit,
+                        bitmap = escudoBitmap,
+                        contentDescription = "Escudo de la falla",
                         modifier = Modifier
                             .size(60.dp)
-                            .clip(RoundedCornerShape(8.dp))
+                            .clip(RoundedCornerShape(8.dp)),
+                        contentScale = ContentScale.Fit
                     )
                 } else {
                     Box(

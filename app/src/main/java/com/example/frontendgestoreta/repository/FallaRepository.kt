@@ -20,4 +20,13 @@ class FallaRepository(private val apiService: ApiService) {
         return allFallas.first { it.idFalla == idFalla }
     }
 
+    suspend fun getEscudoFalla(idFalla: Long): ByteArray? {
+        val response = apiService.getEscudoFalla(idFalla)
+        return if (response.isSuccessful) {
+            response.body()?.bytes()
+        } else {
+            null
+        }
+    }
+
 }

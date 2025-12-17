@@ -1,6 +1,10 @@
 package com.example.frontendgestoreta.viewModel
 
+import android.graphics.BitmapFactory
 import android.util.Log
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.frontendgestoreta.data.api.RetrofitClient
@@ -20,6 +24,9 @@ class FallaViewModel : ViewModel() {
     // Estado de la lista de fallas
     private val _fallas = MutableStateFlow<List<FallaDTO>>(emptyList())
     val fallas: StateFlow<List<FallaDTO>> = _fallas.asStateFlow()
+
+    private val _escudos = mutableStateMapOf<Long, ImageBitmap>()
+    val escudos: Map<Long, ImageBitmap> = _escudos
 
     // Estado de carga (Loading)
     private val _isLoading = MutableStateFlow(false)
@@ -48,6 +55,18 @@ class FallaViewModel : ViewModel() {
                 onResult(members.size)
             } catch (e: Exception) {
                 onResult(0)
+            }
+        }
+    }
+
+    fun loadEscudo(idFalla: Long) {
+        if (_escudos.containsKey(idFalla)) return
+
+        viewModelScope.launch {
+            val bytes = repository.getEscudoFalla(idFalla)
+            bytes?.let {
+                val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
+                _escudos[idFalla] = bitmap.asImageBitmap()
             }
         }
     }
