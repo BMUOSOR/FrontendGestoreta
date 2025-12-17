@@ -1,6 +1,10 @@
 package com.example.frontendgestoreta.ui.screens_user
 
 import android.content.Context
+import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,6 +27,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -37,13 +42,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.decodeToImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.drawable.toBitmap
+import androidx.core.graphics.drawable.toDrawable
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.frontendgestoreta.R
 import com.example.frontendgestoreta.data.models.EventDTO
 import com.example.frontendgestoreta.data.models.MemberDTO
 import com.example.frontendgestoreta.ui.components.DatePickerField
@@ -191,12 +202,18 @@ fun ModifyUserScreen(
             }
 
         }
+        Spacer(modifier = Modifier.height(24.dp))
+        Text(
+            text = "Foto de perfil",
+            fontWeight = FontWeight.Medium,
+            fontSize = 16.sp
+        )
 
         Spacer(modifier = Modifier.height(24.dp))
-
         Box(
             modifier = Modifier
                 .size(200.dp)
+                .align(Alignment.CenterHorizontally)
                 .clickable { imagePickerLauncher.launch("image/jpeg") }  // <-- ABRIR GALERÍA
         ) {
             Log.d("AuthViewModel", "${imageByteArray.size}")
@@ -207,17 +224,16 @@ fun ModifyUserScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .clip(RoundedCornerShape(24.dp))
+                        .align(Alignment.Center)
                 )
             } else {
                 // Imagen por defecto si no hay nada
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Gray),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text("Seleccionar imagen", color = Color.White)
-                }
+                Image(
+                    painter = painterResource(R.drawable.upload),
+                    contentDescription = "Suba una imagen",
+                    modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(24.dp)).align(
+                        Alignment.Center)
+                )
             }
         }
         Spacer(modifier = Modifier.height(24.dp))

@@ -66,7 +66,6 @@ fun MainScreenGestor(
     val navigationItems = listOf(
         AppScreens.NewsGestor,
         AppScreens.Members,
-        AppScreens.Map,
         AppScreens.FallaSettings
 
     )
@@ -138,7 +137,7 @@ fun MainScreenGestor(
                     contentColor = colorResource(R.color.white),
                     modifier = Modifier
                         .size(68.dp)
-                        .offset(y = 45.dp) // <--- más abajo
+                        .offset(y =5.dp) // <--- más abajo
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_add_new),
