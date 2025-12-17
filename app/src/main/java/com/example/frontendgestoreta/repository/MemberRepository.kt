@@ -78,6 +78,10 @@ class MemberRepository(private val apiService: ApiService) {
         return apiService.getProfileImageOfUser(idUsuario).body()?.bytes() ?: ByteArray(0)
     }
 
+    suspend fun deleteUserImage(idUsuario : Long) {
+        apiService.deleteProfileImageOfUser(idUsuario)
+    }
+
     suspend fun uploadUserImage(idUsuario: Long, file : MultipartBody.Part) {
         val response = apiService.uploadFoto(idUsuario,file)
         Log.d("AuthViewModel", "Respuesta: $response")

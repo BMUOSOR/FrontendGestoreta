@@ -106,6 +106,12 @@ class AuthViewModel : ViewModel() {
         }
     }
 
+    fun deleteUserImage(userId : Long) {
+        viewModelScope.launch {
+            memberRepo.deleteUserImage(userId)
+        }
+    }
+
     fun getSubsFromCuenta(idUsuario: Long) {
         viewModelScope.launch {
             try {

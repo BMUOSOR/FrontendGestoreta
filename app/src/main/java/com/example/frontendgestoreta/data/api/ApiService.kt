@@ -124,6 +124,9 @@ interface ApiService {
     @GET("usuario/{id}/profile-image/file")
     suspend fun getProfileImageOfUser(@Path("id") idUsuario: Long) : Response<ResponseBody>
 
+    @DELETE("usuario/{id}/profile-image/delete")
+    suspend fun deleteProfileImageOfUser(@Path("id") idUsuario: Long) : Response<String>
+
     @GET("falla/getEscudo/{idFalla}")
     suspend fun getEscudoFalla(
         @Path("idFalla") idFalla: Long
