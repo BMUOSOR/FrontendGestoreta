@@ -26,6 +26,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
@@ -45,6 +46,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.decodeToImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -94,7 +96,7 @@ fun ModifyUserScreen(
     var nombre by remember { mutableStateOf(member.nombre ?: "") }
     var apellidos by remember { mutableStateOf(member.apellidos ?: "") }
     var fecha by remember { mutableStateOf(member.fechaNac ?: LocalDate.now()) }
-
+    val (showInfoDialog, setShowInfoDialog) = remember { mutableStateOf(false) }
     val imageByteArray by authViewModel.pfp.collectAsState()
     val scrollState = rememberScrollState()
     // -----------------------------
@@ -271,12 +273,27 @@ fun ModifyUserScreen(
                         authViewModel.updateProfilePicture(imageByteArray,part)
 
                     }
-
-                    onBack()
+                    setShowInfoDialog(true)
                 },
                 enabled = nombre.isNotBlank() && apellidos.isNotBlank()
             ) {
                 Text("Guardar Cambios")
+            }
+            if (showInfoDialog) {
+                AlertDialog(
+                    onDismissRequest = { setShowInfoDialog(false) },
+                    containerColor = colorResource(R.color.white),
+                    title = { Text("Usuario modificado", color = colorResource(R.color.black), fontFamily = RalewayFont, fontWeight = FontWeight.SemiBold) },
+                    text = { Text("Se ha actualizado la información del usuario", color = colorResource(R.color.black), fontFamily = RalewayFont) },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            setShowInfoDialog(false)
+                            onBack()
+                        }) {
+                            Text("Aceptar", color = colorResource(R.color.indigo), fontFamily = RalewayFont)
+                        }
+                    }
+                )
             }
         }
 

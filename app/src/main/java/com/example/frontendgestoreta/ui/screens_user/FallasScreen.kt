@@ -373,6 +373,7 @@ fun JoinFallaFormContent(
     viewModel: FallaDetailViewModel = viewModel(),
 
     ) {
+    val (showInfoDialog, setShowInfoDialog) = remember { mutableStateOf(false) }
     val nombre = currentUser?.let { "${it.nombre} ${it.apellidos}".trim() } ?: ""
     val dni = currentUser?.dni ?: ""
     var motivo by remember { mutableStateOf("") }
@@ -414,12 +415,14 @@ fun JoinFallaFormContent(
                     return@Button
                 }
                 viewModel.sendJoinRequest(fallaId, nombre, dni, motivo)
+                setShowInfoDialog(true)
             },
             modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
             enabled = motivo.isNotBlank(),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9FA8DA))
         ) {
             Text("Enviar Solicitud", fontFamily = RalewayFont, fontWeight = FontWeight.SemiBold)
+
         }
         Text(
             text = "Cancelar",
@@ -430,6 +433,22 @@ fun JoinFallaFormContent(
                 fontWeight = FontWeight.Medium
             )
         )
+        if (showInfoDialog) {
+            AlertDialog(
+                onDismissRequest = { setShowInfoDialog(false) },
+                containerColor = colorResource(R.color.white),
+                title = { Text("Inscripción completada", color = colorResource(R.color.black), fontFamily = RalewayFont, fontWeight = FontWeight.SemiBold) },
+                text = { Text("Se ha enviado una solicitud a la falla", color = colorResource(R.color.black), fontFamily = RalewayFont) },
+                confirmButton = {
+                    TextButton(onClick = {
+                        setShowInfoDialog(false)
+                        onDismiss()
+                    }) {
+                        Text("Aceptar", color = colorResource(R.color.indigo), fontFamily = RalewayFont)
+                    }
+                }
+            )
+        }
         if (message != null && !message!!.contains("éxito")) {
             Text(message ?: "", color = Color.Red, fontSize = 12.sp, fontFamily = RalewayFont, fontWeight = FontWeight.Light)
         }
