@@ -34,6 +34,10 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import org.json.JSONObject
 
 //Fuente Raleway
@@ -53,6 +57,7 @@ fun NewsDetailScreen(
 ) {
     val context = LocalContext.current
     val headerHeight = 400.dp
+    var showInfoDialog by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize().background(Color.White)) {
 

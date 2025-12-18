@@ -41,6 +41,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import com.example.frontendgestoreta.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,9 +55,13 @@ fun MainScreen(
 
     val user by authViewModel.currentUser.collectAsState()
     val navController = rememberNavController()
-
+    val RalewayFont = FontFamily(
+        Font(R.font.raleway_light, FontWeight.Normal),
+        Font(R.font.raleway_semibold, FontWeight.Bold)
+    )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+    val (showInfoDialog, setShowInfoDialog) = remember { mutableStateOf(false) }
 
     // Carga de datos
     LaunchedEffect(Unit) {
@@ -131,7 +138,6 @@ fun MainScreen(
                     }
                 }
             }
-
 
         ) { innerPadding ->
 
@@ -218,11 +224,12 @@ fun MainScreen(
                             nombrePublicador = nombrePublicador,
                             relatedEvents = relatedEvents,
                             onInscribirseClick = {
+                                eventViewModel.apuntarUsuario(event.idEvento!!, user!!.idUsuario)
                                 android.util.Log.d(
                                     "Inscripción",
-                                    "Usuario inscrito en: ${event.titulo}"
+                                    "Usuario ${user!!.idUsuario} inscrito en: ${event.titulo}"
                                 )
-
+                                setShowInfoDialog(true) // <-- activamos el diálogo
                             },
                             onBack = { navController.popBackStack() },
                             onRelatedEventClick = { relatedEvent ->
@@ -235,7 +242,24 @@ fun MainScreen(
                                     launchSingleTop = true
                                 }
                             }
+
                         )
+                        if (showInfoDialog) {
+                            AlertDialog(
+                                onDismissRequest = { setShowInfoDialog(false) },
+                                containerColor = colorResource(R.color.white),
+                                title = { Text("Inscripción completada", color = colorResource(R.color.black), fontFamily = RalewayFont, fontWeight = FontWeight.SemiBold) },
+                                text = { Text("Te has inscrito correctamente en el evento.", color = colorResource(R.color.black), fontFamily = RalewayFont) },
+                                confirmButton = {
+                                    TextButton(onClick = {
+                                        setShowInfoDialog(false)
+                                        navController.popBackStack() // cerramos NewsDetailScreen
+                                    }) {
+                                        Text("Aceptar", color = colorResource(R.color.indigo), fontFamily = RalewayFont)
+                                    }
+                                }
+                            )
+                        }
                     }
                 }
             }

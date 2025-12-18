@@ -115,5 +115,14 @@ class EventViewModel : ViewModel() {
             }
         }
     }
+    fun apuntarUsuario(idEvento : Long, idUsuario : Long){
+        viewModelScope.launch {
+            try {
+                repository.apuntarUsuario(idEvento, idUsuario)
+            } catch (e: Exception) {
+                Log.e("EventViewModel", "Error apuntando usuario", e)
+            }
+        }
 
+    }
 }

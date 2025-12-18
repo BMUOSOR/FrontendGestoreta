@@ -27,6 +27,7 @@ import com.example.frontendgestoreta.ui.components.MemberRequestCard
 import com.example.frontendgestoreta.ui.components.MemberDetailScreen
 import com.example.frontendgestoreta.ui.components.MemberRequestDetailScreen
 import com.example.frontendgestoreta.R
+import com.example.frontendgestoreta.ui.screens_user.RalewayFont
 
 @Composable
 fun MembersScreen(viewModel: MemberViewModel = viewModel()) {
@@ -170,6 +171,7 @@ fun MembersScreen(viewModel: MemberViewModel = viewModel()) {
 // --- Componente de Detalle de Miembro MODIFICADO para incluir el botón de Eliminar ---
 @Composable
 fun MemberDetailScreenWithDelete(member: MemberDTO, onBack: () -> Unit, onDelete: (Long) -> Unit) {
+    val (showInfoDialog, setShowInfoDialog) = remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -201,10 +203,29 @@ fun MemberDetailScreenWithDelete(member: MemberDTO, onBack: () -> Unit, onDelete
                 )
             }
             Button(
-                onClick = { member.idUsuario?.let { onDelete(it) } },
+                onClick = {
+                    member.idUsuario?.let { onDelete(it) }
+                    setShowInfoDialog(true)
+                          },
                 colors = ButtonDefaults.buttonColors(containerColor = colorResource(R.color.purple_200))
             ) {
                 Text("Eliminar Miembro")
+            }
+            if (showInfoDialog) {
+                AlertDialog(
+                    onDismissRequest = { setShowInfoDialog(false) },
+                    containerColor = colorResource(R.color.white),
+                    title = { Text("Usuario modificado", color = colorResource(R.color.black), fontFamily = RalewayFont, fontWeight = FontWeight.SemiBold) },
+                    text = { Text("Se ha actualizado la información del usuario", color = colorResource(R.color.black), fontFamily = RalewayFont) },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            setShowInfoDialog(false)
+                            onBack()
+                        }) {
+                            Text("Aceptar", color = colorResource(R.color.indigo), fontFamily = RalewayFont)
+                        }
+                    }
+                )
             }
         }
     }
