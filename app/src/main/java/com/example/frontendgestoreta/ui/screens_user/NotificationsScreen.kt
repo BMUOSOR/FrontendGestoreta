@@ -4,9 +4,11 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -30,6 +32,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -55,7 +59,7 @@ fun NotificationsScreen(viewModel: AuthViewModel, member: MemberDTO) {
 
     Log.d("NotificationsScreen", "Subs: ${subs.size}")
 
-    Column(Modifier.padding(16.dp)) {
+    Column(Modifier.padding(24.dp)) {
         // NOTIS SWITCH
         Row(
             Modifier.fillMaxWidth(),
@@ -90,8 +94,21 @@ fun NotificationsScreen(viewModel: AuthViewModel, member: MemberDTO) {
                 )
             )
         }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
         Text("Suscripciones actuales", fontWeight = FontWeight.SemiBold)
 
+
+        // Box para centrar el texto horizontal y verticalmente
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("No estás suscrito a ninguna falla", fontWeight = FontWeight.SemiBold, fontStyle = FontStyle.Italic, color = Color.Gray)
+        }
+
+        /*
         Spacer(modifier = Modifier.height(8.dp))
         LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             items(subs.size) { sub ->
@@ -104,6 +121,6 @@ fun NotificationsScreen(viewModel: AuthViewModel, member: MemberDTO) {
                 }
             }
         }
-
+        */
     }
 }
