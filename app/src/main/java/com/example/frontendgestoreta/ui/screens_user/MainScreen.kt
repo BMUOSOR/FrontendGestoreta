@@ -159,7 +159,7 @@ fun MainScreen(
                     }
                     composable(AppScreens.Map.route) {
                         topBarTitle = AppScreens.Map.title!!
-                        MapScreen()
+                        MapScreen(navController = navController)
                     }
                     composable(AppScreens.Fallas.route) {
                         topBarTitle = AppScreens.Fallas.title!!

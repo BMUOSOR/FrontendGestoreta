@@ -48,6 +48,9 @@ import android.Manifest
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.navigation.NavController
+import com.example.frontendgestoreta.data.models.EventDTO
+import com.example.frontendgestoreta.data.models.Tag
 
 val LightPurpleBg = Color(0xFFD0C4FF)
 val SelectedPurple = Color(0xFF6750A4)
@@ -62,8 +65,12 @@ data class MapEvent(
     val lat: Double,
     val lon: Double,
     val categoryName: String,
-    val iconRes: Int
+    val iconRes: Int,
+    val description: String,
+    val tag: com.example.frontendgestoreta.data.models.Tag,
+    val ubicacion: String?
 )
+
 
 fun getResizedDrawableMaintainAspectRatio(context: android.content.Context, iconRes: Int, targetHeightPx: Int): Drawable {
     val originalBitmap = BitmapFactory.decodeResource(context.resources, iconRes)
@@ -80,7 +87,7 @@ fun getResizedDrawableMaintainAspectRatio(context: android.content.Context, icon
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MapScreen() {
+fun MapScreen(navController: NavController) {
 
     var currentTab by remember { mutableStateOf(MapTab.FILTER) }
     var selectedEventPopup by remember { mutableStateOf<MapEvent?>(null) }
@@ -94,20 +101,124 @@ fun MapScreen() {
     // Coordenadas para pines
     val allEvents = remember {
         listOf(
-            MapEvent("Casal Na Jordana", 39.4816, -0.3824, "Casales", R.drawable.ic_map_pin_casales),
-            MapEvent("Casal Convento Jerusalén", 39.4682, -0.3835, "Casales", R.drawable.ic_map_pin_casales),
-            MapEvent("Casal Plaza del Pilar", 39.4736, -0.3805, "Casales", R.drawable.ic_map_pin_casales),
-            MapEvent("Casal Cuba-Literato Azorín", 39.4612, -0.3736, "Casales", R.drawable.ic_map_pin_casales),
-            MapEvent("Casal Sueca-Literato Azorín", 39.4620, -0.3745, "Casales", R.drawable.ic_map_pin_casales),
-            MapEvent("Casal Almirante Cadarso", 39.4665, -0.3685, "Casales", R.drawable.ic_map_pin_casales),
-            MapEvent("Casal L'Antiga de Campanar", 39.4850, -0.3950, "Casales", R.drawable.ic_map_pin_casales),
+            MapEvent("Casal Na Jordana", 39.4816, -0.3824, "Casales", R.drawable.ic_map_pin_casales, tag = com.example.frontendgestoreta.data.models.Tag.Verbena, description="Casal Na Jordana", ubicacion = ""),
+            MapEvent("Casal Convento Jerusalén", 39.4682, -0.3835, "Casales", R.drawable.ic_map_pin_casales, tag = com.example.frontendgestoreta.data.models.Tag.Verbena, description="Casal Na Jordana",ubicacion = ""),
+            MapEvent("Casal Plaza del Pilar", 39.4736, -0.3805, "Casales", R.drawable.ic_map_pin_casales, tag = com.example.frontendgestoreta.data.models.Tag.Verbena, description="Casal Na Jordana",ubicacion = ""),
+            MapEvent("Casal Sueca-Literato Azorín", 39.4620, -0.3745, "Casales", R.drawable.ic_map_pin_casales, tag = com.example.frontendgestoreta.data.models.Tag.Verbena, description="Casal Na Jordana",ubicacion = ""),
+            MapEvent("Casal Almirante Cadarso", 39.4665, -0.3685, "Casales", R.drawable.ic_map_pin_casales, tag = com.example.frontendgestoreta.data.models.Tag.Verbena, description="Casal Na Jordana",ubicacion = ""),
+            MapEvent("Casal L'Antiga de Campanar", 39.4850, -0.3950, "Casales", R.drawable.ic_map_pin_casales, tag = com.example.frontendgestoreta.data.models.Tag.Verbena, description="Casal Na Jordana",ubicacion = ""),
 
-            MapEvent("Inicio Ofrenda (C/ La Paz)", 39.4739, -0.3746, "Pasacalles", R.drawable.ic_map_pin_pasacalles),
-            MapEvent("Inicio Ofrenda (San Vicente)", 39.4730, -0.3755, "Pasacalles", R.drawable.ic_map_pin_pasacalles),
-            MapEvent("Recogida de Premios (Ayto)", 39.4699, -0.3763, "Pasacalles", R.drawable.ic_map_pin_pasacalles),
-            MapEvent("Pasacalle Russafa", 39.4600, -0.3700, "Pasacalles", R.drawable.ic_map_pin_pasacalles),
-            MapEvent("Pasacalle Marítimo", 39.4650, -0.3300, "Pasacalles", R.drawable.ic_map_pin_pasacalles),
-        )
+            MapEvent(
+                name = "Inicio Ofrenda (C/ La Paz)",
+                lat = 39.4739,
+                lon = -0.3746,
+                categoryName = "Pasacalles",
+                iconRes = R.drawable.ic_map_pin_pasacalles,
+                tag = com.example.frontendgestoreta.data.models.Tag.Pasacalle,
+                description = """
+Este punto marca uno de los inicios oficiales de la Ofrenda a la Virgen de los Desamparados, uno de los actos más emotivos de las Fallas. Desde la calle de la Paz, las comisiones falleras comienzan su recorrido acompañadas por música tradicional y un ambiente solemne.
+
+Durante horas, falleras y falleros desfilan ataviados con los trajes regionales valencianos, portando ramos de flores que formarán el espectacular manto floral de la Virgen. El sonido de las bandas y el aplauso del público crean una atmósfera única.
+
+Se recomienda acudir con antelación, ya que es una de las zonas con mayor afluencia de público. Es un lugar ideal para disfrutar de la tradición fallera en su máxima expresión.
+""",
+                ubicacion = """
+{
+  "direccion": "Calle de la Paz, Valencia",
+  "ciudad": "Valencia"
+}
+""".trimIndent()
+            ),
+
+            MapEvent(
+                name = "Inicio Ofrenda (San Vicente)",
+                lat = 39.476568,
+                lon = -0.360340,
+                categoryName = "Pasacalles",
+                iconRes = R.drawable.ic_map_pin_pasacalles,
+                tag = com.example.frontendgestoreta.data.models.Tag.Pasacalle,
+                description = """
+Este inicio alternativo de la Ofrenda se sitúa en la calle San Vicente, uno de los accesos principales al recorrido hacia la Plaza de la Virgen. Desde aquí, numerosas comisiones se incorporan al desfile oficial.
+
+El ambiente es festivo y emocionante, combinando la solemnidad del acto con la alegría de las comisiones que avanzan acompañadas de música y aplausos. Es un punto muy apreciado por quienes desean vivir la Ofrenda desde sus primeros momentos.
+
+La cercanía con el centro histórico permite disfrutar del entorno urbano y de la participación ciudadana, convirtiéndolo en un lugar privilegiado para seguir el evento.
+""".trimIndent(),
+                ubicacion = """
+{
+  "direccion": "Calle San Vicente, Valencia",
+  "ciudad": "Valencia"
+}
+""".trimIndent()
+            ),
+
+            MapEvent(
+                name = "Recogida de Premios (Ayto)",
+                lat = 39.4699,
+                lon = -0.3763,
+                categoryName = "Pasacalles",
+                iconRes = R.drawable.ic_map_pin_pasacalles,
+                tag = com.example.frontendgestoreta.data.models.Tag.Pasacalle,
+                description = """
+La recogida de premios frente al Ayuntamiento de Valencia es uno de los momentos más esperados por las comisiones falleras. En este punto se celebran los logros obtenidos durante las Fallas.
+
+Las falleras mayores y representantes de cada comisión desfilan con orgullo para recoger los galardones otorgados, mientras el público acompaña el acto con aplausos y celebración.
+
+Este evento simboliza el esfuerzo colectivo de todo un año de trabajo y es una excelente oportunidad para vivir el espíritu competitivo y festivo de las Fallas en un entorno emblemático.
+""".trimIndent(),
+                ubicacion = """
+{
+  "direccion": "Plaza del Ayuntamiento, Valencia",
+  "ciudad": "Valencia"
+}
+""".trimIndent()
+            ),
+
+            MapEvent(
+                name = "Pasacalle Russafa",
+                lat = 39.4600,
+                lon = -0.3700,
+                categoryName = "Pasacalles",
+                iconRes = R.drawable.ic_map_pin_pasacalles,
+                tag = com.example.frontendgestoreta.data.models.Tag.Pasacalle,
+                description = """
+El pasacalle del barrio de Russafa recorre algunas de las calles más animadas de la zona, llenándolas de música, color y tradición fallera. Es uno de los recorridos más populares por su ambiente cercano y participativo.
+
+Las bandas de música, acompañadas por las comisiones falleras, avanzan entre vecinos y visitantes que disfrutan del desfile desde aceras y balcones. La mezcla de tradición y vida de barrio lo hace especialmente atractivo.
+
+Es una opción ideal para quienes desean vivir las Fallas de una forma más próxima, lejos de las grandes concentraciones del centro histórico.
+""".trimIndent(),
+                ubicacion = """
+{
+  "direccion": "Barrio de Russafa, Valencia",
+  "ciudad": "Valencia"
+}
+""".trimIndent()
+            ),
+
+            MapEvent(
+                name = "Pasacalle Marítimo",
+                lat = 39.4850,
+                lon = -0.3950,
+                categoryName = "Pasacalles",
+                iconRes = R.drawable.ic_map_pin_pasacalles,
+                tag = com.example.frontendgestoreta.data.models.Tag.Pasacalle,
+                description = """
+El pasacalle marítimo recorre la zona cercana al litoral valenciano, combinando la tradición fallera con el entorno del mar. Es un desfile diferente, marcado por la amplitud de las avenidas y la brisa marina.
+
+Las comisiones avanzan acompañadas por música festiva, creando un ambiente relajado y familiar. Es habitual ver tanto a vecinos como a visitantes disfrutando del recorrido.
+
+Este pasacalle es perfecto para quienes buscan una experiencia fallera más tranquila, sin renunciar a la esencia y el colorido de las fiestas.
+""".trimIndent(),
+                ubicacion = """
+{
+  "direccion": "Avenida del Mar, Valencia",
+  "ciudad": "Valencia"
+}
+""".trimIndent()
+            ),
+
+            )
     }
     val searchResults = remember(searchQuery, allEvents) {
         if (searchQuery.isBlank()) emptyList()
@@ -271,7 +382,8 @@ fun MapScreen() {
                                         savedEvents.add(event)
                                     }
                                 },
-                                onClose = { selectedEventPopup = null }
+                                onClose = { selectedEventPopup = null },
+                                navController = navController
                             )
                         }
                     }
@@ -743,6 +855,7 @@ fun MapEventPopup(
     isSaved: Boolean,
     onToggleSave: () -> Unit,
     onClose: () -> Unit,
+    navController: NavController,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -796,12 +909,55 @@ fun MapEventPopup(
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     // Botones Detalles + Guardar
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    val randomImage = (1..4).random()
+
+                    val imageRes = when (randomImage) {
+                        1 -> R.drawable.img_map_evento_1
+                        2 -> R.drawable.img_map_evento_2
+                        3 -> R.drawable.img_map_evento_3
+                        else -> R.drawable.img_map_evento_4
+                    }
+                    val ubicacionJson = """
+                    {
+                      "direccion": "${event.name}",
+                      "ciudad": "Valencia"
+                    }
+                    """.trimIndent()
+
+                        Row(verticalAlignment = Alignment.CenterVertically) {
                         // Botón Detalles
+                            if (event.tag != Tag.Verbena) {
                         Surface(
                             color = SelectedPurple,
                             shape = RoundedCornerShape(8.dp),
-                            modifier = Modifier.clickable { /* Acción detalles */ }
+                            modifier = Modifier.clickable {                                 // Codificar evento ficticio como EventDTO
+                                val eventDTO = EventDTO(
+                                    idEvento = 0,
+                                    createdAt = java.time.OffsetDateTime.now(),
+                                    fecha = java.time.LocalDate.now(),
+                                    hora = "00:00",
+                                    ubicacion = ubicacionJson,
+                                    idFalla = 0,
+                                    idAnuncio = 0,
+                                    idEtiqueta = 0,
+                                    publico = true,
+                                    titulo = event.name,
+                                    descripcion = event.description,
+                                    maxPersonas = 0,
+                                    tag = event.tag,
+                                    imagen = imageRes.toString() // placeholder
+                                )
+                                val json = com.google.gson.Gson().toJson(eventDTO)
+                                val encodedJson = android.util.Base64.encodeToString(
+                                    json.toByteArray(),
+                                    android.util.Base64.URL_SAFE or android.util.Base64.NO_WRAP
+                                )
+                                navController.navigate("event_detail/$encodedJson") {
+                                    launchSingleTop = true
+                                }
+                                onClose()
+                            }
+
                         ) {
                             Text(
                                 text = "Ver detalles",
@@ -809,7 +965,8 @@ fun MapEventPopup(
                                 style = MaterialTheme.typography.bodySmall,
                                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                             )
-                        }
+                        }}
+
 
                         Spacer(modifier = Modifier.width(16.dp))
                         Icon(

@@ -174,16 +174,13 @@ fun FallasScreen(authViewModel: AuthViewModel, viewModel: FallaViewModel = viewM
     }
 }
 
-// El resto de componentes (FallaCardItem y JoinFallaFormContent) se mantienen EXACTAMENTE igual que en tu código original.
-// No hace falta repetirlos aquí si ya los tienes en tu archivo,
-// pero asegúrate de que FallaCardItem sigue usando la lógica segura (toIntOrNull) que corregimos antes.
-
 @Composable
 fun FallaCardItem(
     falla: FallaDTO,
     viewModel: FallaViewModel,
     onJoinClick: () -> Unit
 ) {
+    // --- ESTADOS Y VARIABLES ALEATORIAS ---
     val randomPrice = remember {
         val base = (300..500).random()
         val lastDigitOptions = listOf(9, 5, 0)
@@ -193,6 +190,10 @@ fun FallaCardItem(
     val randomMembers = remember { (45..500).random() }
     val randomYear = remember { (1880..1994).random() }
     var memberCount by remember { mutableStateOf(0) }
+
+    // Estado para el botón de favorito
+    var isFavorite by remember { mutableStateOf(false) }
+
     // Lógica segura de ID
     val escudoResId = remember(falla.escudo) {
         falla.escudo?.toIntOrNull()
@@ -207,6 +208,7 @@ fun FallaCardItem(
         viewModel.loadEscudo(falla.idFalla)
     }
 
+    // --- UI ---
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -215,153 +217,176 @@ fun FallaCardItem(
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(20.dp)
-        ) {
-            // Título
-            Text(
-                text = falla.nombre ?: "Falla Sin Nombre",
-                fontFamily = RalewayFont,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 22.sp,
-                color = Color.Black
-            )
+        // Usamos BOX para superponer elementos (contenido + icono favorito)
+        Box(modifier = Modifier.fillMaxWidth()) {
 
-            // Email
-            val fakeEmail = "falla@${falla.nombre?.lowercase()?.replace(" ", "") ?: "gestoreta"}.com"
-            Text(
-                text = fakeEmail,
-                fontFamily = RalewayFont,
-                fontWeight = FontWeight.Light,
-                fontSize = 14.sp,
-                color = Color.Gray,
-                modifier = Modifier.padding(top = 4.dp)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Estadísticas
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+            // 1. CONTENIDO ORIGINAL (Column)
+            Column(
+                modifier = Modifier.padding(20.dp)
             ) {
-                // MIEMBROS
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_member_icon_falla),
-                        contentDescription = "Miembros",
-                        modifier = Modifier.size(20.dp),
-                        tint = Color.Black
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = "$randomMembers",
-                        fontFamily = RalewayFont,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 14.sp
-                    )
-                }
-
-                // PRECIO
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_precio_fallas),
-                        contentDescription = "Precio",
-                        modifier = Modifier.size(18.dp),
-                        tint = Color.Black
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = "$randomPrice€ / año",
-                        fontFamily = RalewayFont,
-                        fontWeight = FontWeight.Light,
-                        fontSize = 14.sp
-                    )
-                }
-
-                // ANTIGÜEDAD
+                // Título (Añadimos padding end para que no choque con el corazón si es muy largo)
                 Text(
-                    text = "desde $randomYear",
-                    fontFamily = RalewayFont,
+                    text = falla.nombre ?: "Falla Sin Nombre",
+                    // fontFamily = RalewayFont, // Descomentar si tienes la fuente importada
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 22.sp,
+                    color = Color.Black,
+                    modifier = Modifier.padding(end = 30.dp)
+                )
+
+                // Email
+                val fakeEmail = "falla@${falla.nombre?.lowercase()?.replace(" ", "") ?: "gestoreta"}.com"
+                Text(
+                    text = fakeEmail,
+                    // fontFamily = RalewayFont,
                     fontWeight = FontWeight.Light,
                     fontSize = 14.sp,
-                    color = Color.DarkGray
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Dirección
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = falla.direccion ?: "Calle desconocida",
-                    fontFamily = RalewayFont,
-                    fontWeight = FontWeight.Light,
-                    fontSize = 13.sp,
                     color = Color.Gray,
-                    modifier = Modifier.weight(0.6f),
-                    lineHeight = 16.sp
+                    modifier = Modifier.padding(top = 4.dp)
                 )
 
-                Text(
-                    text = "963312629",
-                    fontFamily = RalewayFont,
-                    fontWeight = FontWeight.Light,
-                    fontSize = 13.sp,
-                    color = Color.Gray,
-                    modifier = Modifier.weight(0.4f).wrapContentWidth(Alignment.End)
-                )
-            }
+                Spacer(modifier = Modifier.height(16.dp))
 
-            Spacer(modifier = Modifier.height(24.dp))
+                // Estadísticas
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    // MIEMBROS
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_member_icon_falla),
+                            contentDescription = "Miembros",
+                            modifier = Modifier.size(20.dp),
+                            tint = Color.Black
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = "$randomMembers",
+                            // fontFamily = RalewayFont,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 14.sp
+                        )
+                    }
 
-            // Imagen + Botón
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                val escudoBitmap = viewModel.escudos[falla.idFalla]
+                    // PRECIO
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_precio_fallas),
+                            contentDescription = "Precio",
+                            modifier = Modifier.size(18.dp),
+                            tint = Color.Black
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = "$randomPrice€ / año",
+                            // fontFamily = RalewayFont,
+                            fontWeight = FontWeight.Light,
+                            fontSize = 14.sp
+                        )
+                    }
 
-                if (escudoBitmap != null) {
-                    Image(
-                        bitmap = escudoBitmap,
-                        contentDescription = "Escudo de la falla",
-                        modifier = Modifier
-                            .size(60.dp)
-                            .clip(RoundedCornerShape(8.dp)),
-                        contentScale = ContentScale.Fit
-                    )
-                } else {
-                    Box(
-                        modifier = Modifier
-                            .size(60.dp)
-                            .background(Color.LightGray, RoundedCornerShape(8.dp))
+                    // ANTIGÜEDAD
+                    Text(
+                        text = "desde $randomYear",
+                        // fontFamily = RalewayFont,
+                        fontWeight = FontWeight.Light,
+                        fontSize = 14.sp,
+                        color = Color.DarkGray
                     )
                 }
 
-                Button(
-                    onClick = onJoinClick,
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9FA8DA)),
-                    shape = RoundedCornerShape(12.dp),
-                    modifier = Modifier
-                        .height(45.dp)
-                        .width(160.dp)
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Dirección
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "Inscríbete",
-                        fontFamily = RalewayFont,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 16.sp,
-                        color = Color.White
+                        text = falla.direccion ?: "Calle desconocida",
+                        // fontFamily = RalewayFont,
+                        fontWeight = FontWeight.Light,
+                        fontSize = 13.sp,
+                        color = Color.Gray,
+                        modifier = Modifier.weight(0.6f),
+                        lineHeight = 16.sp
+                    )
+
+                    Text(
+                        text = "963312629",
+                        // fontFamily = RalewayFont,
+                        fontWeight = FontWeight.Light,
+                        fontSize = 13.sp,
+                        color = Color.Gray,
+                        modifier = Modifier
+                            .weight(0.4f)
+                            .wrapContentWidth(Alignment.End)
                     )
                 }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Imagen + Botón
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.Bottom,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    val escudoBitmap = viewModel.escudos[falla.idFalla]
+
+                    if (escudoBitmap != null) {
+                        Image(
+                            bitmap = escudoBitmap,
+                            contentDescription = "Escudo de la falla",
+                            modifier = Modifier
+                                .size(60.dp)
+                                .clip(RoundedCornerShape(8.dp)),
+                            contentScale = ContentScale.Fit
+                        )
+                    } else {
+                        Box(
+                            modifier = Modifier
+                                .size(60.dp)
+                                .background(Color.LightGray, RoundedCornerShape(8.dp))
+                        )
+                    }
+
+                    Button(
+                        onClick = onJoinClick,
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9FA8DA)),
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier
+                            .height(45.dp)
+                            .width(160.dp)
+                    ) {
+                        Text(
+                            text = "Inscríbete",
+                            // fontFamily = RalewayFont,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 16.sp,
+                            color = Color.White
+                        )
+                    }
+                }
+            } // Fin Column
+
+            // 2. ICONO FAVORITO (Superpuesto)
+            IconButton(
+                onClick = { isFavorite = !isFavorite },
+                modifier = Modifier
+                    .align(Alignment.TopEnd) // Arriba a la derecha
+                    .padding(8.dp) // Un pequeño margen para que no toque el borde exacto
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_favorite),
+                    contentDescription = "Favorito",
+                    // Como el fondo es blanco, usamos Gris para inactivo y Rojo para activo
+                    tint = if (isFavorite) Color.Red else Color.LightGray
+                )
             }
-        }
+        } // Fin Box
     }
 }
 
