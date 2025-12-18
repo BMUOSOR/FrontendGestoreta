@@ -222,6 +222,7 @@ fun MainScreen(
                                     "Inscripción",
                                     "Usuario inscrito en: ${event.titulo}"
                                 )
+
                             },
                             onBack = { navController.popBackStack() },
                             onRelatedEventClick = { relatedEvent ->

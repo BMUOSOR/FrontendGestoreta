@@ -46,10 +46,8 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -168,47 +166,47 @@ fun EventFilterMenu(
                         ) {
                             Icon(
 
-                                imageVector = ImageVector.vectorResource(R.drawable.verbenas_ico),
+                                painter = painterResource(id = R.drawable.ic_verbenas),
                                 contentDescription = "Verbenas",
                                 tint = if (selectedIndex == 0) Color(R.color.purple_200) else Color(R.color.black)
                             )
                         }
-                        IconButton(onClick = { onFilterChange(filter.copy(tagId=4))
-                            selectedIndex = 3
+
+                        IconButton(onClick = { onFilterChange(filter.copy(tagId=1))
+                            selectedIndex = 1
                         }) {
                             Icon(
 
-                                imageVector = ImageVector.vectorResource(R.drawable.pirotecnia_ico),
-                                contentDescription = "Pirotecnia",
-                                tint = if (selectedIndex == 3) Color(R.color.purple_200) else Color(R.color.black)
+                                painter = painterResource(id = R.drawable.ic_cultura),
+                                contentDescription = "Cultura",
+                                tint = if (selectedIndex == 1) Color(R.color.purple_200) else Color(R.color.black)
 
                             )
                         }
-                    }
-
 
                         IconButton(onClick = { onFilterChange(filter.copy(tagId=2))
                             selectedIndex = 2
                         }) {
                             Icon(
 
-                                imageVector = ImageVector.vectorResource(R.drawable.pasacalles_ico),
+                                painter = painterResource(id = R.drawable.ic_pasacalles),
                                 contentDescription = "Pasacalles",
                                 tint = if (selectedIndex == 2) Color(R.color.purple_200) else Color(R.color.black)
 
                             )
                         }
 
-                    IconButton(onClick = { onFilterChange(filter.copy(tagId=1))
-                        selectedIndex = 1
-                    }) {
-                        Icon(
+                        IconButton(onClick = { onFilterChange(filter.copy(tagId=4))
+                            selectedIndex = 3
+                        }) {
+                            Icon(
 
-                            imageVector = ImageVector.vectorResource(R.drawable.cultura_ico),
-                            contentDescription = "Cultura",
-                            tint = if (selectedIndex == 1) Color(R.color.purple_200) else Color(R.color.black)
+                                painter = painterResource(id = R.drawable.ic_pirotecnia),
+                                contentDescription = "Pirotecnia",
+                                tint = if (selectedIndex == 3) Color(R.color.purple_200) else Color(R.color.black)
 
-                        )
+                            )
+                        }
                     }
 
                     Spacer(Modifier.height(12.dp))
@@ -239,8 +237,8 @@ fun EventFilterMenu(
                         }
                     }
 
+                }
             }
-        }
 
         }
         Log.d("EventFilterMenu","Antes de: " + filter.beforeDate + " Después de: " + filter.afterDate)

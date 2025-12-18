@@ -4,6 +4,7 @@ import android.os.Build
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -18,10 +19,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
@@ -367,8 +370,9 @@ fun JoinFallaFormContent(
     fallaId: Long,
     currentUser: MemberDTO?,
     onDismiss: () -> Unit,
-    viewModel: FallaDetailViewModel = viewModel()
-) {
+    viewModel: FallaDetailViewModel = viewModel(),
+
+    ) {
     val nombre = currentUser?.let { "${it.nombre} ${it.apellidos}".trim() } ?: ""
     val dni = currentUser?.dni ?: ""
     var motivo by remember { mutableStateOf("") }
@@ -417,7 +421,15 @@ fun JoinFallaFormContent(
         ) {
             Text("Enviar Solicitud", fontFamily = RalewayFont, fontWeight = FontWeight.SemiBold)
         }
-
+        Text(
+            text = "Cancelar",
+            modifier = Modifier.clickable { onDismiss() },
+            style = MaterialTheme.typography.bodyLarge.copy(
+                textDecoration = TextDecoration.Underline,
+                color = colorResource(R.color.black),
+                fontWeight = FontWeight.Medium
+            )
+        )
         if (message != null && !message!!.contains("éxito")) {
             Text(message ?: "", color = Color.Red, fontSize = 12.sp, fontFamily = RalewayFont, fontWeight = FontWeight.Light)
         }

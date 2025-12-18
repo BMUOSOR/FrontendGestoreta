@@ -173,7 +173,8 @@ fun MemberDetailScreenWithDelete(member: MemberDTO, onBack: () -> Unit, onDelete
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(R.color.white)),
+            .background(colorResource(R.color.white))
+            .padding(16.dp),
         horizontalAlignment = Alignment.Start
     ) {
         Text(

@@ -1,5 +1,6 @@
 package com.example.frontendgestoreta.ui.screens_user
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -8,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.frontendgestoreta.data.models.MemberDTO
@@ -17,7 +19,8 @@ import com.example.frontendgestoreta.viewModel.FallaDetailViewModel
 fun JoinFallaForm(
     fallaId: Long,
     currentUser: MemberDTO?, // ← Recibe el usuario logueado
-    viewModel: FallaDetailViewModel = viewModel()
+    viewModel: FallaDetailViewModel = viewModel(),
+    onCancel: () -> Unit   // 👈 nuevo
 ) {
     // Pre-rellenar nombre y DNI si el usuario está logueado
     val nombre = currentUser?.let { "${it.nombre} ${it.apellidos}".trim() } ?: ""
@@ -89,6 +92,17 @@ fun JoinFallaForm(
             ) {
                 Text("Enviar Solicitud")
             }
+            Text(
+                text = "Cancelar",
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable { onCancel() },
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    textDecoration = TextDecoration.Underline,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Medium
+                )
+            )
         }
     }
 }
